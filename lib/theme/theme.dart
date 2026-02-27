@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 
-// Definición de la paleta de colores futurista
+// Definición de la paleta de colores futurista - tema claro (fondo blanco)
 class AppColors {
-  // Tema Oscuro
-  static const Color primaryText = Color(0xFFFFFFFF);
-  static const Color secondaryText = Color(0xFFB0B0B0);
-  static const Color background = Color(0xFF0A0A0A);
-  static const Color surface = Color(0xFF1A1A1A);
+  // Tema Claro - fondo y superficie
+  static const Color primaryText = Color(0xFF1A1A1A);
+  static const Color secondaryText = Color(0xFF555555);
+  static const Color background = Color(0xFFFFFFFF);
+  static const Color surface = Color(0xFFF5F5F5);
   static const Color accent = Color(0xFFFFD700); // Amarillo Neón
   static const Color accentGreen = Color(0xFF00FF00); // Verde Neón
   static const Color accentBlue = Color(0xFF00FFFF); // Azul Neón
 
-  // Tema Claro
-  static const Color lightPrimaryText = Color(0xFF000000);
+  // Tema Claro (fondo blanco)
+  static const Color lightPrimaryText = Color(0xFF1A1A1A);
   static const Color lightSecondaryText = Color(0xFF555555);
-  static const Color lightBackground = Color(0xFFF5F5F5);
+  static const Color lightBackground = Color(0xFFFFFFFF);
   static const Color lightSurface = Color(0xFFFFFFFF);
   static const Color lightAccent = Color(0xFF0052D4);
 }

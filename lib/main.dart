@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
       title: 'Futbol AI',
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.dark, // Se establece el modo oscuro por defecto directamente
+      themeMode: ThemeMode.light, // Fondo blanco en toda la app
       home: const AuthGate(),
       debugShowCheckedModeBanner: false,
     );

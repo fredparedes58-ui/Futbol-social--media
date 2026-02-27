@@ -1,0 +1,85 @@
+name: Flutter CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+
+jobs:
+  build_and_test:
+    name: Build & Test Flutter App
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout repository
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Configurar Java (Requerido para compilar Android)
+      - name: ⚙️ Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      # 3. Configurar Flutter
+      - name: 🐦 Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      # 4. Instalar dependencias
+      - name: 📦 Install dependencies
+        run: flutter pub get
+
+      # 5. Ejecutar pruebas
+      - name: 🧪 Run tests
+        run: flutter test
+
+      # 6. Compilar APK (Android)
+      - name: 🔨 Build APK
+        run: flutter build apk --release
+
+      # 7. Compilar AAB (Android App Bundle)
+      - name: 🔨 Build AAB
+        run: flutter build appbundle --release
+
+      # 8. (Opcional) Subir los artefactos generados
+      - name: 📤 Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+
+      - name: 📤 Upload AAB Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-aab
+          path: build/app/outputs/bundle/release/app-release.aab
+
+      # 9. Notificación Webhook (Ej. WhatsApp)
+      # Referencia: EJECUTAR_CHAT_WHATSAPP.md (Se puede integrar con la API de WhatsApp para notificar a los devs)
+      - name: 🔔 Notificar resultado por Webhook
+        if: always()
+        run: |
+          if [ "${{ job.status }}" = "success" ]; then
+            STATUS_MSG="✅ Build Exitoso"
+          else
+            STATUS_MSG="❌ Build Fallido"
+          fi
+          
+          # Configura el WEBHOOK_URL en los Secrets de tu repositorio en GitHub
+          curl -X POST "${{ secrets.WEBHOOK_URL }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "mensaje": "'"$STATUS_MSG"'",
+              "proyecto": "${{ github.repository }}",
+              "rama": "${{ github.ref_name }}",
+              "commit": "${{ github.sha }}"
+            }'
