@@ -38,12 +38,14 @@ dependencies:
   image: ^4.3.0
   geolocator: ^13.0.1
   audioplayers: ^6.1.0
-  record: ^5.0.4
+  record: ^6.2.0
   # 🌐 FFCV Web Scraping
   http: ^1.2.2
   html: ^0.15.5
   # 🔔 Notificaciones locales (sin Firebase)
   flutter_local_notifications: ^18.0.1
+  # ⏰ Formato de tiempo relativo
+  timeago: ^3.7.0
 
 dev_dependencies:
   flutter_test:
