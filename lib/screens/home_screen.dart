@@ -9,7 +9,7 @@ import 'package:myapp/screens/session_planner_screen.dart';
 import 'package:myapp/screens/training_categories_screen.dart';
 import 'package:myapp/screens/matches_screen.dart';
 import 'package:myapp/screens/drills_screen.dart';
-import 'package:myapp/screens/team_chat_screen.dart';
+import 'package:myapp/screens/chat_inbox_screen.dart';
 import 'package:myapp/screens/gallery_screen.dart';
 import 'package:myapp/screens/settings_screen.dart';
 import 'package:myapp/screens/methodology_screen.dart';
@@ -328,8 +328,7 @@ class _HomeScreenState extends State<HomeScreen> {
         onTap: () => Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                const TeamChatScreen(userRole: 'coach', userName: 'Entrenador'),
+            builder: (context) => const ChatInboxScreen(),
           ),
         ),
       ),

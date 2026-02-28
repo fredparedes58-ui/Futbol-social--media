@@ -8,12 +8,15 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'dart:io';
-import 'package:image_picker/image_picker.dart';
 import '../models/social_post_model.dart';
+import '../models/social_story_model.dart';
 import '../services/social_service.dart';
+import '../services/storage_service.dart';
 import 'create_post_screen.dart';
 import 'victory_share_screen.dart';
+import 'victory_share_screen.dart';
+import 'story_view_screen.dart';
+import 'dart:async';
 
 class SocialFeedScreen extends StatefulWidget {
   final String teamId;
@@ -26,11 +29,14 @@ class SocialFeedScreen extends StatefulWidget {
 
 class _SocialFeedScreenState extends State<SocialFeedScreen> {
   final SocialService _socialService = SocialService();
+  final StorageService _storageService = StorageService();
   final ScrollController _scrollController = ScrollController();
   final ImagePicker _imagePicker = ImagePicker();
   List<SocialPost> _posts = [];
+  List<UserStoryGroup> _stories = [];
   bool _isLoading = true;
   bool _isLoadingMore = false;
+  bool _isUploadingStory = false;
   int _currentPage = 0;
   static const int _pageSize = 20;
 
@@ -59,19 +65,25 @@ class _SocialFeedScreenState extends State<SocialFeedScreen> {
   Future<void> _loadInitialPosts() async {
     setState(() => _isLoading = true);
     try {
-      final posts = await _socialService.getTeamFeed(
+      final postsFuture = _socialService.getTeamFeed(
         teamId: widget.teamId,
         limit: _pageSize,
         offset: 0,
       );
+      
+      final storiesFuture = _socialService.getActiveStories(widget.teamId);
+      
+      final results = await Future.wait([postsFuture, storiesFuture]);
+      
       setState(() {
-        _posts = posts;
+        _posts = results[0] as List<SocialPost>;
+        _stories = results[1] as List<UserStoryGroup>;
         _currentPage = 1;
         _isLoading = false;
       });
     } catch (e) {
       setState(() => _isLoading = false);
-      _showError('Error cargando posts: $e');
+      _showError('Error cargando feed: $e');
     }
   }
 
@@ -198,6 +210,48 @@ class _SocialFeedScreenState extends State<SocialFeedScreen> {
       ),
     );
   }
+  
+  Future<void> _handleCreateStory() async {
+    final source = await _showImageSourceDialog();
+    if (source == null) return;
+    
+    try {
+      final XFile? media = await _imagePicker.pickImage(
+        source: source,
+        maxWidth: 1080,
+        maxHeight: 1920,
+        imageQuality: 80,
+      );
+
+      if (media != null) {
+        setState(() => _isUploadingStory = true);
+        
+        final userId = Supabase.instance.client.auth.currentUser?.id;
+        if (userId == null) throw Exception("No autorizado");
+
+        // 1. Subir al storage
+        final publicUrl = await _storageService.uploadStoryMedia(File(media.path), userId);
+        
+        // 2. Insertar en la tabla de historias
+        await _socialService.createStory(
+          teamId: widget.teamId, 
+          mediaUrl: publicUrl, 
+          mediaType: MediaType.image,
+          durationSeconds: 5,
+        );
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('¡Historia compartida! ✨'), backgroundColor: Colors.purple),
+        );
+        
+        _refreshFeed();
+      }
+    } catch (e) {
+      _showError('Error al subir historia: $e');
+    } finally {
+      if (mounted) setState(() => _isUploadingStory = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -228,32 +282,59 @@ class _SocialFeedScreenState extends State<SocialFeedScreen> {
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
-          : _posts.isEmpty
-              ? _buildEmptyState()
-              : RefreshIndicator(
-                  onRefresh: _refreshFeed,
-                  child: ListView.builder(
-                    controller: _scrollController,
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    itemCount: _posts.length + (_isLoadingMore ? 1 : 0),
-                    itemBuilder: (context, index) {
-                      if (index == _posts.length) {
-                        return const Center(
-                          child: Padding(
-                            padding: EdgeInsets.all(16.0),
-                            child: CircularProgressIndicator(),
-                          ),
-                        );
-                      }
-                      return SocialPostCard(
-                        post: _posts[index],
-                        onLikeToggle: () => _handleLikeToggle(_posts[index]),
-                        onDelete: () => _handleDelete(_posts[index].id),
-                      );
-                    },
+          : RefreshIndicator(
+              onRefresh: _refreshFeed,
+              child: CustomScrollView(
+                controller: _scrollController,
+                physics: const AlwaysScrollableScrollPhysics(),
+                slivers: [
+                  // STORIERS CAROUSEL
+                  SliverToBoxAdapter(
+                    child: _buildStoriesCarousel(),
                   ),
-                ),
+                  
+                  // DIVIDER
+                  if (_posts.isNotEmpty)
+                    SliverToBoxAdapter(
+                      child: Divider(
+                        color: Colors.white.withValues(alpha: 0.1),
+                        height: 1,
+                        thickness: 1,
+                      ),
+                    ),
+                  
+                  // POSTS FEED
+                  if (_posts.isEmpty)
+                    SliverFillRemaining(
+                      hasScrollBody: false,
+                      child: _buildEmptyState(),
+                    )
+                  else
+                    SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                          if (index == _posts.length) {
+                            return _isLoadingMore
+                              ? const Center(
+                                  child: Padding(
+                                    padding: EdgeInsets.all(16.0),
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                )
+                              : const SizedBox.shrink();
+                          }
+                          return SocialPostCard(
+                            post: _posts[index],
+                            onLikeToggle: () => _handleLikeToggle(_posts[index]),
+                            onDelete: () => _handleDelete(_posts[index].id),
+                          );
+                        },
+                        childCount: _posts.length + (_isLoadingMore ? 1 : 0),
+                      ),
+                    ),
+                ],
+              ),
+            ),
       floatingActionButton: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -282,6 +363,158 @@ class _SocialFeedScreenState extends State<SocialFeedScreen> {
         ],
       ),
     );
+  }
+
+  Widget _buildStoriesCarousel() {
+    return Container(
+      height: 110,
+      padding: const EdgeInsets.only(top: 12, bottom: 8),
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: _stories.length + 1, // +1 para el botón de "Crear Historia"
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        itemBuilder: (context, index) {
+          if (index == 0) {
+            return _buildCreateStoryButton();
+          }
+          final group = _stories[index - 1];
+          return _buildStoryAvatar(group);
+        },
+      ),
+    );
+  }
+
+  Widget _buildCreateStoryButton() {
+    return GestureDetector(
+      onTap: _isUploadingStory ? null : _handleCreateStory,
+      child: Container(
+        margin: const EdgeInsets.only(right: 16),
+        child: Column(
+          children: [
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                Stack(
+                  alignment: Alignment.bottomRight,
+                  children: [
+                    Container(
+                      width: 65,
+                      height: 65,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white24, width: 2),
+                        color: Theme.of(context).primaryColor.withValues(alpha: 0.2),
+                      ),
+                      child: const Center(
+                        child: Icon(Icons.person, color: Colors.white70, size: 30),
+                      ),
+                    ),
+                    Container(
+                      width: 22,
+                      height: 22,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).primaryColor,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: const Color(0xFF0A0E21), width: 2),
+                      ),
+                      child: const Icon(Icons.add, color: Colors.white, size: 16),
+                    ),
+                  ],
+                ),
+                if (_isUploadingStory)
+                  const CircularProgressIndicator(color: Colors.white),
+              ],
+            ),
+            const SizedBox(height: 6),
+            Text(
+              _isUploadingStory ? 'Subiendo...' : 'Tu historia',
+              style: GoogleFonts.roboto(
+                fontSize: 12,
+                color: Colors.white70,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStoryAvatar(UserStoryGroup group) {
+    // Si tiene historias sin ver, borde con gradiente de instagram
+    final hasUnseen = !group.allViewed;
+    
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => StoryViewScreen(
+              storyGroup: group,
+              allGroups: _stories,
+            ),
+          ),
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.only(right: 16),
+        child: Column(
+          children: [
+            Container(
+              width: 65,
+              height: 65,
+              padding: const EdgeInsets.all(3),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: hasUnseen
+                    ? const LinearGradient(
+                        colors: [Color(0xFF833AB4), Color(0xFFFD1D1D), Color(0xFFFCEA2B)],
+                        begin: Alignment.topRight,
+                        end: Alignment.bottomLeft,
+                      )
+                    : null,
+                border: hasUnseen 
+                    ? null 
+                    : Border.all(color: Colors.white24, width: 2),
+              ),
+              child: Container(
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Color(0xFF0A0E21),
+                ),
+                padding: const EdgeInsets.all(2),
+                child: ClipOval(
+                  child: CachedNetworkImage(
+                    imageUrl: group.authorAvatarUrl,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => Container(color: Colors.white12),
+                    errorWidget: (context, url, error) => Container(
+                      color: Colors.white12,
+                      child: const Icon(Icons.person, color: Colors.white54),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              _getShortName(group.authorName),
+              style: GoogleFonts.roboto(
+                fontSize: 12,
+                color: Colors.white,
+                fontWeight: hasUnseen ? FontWeight.w600 : FontWeight.normal,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _getShortName(String fullName) {
+    final parts = fullName.split(' ');
+    if (parts.isEmpty) return '';
+    return parts[0];
   }
 
   Widget _buildEmptyState() {
@@ -627,10 +860,10 @@ class _PostMedia extends StatelessWidget {
 }
 
 // ============================================================
-// POST FOOTER - Likes y descripción
+// POST FOOTER - Likes y descripción y Comentarios
 // ============================================================
 
-class _PostFooter extends StatelessWidget {
+class _PostFooter extends StatefulWidget {
   final SocialPost post;
   final VoidCallback onLikeToggle;
 
@@ -640,15 +873,48 @@ class _PostFooter extends StatelessWidget {
   });
 
   @override
+  State<_PostFooter> createState() => _PostFooterState();
+}
+
+class _PostFooterState extends State<_PostFooter> {
+  final SocialService _socialService = SocialService();
+
+  void _showCommentsBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: const Color(0xFF1D1E33),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return DraggableScrollableSheet(
+          initialChildSize: 0.6,
+          maxChildSize: 0.9,
+          minChildSize: 0.4,
+          expand: false,
+          builder: (_, controller) {
+            return _CommentsSheet(
+              post: widget.post,
+              socialService: _socialService,
+              scrollController: controller,
+            );
+          },
+        );
+      },
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final isLiked = post.isLikedByMe ?? false;
+    final isLiked = widget.post.isLikedByMe ?? false;
 
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Botón de like
+          // Botones de acción
           Row(
             children: [
               IconButton(
@@ -656,10 +922,10 @@ class _PostFooter extends StatelessWidget {
                   isLiked ? Icons.favorite : Icons.favorite_outline,
                   color: isLiked ? Colors.red : Colors.white70,
                 ),
-                onPressed: onLikeToggle,
+                onPressed: widget.onLikeToggle,
               ),
               Text(
-                '${post.likesCount}',
+                '${widget.post.likesCount}',
                 style: GoogleFonts.roboto(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
@@ -667,28 +933,37 @@ class _PostFooter extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 16),
-              Icon(
-                Icons.chat_bubble_outline,
-                size: 24,
-                color: Colors.white.withValues(alpha: 0.5),
-              ),
-              const SizedBox(width: 8),
-              Text(
-                '${post.commentsCount}',
-                style: GoogleFonts.roboto(
-                  fontSize: 16,
-                  color: Colors.white.withValues(alpha: 0.7),
+              
+              // Botón de Comentarios
+              GestureDetector(
+                onTap: () => _showCommentsBottomSheet(context),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.chat_bubble_outline,
+                      size: 24,
+                      color: Colors.white.withValues(alpha: 0.8),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      '${widget.post.commentsCount}',
+                      style: GoogleFonts.roboto(
+                        fontSize: 16,
+                        color: Colors.white.withValues(alpha: 0.8),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
 
           // Descripción del post
-          if (post.contentText != null && post.contentText!.isNotEmpty)
+          if (widget.post.contentText != null && widget.post.contentText!.isNotEmpty)
             Padding(
-              padding: const EdgeInsets.only(top: 8.0),
+              padding: const EdgeInsets.only(top: 8.0, bottom: 4.0),
               child: Text(
-                post.contentText!,
+                widget.post.contentText!,
                 style: GoogleFonts.roboto(
                   fontSize: 14,
                   color: Colors.white.withValues(alpha: 0.9),
@@ -696,8 +971,239 @@ class _PostFooter extends StatelessWidget {
                 ),
               ),
             ),
+            
+            // "Ver comentarios" enlace rápido
+            if (widget.post.commentsCount > 0)
+              GestureDetector(
+                onTap: () => _showCommentsBottomSheet(context),
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 4.0),
+                  child: Text(
+                    'Ver los ${widget.post.commentsCount} comentarios',
+                    style: GoogleFonts.roboto(
+                      color: Colors.grey,
+                      fontSize: 13,
+                    ),
+                  ),
+                ),
+              ),
         ],
       ),
+    );
+  }
+}
+
+// ============================================================
+// COMMENTS SHEET - Componente para la ventana de comentarios
+// ============================================================
+
+import '../models/social_post_comment_model.dart';
+
+class _CommentsSheet extends StatefulWidget {
+  final SocialPost post;
+  final SocialService socialService;
+  final ScrollController scrollController;
+
+  const _CommentsSheet({
+    required this.post,
+    required this.socialService,
+    required this.scrollController,
+  });
+
+  @override
+  State<_CommentsSheet> createState() => _CommentsSheetState();
+}
+
+class _CommentsSheetState extends State<_CommentsSheet> {
+  final TextEditingController _commentController = TextEditingController();
+  bool _isSubmitting = false;
+
+  @override
+  void dispose() {
+    _commentController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _submitComment() async {
+    final text = _commentController.text.trim();
+    if (text.isEmpty) return;
+
+    setState(() => _isSubmitting = true);
+    
+    try {
+      await widget.socialService.addComment(
+        postId: widget.post.id, 
+        content: text,
+      );
+      _commentController.clear();
+      FocusScope.of(context).unfocus();
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error al comentar: $e'), backgroundColor: Colors.red),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isSubmitting = false);
+    }
+  }
+
+  Future<void> _deleteComment(String commentId) async {
+    try {
+      await widget.socialService.deleteComment(commentId);
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error al borrar: $e'), backgroundColor: Colors.red),
+        );
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        // Manija decorativa
+        Container(
+          width: 40,
+          height: 4,
+          margin: const EdgeInsets.only(top: 12, bottom: 12),
+          decoration: BoxDecoration(
+            color: Colors.grey.withOpacity(0.5),
+            borderRadius: BorderRadius.circular(2),
+          ),
+        ),
+        Text(
+          'Comentarios',
+          style: GoogleFonts.oswald(
+            fontSize: 18, 
+            fontWeight: FontWeight.bold, 
+            color: Colors.white,
+          ),
+        ),
+        const Divider(color: Colors.white24, height: 20),
+        
+        // Lista de Comentarios en Tiempo Real
+        Expanded(
+          child: StreamBuilder<List<SocialPostComment>>(
+            stream: widget.socialService.streamPostComments(widget.post.id),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator(color: Colors.cyan));
+              }
+
+              if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}', style: const TextStyle(color: Colors.red)));
+              }
+
+              final comments = snapshot.data ?? [];
+
+              if (comments.isEmpty) {
+                return Center(
+                  child: Text(
+                    'No hay comentarios aún.\n¡Sé el primero en opinar!',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.roboto(color: Colors.grey),
+                  ),
+                );
+              }
+
+              return ListView.builder(
+                controller: widget.scrollController,
+                itemCount: comments.length,
+                itemBuilder: (context, index) {
+                  final comment = comments[index];
+                  final isMyComment = comment.userId == Supabase.instance.client.auth.currentUser?.id;
+
+                  return ListTile(
+                    leading: CircleAvatar(
+                      backgroundColor: Colors.cyan.withOpacity(0.2),
+                      backgroundImage: comment.authorAvatarUrl != null ? NetworkImage(comment.authorAvatarUrl!) : null,
+                      child: comment.authorAvatarUrl == null 
+                          ? Text(comment.authorName?.substring(0, 1).toUpperCase() ?? 'U', style: const TextStyle(color: Colors.cyan)) 
+                          : null,
+                    ),
+                    title: Row(
+                      children: [
+                        Text(
+                          comment.authorName ?? 'Usuario',
+                          style: GoogleFonts.roboto(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 13),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          comment.getRelativeTime(),
+                          style: GoogleFonts.roboto(color: Colors.grey, fontSize: 11),
+                        ),
+                      ],
+                    ),
+                    subtitle: Padding(
+                      padding: const EdgeInsets.only(top: 4.0),
+                      child: Text(
+                        comment.content,
+                        style: GoogleFonts.roboto(color: Colors.white70, fontSize: 14),
+                      ),
+                    ),
+                    trailing: isMyComment
+                        ? IconButton(
+                            icon: const Icon(Icons.close, size: 16, color: Colors.grey),
+                            onPressed: () => _deleteComment(comment.id),
+                          )
+                        : null,
+                  );
+                },
+              );
+            },
+          ),
+        ),
+        
+        // Input Area
+        SafeArea(
+          child: Container(
+            padding: EdgeInsets.only(
+              left: 16, 
+              right: 16, 
+              top: 10, 
+              bottom: MediaQuery.of(context).viewInsets.bottom + 10,
+            ),
+            decoration: BoxDecoration(
+              color: const Color(0xFF0A0E21),
+              border: Border(top: BorderSide(color: Colors.white.withOpacity(0.1))),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _commentController,
+                    style: const TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      hintText: 'Añadir un comentario...',
+                      hintStyle: const TextStyle(color: Colors.grey),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(24),
+                        borderSide: BorderSide.none,
+                      ),
+                      filled: true,
+                      fillColor: const Color(0xFF1D1E33),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                _isSubmitting
+                    ? const Padding(
+                        padding: EdgeInsets.all(12.0),
+                        child: SizedBox(width: 24, height: 24, child: CircularProgressIndicator(color: Colors.cyan, strokeWidth: 2)),
+                      )
+                    : IconButton(
+                        icon: const Icon(Icons.send, color: Colors.cyan),
+                        onPressed: _submitComment,
+                      ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

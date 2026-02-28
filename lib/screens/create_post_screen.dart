@@ -12,7 +12,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/social_post_model.dart';
 import '../services/social_service.dart';
 import 'victory_share_screen.dart';
-import '../services/media_upload_service.dart';
+import '../services/storage_service.dart';
 
 class CreatePostScreen extends StatefulWidget {
   final String teamId;
@@ -27,7 +27,7 @@ class CreatePostScreen extends StatefulWidget {
 class _CreatePostScreenState extends State<CreatePostScreen> {
   final TextEditingController _descriptionController = TextEditingController();
   final SocialService _socialService = SocialService();
-  final MediaUploadService _mediaService = MediaUploadService();
+  final StorageService _storageService = StorageService();
   final ImagePicker _picker = ImagePicker();
 
   File? _selectedFile;
@@ -185,31 +185,28 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   Future<_MediaUploadResult> _uploadMedia() async {
     if (_selectedFile == null) throw Exception('No hay archivo seleccionado');
 
-    setState(() => _uploadProgress = 0.0);
+    setState(() => _uploadProgress = 0.5); // Feedback visual básico (TODO: Progreso real con streams)
 
     try {
       String mediaUrl;
       String? thumbnailUrl;
 
       if (_mediaType == MediaType.image) {
-        // Para imágenes, no hay thumbnail (se usa el mismo mediaUrl)
-        mediaUrl = await _mediaService.uploadPhoto(_selectedFile!);
+        // Upload photo a Supabase Storage
+        mediaUrl = await _storageService.uploadSocialImage(_selectedFile!, widget.teamId);
         thumbnailUrl = null;
       } else {
-        // Para videos, Bunny Stream genera automáticamente el thumbnail
-        final result = await _mediaService.uploadVideo(
-          _selectedFile!,
-          onProgress: (progress) {
-            setState(() => _uploadProgress = progress);
-          },
-        );
-        mediaUrl = result.directPlayUrl;
-        thumbnailUrl = result.thumbnailUrl;
+        // Para videos, la subida es idéntica pero podríamos tener que generar thumbnail. 
+        // Por simplicidad, se guarda en social_media 
+        mediaUrl = await _storageService.uploadSocialImage(_selectedFile!, widget.teamId);
+        thumbnailUrl = null; 
+        // En una futura versión se podría extraer un frame o vincular con Mux/Bunny para optimización
       }
+      
       setState(() => _uploadProgress = 1.0);
       return _MediaUploadResult(mediaUrl: mediaUrl, thumbnailUrl: thumbnailUrl);
     } catch (e) {
-      throw Exception('Error subiendo archivo: $e');
+      throw Exception('Error subiendo archivo a Supabase: $e');
     }
   }
 

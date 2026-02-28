@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:myapp/screens/notice_detail_screen.dart';
-import 'package:myapp/models/notice_board_post_model.dart';
-import 'package:myapp/widgets/empty_state_widget.dart';
-import 'package:myapp/widgets/loading_widget.dart';
-import 'package:myapp/widgets/error_state_widget.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import '../models/notification_model.dart';
+import '../services/notification_service.dart';
+import '../widgets/empty_state_widget.dart';
+import '../widgets/loading_widget.dart';
+import '../widgets/error_state_widget.dart';
 
 class NotificationsScreen extends StatefulWidget {
   const NotificationsScreen({super.key});
@@ -15,7 +15,8 @@ class NotificationsScreen extends StatefulWidget {
 }
 
 class _NotificationsScreenState extends State<NotificationsScreen> {
-  List<Map<String, dynamic>> _notifications = [];
+  final NotificationService _notificationService = NotificationService();
+  List<SocialNotification> _notifications = [];
   bool _isLoading = true;
   String? _errorMessage;
 
@@ -32,77 +33,18 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     });
 
     try {
-      final user = Supabase.instance.client.auth.currentUser;
-      if (user == null) {
-        setState(() {
-          _isLoading = false;
-          _errorMessage = 'Usuario no autenticado';
-        });
-        return;
-      }
-
-      // Obtener team_id del usuario
-      final teamMember = await Supabase.instance.client
-          .from('team_members')
-          .select('team_id, role')
-          .eq('user_id', user.id)
-          .maybeSingle();
-
-      if (teamMember == null) {
-        setState(() {
-          _isLoading = false;
-          _notifications = [];
-        });
-        return;
-      }
-
-      final teamId = teamMember['team_id'];
-      final userRole = teamMember['role'];
-
-      // Cargar notificaciones desde notices (avisos del tablón)
-      final noticesResponse = await Supabase.instance.client
-          .from('notices')
-          .select('*, created_by_user:profiles!created_by(full_name)')
-          .eq('team_id', teamId)
-          .order('created_at', ascending: false)
-          .limit(50);
-
-      final notices = List<Map<String, dynamic>>.from(noticesResponse);
-
-      // Filtrar por rol del usuario
-      final filteredNotices = notices.where((notice) {
-        final targetRoles = List<String>.from(notice['target_roles'] ?? []);
-        return targetRoles.isEmpty || 
-               targetRoles.contains(userRole) || 
-               targetRoles.contains('all');
-      }).toList();
-
-      // Convertir a formato de notificaciones
-      final notifications = filteredNotices.map((notice) {
-        String? authorName;
-        if (notice['created_by_user'] != null) {
-          final createdByUser = notice['created_by_user'];
-          if (createdByUser is Map<String, dynamic>) {
-            authorName = createdByUser['full_name'] as String?;
-          }
-        }
-
-        return {
-          'id': notice['id'],
-          'type': notice['priority'] == 'urgent' ? 'urgent' : 'info',
-          'title': notice['title'],
-          'content': notice['content'],
-          'author': authorName ?? 'Sistema',
-          'created_at': notice['created_at'],
-          'is_read': false, // TODO: Implementar lectura
-          'notice_data': notice, // Para navegación
-        };
-      }).toList();
+      final notifications = await _notificationService.getUserNotifications();
 
       setState(() {
         _notifications = notifications;
         _isLoading = false;
       });
+
+      // Marcar todas como leídas en background
+      if (notifications.any((n) => !n.isRead)) {
+        await _notificationService.markAllAsRead();
+      }
+
     } catch (e) {
       debugPrint('Error cargando notificaciones: $e');
       setState(() {
@@ -133,39 +75,31 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     }
   }
 
-  void _onNotificationTap(Map<String, dynamic> notification) {
-    final noticeData = notification['notice_data'] as Map<String, dynamic>?;
-    if (noticeData != null) {
-      // Convertir a NoticeBoardPost para navegación
-      String? authorName;
-      if (noticeData['created_by_user'] != null) {
-        final createdByUser = noticeData['created_by_user'];
-        if (createdByUser is Map<String, dynamic>) {
-          authorName = createdByUser['full_name'] as String?;
+  void _onNotificationTap(SocialNotification notification) {
+    if (!notification.isRead) {
+      _notificationService.markAsRead(notification.id);
+      setState(() {
+        final index = _notifications.indexWhere((n) => n.id == notification.id);
+        if (index != -1) {
+          _notifications[index] = SocialNotification(
+            id: notification.id,
+            recipientId: notification.recipientId,
+            actorId: notification.actorId,
+            type: notification.type,
+            entityId: notification.entityId,
+            entityType: notification.entityType,
+            isRead: true,
+            createdAt: notification.createdAt,
+            actorName: notification.actorName,
+            actorAvatarUrl: notification.actorAvatarUrl,
+            entityPreviewUrl: notification.entityPreviewUrl,
+          );
         }
-      }
-
-      final notice = NoticeBoardPost(
-        id: noticeData['id'],
-        teamId: noticeData['team_id'],
-        authorId: noticeData['created_by'] ?? '',
-        authorName: authorName,
-        title: noticeData['title'],
-        content: noticeData['content'],
-        attachmentUrl: noticeData['attachment_url'],
-        priority: noticeData['priority'] == 'urgent' 
-            ? NoticePriority.urgent 
-            : NoticePriority.normal,
-        createdAt: DateTime.parse(noticeData['created_at']),
-      );
-
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => NoticeDetailScreen(notice: notice),
-        ),
-      );
+      });
     }
+
+    // TODO: Manejar la navegación según el tipo de entidad (entityType/entityId)
+    // Ejemplo: Navigator.push(context, route_to_post_detail(notification.entityId));
   }
 
   @override
@@ -210,65 +144,108 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                         itemCount: _notifications.length,
                         itemBuilder: (context, index) {
                           final notification = _notifications[index];
-                          final isUrgent = notification['type'] == 'urgent';
+                          final isUnread = !notification.isRead;
 
-                          return Card(
-                            margin: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 4,
-                            ),
-                            color: isUrgent
-                                ? theme.colorScheme.errorContainer.withOpacity(0.3)
-                                : null,
-                            child: ListTile(
-                              leading: CircleAvatar(
-                                backgroundColor: isUrgent
-                                    ? theme.colorScheme.error
-                                    : theme.colorScheme.primary,
-                                child: Icon(
-                                  isUrgent ? Icons.warning : Icons.info,
-                                  color: Colors.white,
-                                ),
+                          return InkWell(
+                            onTap: () => _onNotificationTap(notification),
+                            child: Container(
+                              color: isUnread
+                                  ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
+                                  : Colors.transparent,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 12,
                               ),
-                              title: Text(
-                                notification['title'] ?? 'Sin título',
-                                style: GoogleFonts.roboto(
-                                  fontWeight: FontWeight.bold,
-                                  color: isUrgent
-                                      ? theme.colorScheme.error
-                                      : null,
-                                ),
-                              ),
-                              subtitle: Column(
+                              child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    notification['content'] ?? '',
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: theme.textTheme.bodySmall,
+                                  // Avatar del Actor
+                                  CircleAvatar(
+                                    radius: 24,
+                                    backgroundColor: const Color(0xFF1D1E33),
+                                    backgroundImage: notification.actorAvatarUrl != null
+                                        ? CachedNetworkImageProvider(notification.actorAvatarUrl!)
+                                        : null,
+                                    child: notification.actorAvatarUrl == null
+                                        ? const Icon(Icons.person, color: Colors.white54)
+                                        : null,
                                   ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    '${notification['author']} • ${_formatTimeAgo(notification['created_at'])}',
-                                    style: theme.textTheme.bodySmall?.copyWith(
-                                      fontSize: 11,
-                                      color: theme.colorScheme.onSurface.withOpacity(0.6),
+                                  const SizedBox(width: 12),
+                                  
+                                  // Texto de Referencia
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text.rich(
+                                          TextSpan(
+                                            children: [
+                                              TextSpan(
+                                                text: '${notification.actorName ?? 'Alguien'} ',
+                                                style: GoogleFonts.roboto(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white,
+                                                  fontSize: 14,
+                                                ),
+                                              ),
+                                              TextSpan(
+                                                text: _getActionText(notification.type),
+                                                style: GoogleFonts.roboto(
+                                                  color: Colors.white70,
+                                                  fontSize: 14,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          _formatTimeAgo(notification.createdAt.toIso8601String()),
+                                          style: GoogleFonts.roboto(
+                                            color: Colors.white54,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
+                                  
+                                  // Miniatura del Post (si aplica)
+                                  if (notification.entityPreviewUrl != null)
+                                    Container(
+                                      margin: const EdgeInsets.only(left: 12),
+                                      width: 45,
+                                      height: 45,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                        image: DecorationImage(
+                                          image: CachedNetworkImageProvider(notification.entityPreviewUrl!),
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
                                 ],
                               ),
-                              trailing: IconButton(
-                                icon: const Icon(Icons.chevron_right),
-                                onPressed: () => _onNotificationTap(notification),
-                              ),
-                              onTap: () => _onNotificationTap(notification),
                             ),
                           );
                         },
                       ),
                     ),
     );
+  }
+
+  String _getActionText(NotificationType type) {
+    switch (type) {
+      case NotificationType.likePost:
+        return 'le dio "Me gusta" a tu publicación.';
+      case NotificationType.commentPost:
+        return 'comentó tu publicación.';
+      case NotificationType.newMessage:
+        return 'te envió un mensaje directo.';
+      case NotificationType.newStory:
+        return 'publicó una nueva historia.';
+      default:
+        return 'interactuó contigo.';
+    }
   }
 }
