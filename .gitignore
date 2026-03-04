@@ -38,3 +38,4 @@ windows/
 .flutter-plugins
 .flutter-plugins-dependencies
 pubspec.lock
+node_modules

@@ -1,0 +1,37 @@
+export const FFCV_TEAMS = [
+  "C.F. FUNDACIÓ VCF 'A'", "U.D. ALZIRA 'A'", "C.D. MONTE-SIÓN 'A'",
+  "F.B.C.D. CATARROJA 'B'", "C.F. SPORTING XIRIVELLA 'C'", "COL. SALGUI E.D.E. 'A'",
+  "F.B.U.E. ATLÈTIC AMISTAT 'A'", "C.F.B. CIUTAT DE VALÈNCIA 'A'", "UNIÓ BENETÚSSER-FAVARA C.F. 'A'",
+  "C.D. SAN MARCELINO 'A'", "TORRENT C.F. 'C'", "PICASSENT C.F. 'A'", "C.D. DON BOSCO 'A'"
+];
+
+export const FFCV_ROSTERS = {
+  "C.D. SAN MARCELINO 'A'": [
+    'ALCIBAR GOMEZ, JAIDER', 'ARCOBA BIOT, JORGE', 'CABEZA CAÑAS, MARTIN',
+    'DOLZ SANCHEZ, IKER', 'LAZURAN, RAUL', 'LILLO AVILA, UNAI',
+    'MARTÍNEZ RIAZA, HUGO', 'PAREDES CASTRO, SAMUEL',
+    'PARRAGA MORENO, JULEN', 'RAMOS GONZALEZ, DYLAN', 'GARCIA, ALEJANDRO', 'MARTINEZ, PABLO'
+  ],
+  "C.F. FUNDACIÓ VCF 'A'": [
+    'ALONSO, HUGO', 'GARCIA, MATEO', 'MARTIN, LUCAS', 'RUIZ, LEO', 'PEREZ, DANIEL',
+    'GOMEZ, ADRIAN', 'LOPEZ, ALEJANDRO', 'SANCHEZ, PABLO', 'MARTINEZ, ALONSO', 'DIAZ, THIAGO', 'FERNANDEZ, ENZO', 'ROMERO, DIEGO'
+  ],
+  "U.D. ALZIRA 'A'": [
+    'BLASCO, JAVIER', 'NAVARRO, VICTOR', 'MOLINA, RAUL', 'GIL, MANUEL', 'SERRANO, IZAN',
+    'MARIN, GAEL', 'ORTIZ, BRUNO', 'RAMIREZ, DARIO', 'CRUZ, OLIVER', 'DOMINGUEZ, MARCOS', 'GARRIDO, ERIC', 'IGLESIAS, IAN'
+  ]
+};
+
+const RANDOM_FIRST_NAMES = ['AARON', 'RUBEN', 'MARC', 'PAU', 'JOEL', 'ALVARO', 'HECTOR', 'IKER', 'MARIO', 'ADRIAN', 'SERGIO', 'DAVID', 'CARLOS', 'IVAN'];
+const RANDOM_LAST_NAMES = ['JIMENEZ', 'MORENO', 'MUÑOZ', 'ALVAREZ', 'ROMERO', 'GUTIERREZ', 'NAVARRO', 'TORRES', 'DOMINGUEZ', 'VAZQUEZ', 'RAMOS', 'GIL'];
+
+// Generar rosters realistas para los demás para la demo
+FFCV_TEAMS.forEach(t => {
+  if (!FFCV_ROSTERS[t]) {
+    FFCV_ROSTERS[t] = Array.from({length: 12}, (_, i) => {
+       const fn = RANDOM_FIRST_NAMES[Math.floor(Math.random() * RANDOM_FIRST_NAMES.length)];
+       const ln = RANDOM_LAST_NAMES[Math.floor(Math.random() * RANDOM_LAST_NAMES.length)];
+       return `${ln}, ${fn}`;
+    });
+  }
+});

@@ -1,90 +1,0 @@
-00:00 +0: loading /Users/celiannycastro/Desktop/Futbol social media/test/widget_test.dart                                                                                                              00:01 +0: loading /Users/celiannycastro/Desktop/Futbol social media/test/widget_test.dart                                                                                                              00:02 +0: loading /Users/celiannycastro/Desktop/Futbol social media/test/widget_test.dart                                                                                                              00:03 +0: loading /Users/celiannycastro/Desktop/Futbol social media/test/widget_test.dart                                                                                                              00:04 +0: loading /Users/celiannycastro/Desktop/Futbol social media/test/widget_test.dart                                                                                                              00:05 +0: loading /Users/celiannycastro/Desktop/Futbol social media/test/widget_test.dart                                                                                                              00:06 +0: loading /Users/celiannycastro/Desktop/Futbol social media/test/widget_test.dart                                                                                                              00:07 +0: loading /Users/celiannycastro/Desktop/Futbol social media/test/widget_test.dart                                                                                                              00:08 +0: loading /Users/celiannycastro/Desktop/Futbol social media/test/widget_test.dart                                                                                                              00:08 +0 -1: loading /Users/celiannycastro/Desktop/Futbol social media/test/widget_test.dart [E]                                                                                                       
-  Failed to load "/Users/celiannycastro/Desktop/Futbol social media/test/widget_test.dart":
-  Compilation failed for testPath=/Users/celiannycastro/Desktop/Futbol social media/test/widget_test.dart: lib/screens/social_feed_screen.dart:283:72: Error: Not a constant expression.
-                child: const Icon(Icons.person_outline, size: 18, color: krujensBlue),
-                                                                         ^^^^^^^^^^^
-  lib/screens/social_feed_screen.dart:271:22: Error: The getter 'krujensBlue' isn't defined for the type '_SocialFeedScreenState'.
-   - '_SocialFeedScreenState' is from 'package:myapp/screens/social_feed_screen.dart' ('lib/screens/social_feed_screen.dart').
-  Try correcting the name to the name of an existing getter, or defining a getter or field named 'krujensBlue'.
-                color: krujensBlue,
-                       ^^^^^^^^^^^
-  lib/screens/social_feed_screen.dart:282:32: Error: The getter 'krujensCyan' isn't defined for the type '_SocialFeedScreenState'.
-   - '_SocialFeedScreenState' is from 'package:myapp/screens/social_feed_screen.dart' ('lib/screens/social_feed_screen.dart').
-  Try correcting the name to the name of an existing getter, or defining a getter or field named 'krujensCyan'.
-                backgroundColor: krujensCyan.withValues(alpha: 0.2),
-                                 ^^^^^^^^^^^
-  lib/screens/social_feed_screen.dart:402:58: Error: Not a constant expression.
-                          child: Icon(Icons.person, color: krujensBlue, size: 30),
-                                                           ^^^^^^^^^^^
-  lib/screens/social_feed_screen.dart:418:58: Error: Not a constant expression.
-                    const CircularProgressIndicator(color: krujensCyan),
-                                                           ^^^^^^^^^^^
-  lib/screens/social_feed_screen.dart:392:51: Error: The getter 'krujensCyan' isn't defined for the type '_SocialFeedScreenState'.
-   - '_SocialFeedScreenState' is from 'package:myapp/screens/social_feed_screen.dart' ('lib/screens/social_feed_screen.dart').
-  Try correcting the name to the name of an existing getter, or defining a getter or field named 'krujensCyan'.
-                          border: Border.all(color: krujensCyan.withValues(alpha: 0.5), width: 2),
-                                                    ^^^^^^^^^^^
-  lib/screens/social_feed_screen.dart:396:36: Error: The getter 'krujensCyan' isn't defined for the type '_SocialFeedScreenState'.
-   - '_SocialFeedScreenState' is from 'package:myapp/screens/social_feed_screen.dart' ('lib/screens/social_feed_screen.dart').
-  Try correcting the name to the name of an existing getter, or defining a getter or field named 'krujensCyan'.
-                              color: krujensCyan.withValues(alpha: 0.2),
-                                     ^^^^^^^^^^^
-  lib/screens/social_feed_screen.dart:409:32: Error: The getter 'krujensMagenta' isn't defined for the type '_SocialFeedScreenState'.
-   - '_SocialFeedScreenState' is from 'package:myapp/screens/social_feed_screen.dart' ('lib/screens/social_feed_screen.dart').
-  Try correcting the name to the name of an existing getter, or defining a getter or field named 'krujensMagenta'.
-                          color: krujensMagenta,
-                                 ^^^^^^^^^^^^^^
-  lib/screens/social_feed_screen.dart:426:24: Error: The getter 'krujensBlue' isn't defined for the type '_SocialFeedScreenState'.
-   - '_SocialFeedScreenState' is from 'package:myapp/screens/social_feed_screen.dart' ('lib/screens/social_feed_screen.dart').
-  Try correcting the name to the name of an existing getter, or defining a getter or field named 'krujensBlue'.
-                  color: krujensBlue,
-                         ^^^^^^^^^^^
-  lib/screens/social_feed_screen.dart:463:47: Error: Not a constant expression.
-                          colors: [krujensCyan, krujensMagenta],
-                                                ^^^^^^^^^^^^^^
-  lib/screens/social_feed_screen.dart:463:34: Error: Not a constant expression.
-                          colors: [krujensCyan, krujensMagenta],
-                                   ^^^^^^^^^^^
-  lib/screens/social_feed_screen.dart:488:62: Error: Not a constant expression.
-                        child: const Icon(Icons.person, color: krujensBlue),
-                                                               ^^^^^^^^^^^
-  lib/screens/social_feed_screen.dart:470:41: Error: The getter 'krujensBlue' isn't defined for the type '_SocialFeedScreenState'.
-   - '_SocialFeedScreenState' is from 'package:myapp/screens/social_feed_screen.dart' ('lib/screens/social_feed_screen.dart').
-  Try correcting the name to the name of an existing getter, or defining a getter or field named 'krujensBlue'.
-                      : Border.all(color: krujensBlue.withValues(alpha: 0.1), width: 2),
-                                          ^^^^^^^^^^^
-  lib/screens/social_feed_screen.dart:472:36: Error: The getter 'krujensCyan' isn't defined for the type '_SocialFeedScreenState'.
-   - '_SocialFeedScreenState' is from 'package:myapp/screens/social_feed_screen.dart' ('lib/screens/social_feed_screen.dart').
-  Try correcting the name to the name of an existing getter, or defining a getter or field named 'krujensCyan'.
-                    BoxShadow(color: krujensCyan.withValues(alpha: 0.4), blurRadius: 10),
-                                     ^^^^^^^^^^^
-  lib/screens/social_feed_screen.dart:487:30: Error: The getter 'krujensCyan' isn't defined for the type '_SocialFeedScreenState'.
-   - '_SocialFeedScreenState' is from 'package:myapp/screens/social_feed_screen.dart' ('lib/screens/social_feed_screen.dart').
-  Try correcting the name to the name of an existing getter, or defining a getter or field named 'krujensCyan'.
-                        color: krujensCyan.withValues(alpha: 0.1),
-                               ^^^^^^^^^^^
-  lib/screens/social_feed_screen.dart:499:24: Error: The getter 'krujensBlue' isn't defined for the type '_SocialFeedScreenState'.
-   - '_SocialFeedScreenState' is from 'package:myapp/screens/social_feed_screen.dart' ('lib/screens/social_feed_screen.dart').
-  Try correcting the name to the name of an existing getter, or defining a getter or field named 'krujensBlue'.
-                  color: krujensBlue,
-                         ^^^^^^^^^^^
-  lib/screens/social_feed_screen.dart:599:57: Error: Not a constant expression.
-                      const Icon(Icons.play_arrow, color: krujensCyan),
-                                                          ^^^^^^^^^^^
-  lib/screens/social_feed_screen.dart:627:55: Error: Not a constant expression.
-                    icon: const Icon(Icons.bolt, color: krujensCyan),
-                                                        ^^^^^^^^^^^
-  lib/screens/social_feed_screen.dart:606:32: Error: The getter 'krujensBlue' isn't defined for the type '_SocialFeedScreenState'.
-   - '_SocialFeedScreenState' is from 'package:myapp/screens/social_feed_screen.dart' ('lib/screens/social_feed_screen.dart').
-  Try correcting the name to the name of an existing getter, or defining a getter or field named 'krujensBlue'.
-                          color: krujensBlue,
-                                 ^^^^^^^^^^^
-  lib/screens/social_feed_screen.dart:619:30: Error: The getter 'krujensCyan' isn't defined for the type '_SocialFeedScreenState'.
-   - '_SocialFeedScreenState' is from 'package:myapp/screens/social_feed_screen.dart' ('lib/screens/social_feed_screen.dart').
-  Try correcting the name to the name of an existing getter, or defining a getter or field named 'krujensCyan'.
-                        color: krujensCyan.withValues(alpha: 0.3),
-                               ^^^^^^^^^^^
-  .
-
-To run this test again: /Users/celiannycastro/Desktop/development/flutter/bin/cache/dart-sdk/bin/dart test /Users/celiannycastro/Desktop/Futbol social media/test/widget_test.dart -p vm --plain-name 'loading /Users/celiannycastro/Desktop/Futbol social media/test/widget_test.dart'
-00:08 +0 -1: Some tests failed.                                                                                                                                                                        
