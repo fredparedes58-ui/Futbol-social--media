@@ -6,10 +6,13 @@ import { Search, Plus } from 'lucide-react-native';
 import { COLORS } from '../../src/constants/theme';
 import { styles } from '../../src/styles/globalStyles';
 import League from '../../src/components/League';
-import { supabase } from '../../src/services/supabase';
+import { supabase } from '../../src/services/supabaseClient';
+import { useAuth } from '../../src/contexts/AuthProvider';
 import { FFCV_ROSTERS } from '../../src/data/ffcvData';
 
 export default function LeagueScreen() {
+    const { session } = useAuth();
+    const userId = session?.user?.id;
     const [showMisterAI, setShowMisterAI] = useState(false);
     const [leagueTab, setLeagueTab] = useState('clasificacion');
     const [selectedJornada, setSelectedJornada] = useState(15);
@@ -157,7 +160,9 @@ export default function LeagueScreen() {
                 pickImage={pickImage}
                 squadPhotos={squadPhotos}
                 squadPlayers={squadPlayers}
-                FFCV_ROSTERS={FFCV_ROSTERS} // Keeping as fallback for now
+                FFCV_ROSTERS={FFCV_ROSTERS}
+                supabase={supabase}
+                userId={userId}
             />
         </View>
     );

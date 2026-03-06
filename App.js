@@ -46,7 +46,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as Speech from 'expo-speech';
 import * as FileSystem from 'expo-file-system';
 import { decode } from 'base64-arraybuffer';
-import { supabase } from './src/services/supabase';
+import { supabase } from './src/services/supabaseClient';
 import { Video, ResizeMode } from 'expo-av';
 import { FFCV_TEAMS, FFCV_ROSTERS } from './src/data/ffcvData';
 

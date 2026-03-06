@@ -12,6 +12,7 @@ import {
     Plus,
     Share2,
     TrendingUp,
+    MoreHorizontal,
 } from 'lucide-react-native';
 import { Video, ResizeMode } from 'expo-av';
 import { COLORS } from '../constants/theme';
@@ -113,7 +114,44 @@ const Feed = ({
                             </TouchableOpacity>
                         </View>
 
-                        {post.type === 'video' ? (
+                        {post.type === 'rating' ? (
+                            // ⭐ Special card for match reviews
+                            <View style={{
+                                backgroundColor: COLORS.textMain,
+                                borderRadius: 20,
+                                padding: 18,
+                                marginBottom: 4,
+                            }}>
+                                {/* Match Header */}
+                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                                    <Text style={{ color: COLORS.neonGold, fontFamily: 'Oswald_700Bold', fontSize: 13, letterSpacing: 1 }}>
+                                        ⭐ VALORACIÓN J{post.metadata?.jornada}
+                                    </Text>
+                                    <Text style={{ color: '#22c55e', fontWeight: 'bold', fontSize: 12 }}>
+                                        {post.metadata?.avg_rating}/5
+                                    </Text>
+                                </View>
+                                <Text style={{ color: 'white', fontWeight: 'bold', textAlign: 'center', fontSize: 14, marginBottom: 16 }}>
+                                    {post.metadata?.homeTeam}  {post.metadata?.score}  {post.metadata?.awayTeam}
+                                </Text>
+                                {/* Rating rows */}
+                                {[
+                                    { label: 'Partido', emoji: '⚽', val: post.metadata?.match_rating },
+                                    { label: 'Ambiente', emoji: '🔥', val: post.metadata?.atmosphere_rating },
+                                    { label: 'Bar', emoji: '🍺', val: post.metadata?.bar_rating },
+                                    { label: 'Arbitraje', emoji: '🟨', val: post.metadata?.referee_rating },
+                                ].map(({ label, emoji, val }) => (
+                                    <View key={label} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+                                        <Text style={{ color: 'rgba(255,255,255,0.7)', fontSize: 12, width: 80 }}>{emoji} {label}</Text>
+                                        <View style={{ flexDirection: 'row', gap: 3 }}>
+                                            {[1, 2, 3, 4, 5].map(i => (
+                                                <Text key={i} style={{ color: i <= (val || 0) ? COLORS.neonGold : 'rgba(255,255,255,0.2)', fontSize: 16 }}>★</Text>
+                                            ))}
+                                        </View>
+                                    </View>
+                                ))}
+                            </View>
+                        ) : post.type === 'video' ? (
                             <DynamicMediaContainer mediaUrl={post.imageUrl} metadata={post.metadata} />
                         ) : (
                             <View style={[

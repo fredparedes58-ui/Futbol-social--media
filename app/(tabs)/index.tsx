@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Modal, TextInput, Image } from 'react-native';
-import { X } from 'lucide-react-native';
+import { View, Text, TouchableOpacity, Modal, TextInput, Image, ActivityIndicator } from 'react-native';
+import { X, Search, Plus } from 'lucide-react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { Search, Plus } from 'lucide-react-native';
+import { Video, ResizeMode } from 'expo-av';
 import { COLORS } from '../../src/constants/theme';
 import { styles } from '../../src/styles/globalStyles';
 import Feed from '../../src/components/Feed';
-import { supabase } from '../../src/services/supabase';
-import * as FileSystem from 'expo-file-system';
-import { decode } from 'base64-arraybuffer';
+import { supabase } from '../../src/services/supabaseClient';
 import { useAuth } from '../../src/contexts/AuthProvider';
 
 export default function FeedScreen() {
@@ -21,6 +19,7 @@ export default function FeedScreen() {
     const [uploadDescription, setUploadDescription] = useState('');
     const [uploadMetadata, setUploadMetadata] = useState(null);
     const [isUploading, setIsUploading] = useState(false);
+    const [uploadProgress, setUploadProgress] = useState(0);
 
     const { session } = useAuth();
 
@@ -48,13 +47,12 @@ export default function FeedScreen() {
 
             if (!error && data) {
                 const formattedPosts = data.map(post => {
-                    // Supabase returns an array if foreign key isn't unique, but we know it's a 1-to-many relationship where profiles goes to 1 user.
                     const profileData = Array.isArray(post.profiles) ? post.profiles[0] : post.profiles;
                     return {
                         id: post.id,
                         authorId: profileData?.id,
                         authorName: profileData?.username || 'Usuario Desconocido',
-                        timeText: new Date(post.created_at).toLocaleDateString(), // ToDo: implement date-fns timeAgo
+                        timeText: new Date(post.created_at).toLocaleDateString(),
                         description: post.content,
                         imageUrl: post.media_url,
                         type: post.media_type,
@@ -121,7 +119,8 @@ export default function FeedScreen() {
                 width: asset.width,
                 height: asset.height,
                 aspectRatio: aspectRatio,
-                orientation: detectedOrientation
+                orientation: detectedOrientation,
+                size: asset.fileSize // expo-image-picker includes this
             });
         }
     };
@@ -136,52 +135,98 @@ export default function FeedScreen() {
         }
 
         setIsUploading(true);
+        setUploadProgress(0);
 
         try {
-            // 1. Prepare File for Upload
-            const ext = uploadImageUri.substring(uploadImageUri.lastIndexOf('.') + 1);
+            console.log("Iniciando publicación optimizada (TUS)...", { uploadMediaType, uploadImageUri });
+
+            // 1. Prepare File for Upload using Blobs
+            console.log("1. Creando Blob del archivo...");
+            const response = await fetch(uploadImageUri);
+            if (!response.ok) throw new Error("No se pudo leer el archivo local.");
+
+            const blob = await response.blob();
+            console.log("Blob creado satisfactoriamente. Tamaño:", blob.size, "bytes");
+
+            // Límite aumentado a 500MB para videos largos (Requiere Supabase Pro o similar)
+            if (blob.size > 500 * 1024 * 1024) {
+                throw new Error("El video es demasiado grande (máximo 500MB).");
+            }
+
+            if (blob.size > 48 * 1024 * 1024) {
+                console.warn("⚠️ ALERTA: Este video pesa más de 50MB. Si no has subido el límite en Supabase, la subida fallará.");
+            }
+
+            const ext = uploadImageUri.substring(uploadImageUri.lastIndexOf('.') + 1) || 'mp4';
             const fileName = `${user.id}/${Date.now()}.${ext}`;
             const contentType = uploadMediaType === 'video' ? `video/${ext}` : `image/${ext}`;
 
-            // Read as base64 and decode to ArrayBuffer for Supabase Storage
-            const base64 = await FileSystem.readAsStringAsync(uploadImageUri, {
-                encoding: FileSystem.EncodingType.Base64,
-            });
-            const arrayBuffer = decode(base64);
+            // 2. Upload to Supabase Storage with RESUMABLE (TUS)
+            console.log("2. Subiendo a Supabase Storage con TUS...", fileName);
 
-            // 2. Upload to Supabase Storage (Assumes 'posts' bucket exists)
             const { data: uploadData, error: uploadError } = await supabase
                 .storage
                 .from('posts')
-                .upload(fileName, arrayBuffer, { contentType });
+                .upload(fileName, blob, {
+                    contentType,
+                    upsert: true,
+                    // @ts-ignore
+                    resumable: true,
+                    // @ts-ignore
+                    onUploadProgress: (progress) => {
+                        const percentage = (progress.loaded / progress.total) * 100;
+                        setUploadProgress(Math.round(percentage));
+                        console.log(`Progreso real: ${Math.round(percentage)}%`);
+                    }
+                });
 
-            if (uploadError) throw uploadError;
+            if (uploadError) {
+                console.error("Error detallado en Storage Upload:", uploadError);
+                throw new Error(`Fallo en el servidor de archivos (Storage): ${uploadError.message}`);
+            }
+
+            setUploadProgress(100);
+            console.log("Subida a Storage exitosa:", uploadData);
 
             // 3. Get Public URL
-            const { data: { publicUrl } } = supabase
+            console.log("3. Obteniendo URL pública...");
+            const { data: publicURLRes } = supabase
                 .storage
                 .from('posts')
                 .getPublicUrl(fileName);
 
+            const publicUrl = publicURLRes?.publicUrl;
+            if (!publicUrl) throw new Error("No se pudo generar la URL pública del video.");
+            console.log("URL Pública generada:", publicUrl);
+
             // 4. Insert Object to 'posts' table
+            console.log("4. Insertando registro en tabla 'posts'...");
+            const postObject = {
+                author_id: user.id,
+                content: uploadDescription || "",
+                media_url: publicUrl,
+                media_type: uploadMediaType,
+                media_metadata: uploadMetadata || {}
+            };
+            console.log("Datos del post a insertar:", postObject);
+
             const { data: insertData, error: insertError } = await supabase
                 .from('posts')
-                .insert([{
-                    author_id: user.id,
-                    content: uploadDescription,
-                    media_url: publicUrl,
-                    media_type: uploadMediaType,
-                    media_metadata: uploadMetadata
-                }])
+                .insert([postObject])
                 .select(`
                     id, content, media_url, media_type, media_metadata, created_at,
                     profiles(id, username, avatar_url)
                 `)
                 .single();
 
-            if (insertError) throw insertError;
+            if (insertError) {
+                console.error("Error detallado en Insert Database:", insertError);
+                throw new Error(`Fallo al guardar la publicación (DB): ${insertError.message}`);
+            }
+            console.log("Inserción en DB exitosa:", insertData);
 
-            // 5. Optimistic UI Update from the DB response
+            // 5. Optimistic UI Update
+            console.log("5. Actualizando UI de forma optimista...");
             const profileData = Array.isArray(insertData.profiles) ? insertData.profiles[0] : insertData.profiles;
 
             const newPost = {
@@ -201,10 +246,12 @@ export default function FeedScreen() {
             setUploadImageUri(null);
             setUploadDescription('');
             setUploadMetadata(null);
+            setUploadProgress(0);
 
-        } catch (error) {
+        } catch (error: any) {
+            setUploadProgress(0);
             console.error("Error al publicar:", error);
-            alert("Hubo un error al subir tu publicación.");
+            alert("Hubo un error al subir tu publicación: " + error.message);
         } finally {
             setIsUploading(false);
         }
@@ -212,7 +259,6 @@ export default function FeedScreen() {
 
     return (
         <View style={styles.container}>
-            {/* Header local for the Feed */}
             <View style={styles.header}>
                 <Text style={styles.logo}>KICKBASE</Text>
                 <View style={styles.headerRight}>
@@ -241,7 +287,6 @@ export default function FeedScreen() {
                 setShowPostOptionsModal={setShowPostOptionsModal}
             />
 
-            {/* Modal de Subida de Post Antigravity */}
             <Modal visible={showUpload} animationType="fade" transparent={true}>
                 <View style={styles.modalBg}>
                     <View style={styles.uploadCard}>
@@ -253,11 +298,51 @@ export default function FeedScreen() {
                         </View>
                         <TouchableOpacity style={styles.selectZone} onPress={handlePickPostImage}>
                             {uploadImageUri ? (
-                                <Image source={{ uri: uploadImageUri }} style={{ width: '100%', height: '100%', borderRadius: 15 }} />
+                                <View style={{ width: '100%', height: '100%', overflow: 'hidden', borderRadius: 15, justifyContent: 'center', alignItems: 'center', backgroundColor: '#000' }}>
+                                    {uploadMediaType === 'video' ? (
+                                        <Video
+                                            source={{ uri: uploadImageUri }}
+                                            style={{ width: '100%', height: '100%' }}
+                                            useNativeControls
+                                            resizeMode={ResizeMode.CONTAIN}
+                                            shouldPlay
+                                            isLooping
+                                        />
+                                    ) : (
+                                        <Image source={{ uri: uploadImageUri }} style={{ width: '100%', height: '100%', resizeMode: 'contain' }} />
+                                    )}
+                                    {isUploading && (
+                                        <View style={{
+                                            position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+                                            backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center',
+                                        }}>
+                                            <ActivityIndicator color="white" size="large" />
+                                            <Text style={{ color: 'white', marginTop: 10, fontWeight: 'bold' }}>SUBIENDO MOMENTO...</Text>
+                                        </View>
+                                    )}
+                                </View>
                             ) : (
                                 <Plus color={COLORS.accent} size={40} />
                             )}
                         </TouchableOpacity>
+
+                        {uploadImageUri && !isUploading && uploadMetadata?.size > 48 * 1024 * 1024 && (
+                            <View style={{ backgroundColor: '#FFFBEB', padding: 10, borderRadius: 10, marginTop: 10, borderWidth: 1, borderColor: '#FEF3C7' }}>
+                                <Text style={{ color: '#92400E', fontSize: 11, fontWeight: 'bold', textAlign: 'center' }}>
+                                    ⚠️ ARCHIVO GRANDE: Asegúrate que Supabase acepte más de 50MB o la subida fallará.
+                                </Text>
+                            </View>
+                        )}
+
+                        {isUploading && (
+                            <View>
+                                <View style={styles.progressContainer}>
+                                    <View style={[styles.progressBar, { width: `${uploadProgress}%` }]} />
+                                </View>
+                                <Text style={styles.progressText}>{uploadProgress}% COMPLETADO</Text>
+                            </View>
+                        )}
+
                         <TextInput
                             style={styles.fieldInput}
                             placeholder="Descripción..."
@@ -265,13 +350,15 @@ export default function FeedScreen() {
                             onChangeText={setUploadDescription}
                         />
                         <TouchableOpacity
-                            style={[styles.finalUploadBtn, isUploading && { opacity: 0.7 }]}
+                            style={[styles.finalUploadBtn, (isUploading || !uploadImageUri) && { opacity: 0.7 }]}
                             onPress={handlePublishPost}
-                            disabled={isUploading}
+                            disabled={isUploading || !uploadImageUri}
                         >
-                            <Text style={styles.finalUploadText}>
-                                {isUploading ? 'SUDIENDO...' : 'PUBLICAR AHORA'}
-                            </Text>
+                            {isUploading ? (
+                                <ActivityIndicator color="white" size="small" />
+                            ) : (
+                                <Text style={styles.finalUploadText}>PUBLICAR AHORA</Text>
+                            )}
                         </TouchableOpacity>
                     </View>
                 </View>

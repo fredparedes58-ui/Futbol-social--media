@@ -3,6 +3,8 @@ import { useFonts, Oswald_700Bold } from '@expo-google-fonts/oswald';
 import { Roboto_400Regular, Roboto_700Bold } from '@expo-google-fonts/roboto';
 import { View, ActivityIndicator } from 'react-native';
 import { AuthProvider, useAuth } from '../src/contexts/AuthProvider';
+import { ChildProvider } from '../src/contexts/ChildContext';
+import { supabase } from '../src/services/supabaseClient';
 import { COLORS } from '../src/constants/theme';
 import { useEffect } from 'react';
 import { useRouter, useSegments } from 'expo-router';
@@ -15,15 +17,29 @@ const RootLayoutNav = () => {
     useEffect(() => {
         if (loading) return;
 
-        const inAuthGroup = segments[0] === 'auth';
+        const checkOnboarding = async () => {
+            if (!session) {
+                if (segments[0] !== 'auth') router.replace('/auth');
+                return;
+            }
 
-        if (!session && !inAuthGroup) {
-            // Redirect to the login page.
-            router.replace('/auth');
-        } else if (session && inAuthGroup) {
-            // Redirect away from the login page.
-            router.replace('/(tabs)');
-        }
+            // Check if the parent has a linked child via parent_child_links (FFCV validated)
+            const { data, error } = await supabase
+                .from('parent_child_links')
+                .select('id')
+                .eq('parent_id', session.user.id)
+                .limit(1);
+
+            const hasOnboarded = !!(data && data.length > 0);
+
+            if (segments[0] === 'auth') {
+                if (hasOnboarded) router.replace('/(tabs)');
+            } else {
+                if (!hasOnboarded) router.replace('/auth');
+            }
+        };
+
+        checkOnboarding();
     }, [session, loading, segments]);
 
     return (

@@ -1,42 +1,62 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
     View, Text, TextInput, TouchableOpacity, StyleSheet,
-    ActivityIndicator, Alert, SafeAreaView, KeyboardAvoidingView,
+    ActivityIndicator, SafeAreaView, KeyboardAvoidingView,
     Platform, ScrollView, FlatList
 } from 'react-native';
 import { useAuth } from '../src/contexts/AuthProvider';
-import { supabase } from '../src/services/supabase';
+import { supabase } from '../src/services/supabaseClient';
 import { COLORS } from '../src/constants/theme';
-import { Lock, Mail, User, Users, ChevronRight, CheckCircle, Shield } from 'lucide-react-native';
+import { Lock, Mail, User, CheckCircle, Search, Shield } from 'lucide-react-native';
 import { styles as globalStyles } from '../src/styles/globalStyles';
 import { router } from 'expo-router';
 
-// ─── Step Indicator ───────────────────────────────────────────────
+// ─── Step Dots ────────────────────────────────────────────────────
 const StepDot = ({ step, current }: { step: number; current: number }) => (
     <View style={[localStyles.dot, step <= current && localStyles.dotActive]} />
 );
 
+// ─── Reusable Input ───────────────────────────────────────────────
+const InputRow = ({
+    icon, placeholder, value, onChangeText,
+    secureTextEntry = false,
+    keyboardType = 'default' as any,
+    autoCapitalize = 'sentences' as any,
+}) => (
+    <View style={localStyles.inputContainer}>
+        <View style={localStyles.inputIcon}>{icon}</View>
+        <TextInput
+            style={localStyles.input}
+            placeholder={placeholder}
+            placeholderTextColor={COLORS.textSecondary}
+            value={value}
+            onChangeText={onChangeText}
+            secureTextEntry={secureTextEntry}
+            keyboardType={keyboardType}
+            autoCapitalize={autoCapitalize}
+        />
+    </View>
+);
+
 // ─── Main Component ───────────────────────────────────────────────
 export default function AuthScreen() {
-    // Auth mode: 'login' | 'register' | 'check_email' | 'onboarding_team' | 'onboarding_player'
-    const [mode, setMode] = useState<'login' | 'register' | 'check_email' | 'onboarding_team' | 'onboarding_player'>('login');
+    const [mode, setMode] = useState<'login' | 'register' | 'check_email' | 'onboarding'>('login');
+    const [errorMsg, setErrorMsg] = useState('');
 
-    // Step 1: Account fields
+    // Account
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [username, setUsername] = useState('');
 
-    // Step 2 & 3: Onboarding
-    const [teams, setTeams] = useState<any[]>([]);
-    const [players, setPlayers] = useState<any[]>([]);
-    const [selectedTeam, setSelectedTeam] = useState<any>(null);
+    // Player search
+    const [searchQuery, setSearchQuery] = useState('');
+    const [searchResults, setSearchResults] = useState<any[]>([]);
     const [selectedPlayer, setSelectedPlayer] = useState<any>(null);
+    const [searching, setSearching] = useState(false);
 
     const [loading, setLoading] = useState(false);
-
     const { signIn, signUp, session } = useAuth();
 
-    // When session becomes available, check if onboarding is needed
     useEffect(() => {
         if (session?.user) {
             checkOnboardingStatus(session.user.id);
@@ -51,209 +71,242 @@ export default function AuthScreen() {
             .limit(1);
 
         if (!data || data.length === 0) {
-            // No child linked yet → start onboarding
-            fetchTeams();
-            setMode('onboarding_team');
+            setMode('onboarding');
         }
-        // If already linked, _layout.tsx redirect to tabs handles it
+        // If linked → _layout.tsx redirects to tabs
     };
 
-    const fetchTeams = async () => {
-        const { data } = await supabase.from('teams').select('id, name, shield_url');
-        if (data) setTeams(data);
-    };
+    // ─── SEARCH FFCV PLAYERS ─────────────────────────────────────
+    const searchPlayers = useCallback(async (query: string) => {
+        if (query.trim().length < 2) {
+            setSearchResults([]);
+            return;
+        }
+        setSearching(true);
+        try {
+            const { data, error } = await supabase
+                .from('players')
+                .select('id, first_name, last_name, teams(name)')
+                .or(`first_name.ilike.%${query.trim()}%,last_name.ilike.%${query.trim()}%`)
+                .limit(20);
 
-    const fetchPlayers = async (teamId: string) => {
-        const { data } = await supabase
-            .from('players')
-            .select('id, first_name, last_name, position, overall_rating')
-            .eq('team_id', teamId);
-        if (data) setPlayers(data);
-    };
+            if (error) {
+                console.error('[SEARCH] Error:', error.message);
+                setSearchResults([]);
+            } else {
+                setSearchResults(data || []);
+            }
+        } catch (e: any) {
+            console.error('[SEARCH] Exception:', e.message);
+            setSearchResults([]);
+        } finally {
+            setSearching(false);
+        }
+    }, []);
 
-    // ─── HANDLERS ──────────────────────────────────────────────────
+    useEffect(() => {
+        const timer = setTimeout(() => searchPlayers(searchQuery), 350);
+        return () => clearTimeout(timer);
+    }, [searchQuery]);
+
+    // ─── AUTH HANDLERS ───────────────────────────────────────────
 
     const handleLogin = async () => {
-        if (!email || !password) return Alert.alert('Error', 'Completa email y contraseña.');
+        setErrorMsg('');
+        if (!email || !password) return setErrorMsg('Completa email y contraseña.');
         setLoading(true);
         const { error } = await signIn(email, password);
         setLoading(false);
-        if (error) Alert.alert('Error al iniciar sesión', error.message);
+        if (error) setErrorMsg(error.message);
     };
 
     const handleRegister = async () => {
-        if (!email || !password || !username) {
-            return Alert.alert('Error', 'Todos los campos son obligatorios.');
-        }
-        if (password.length < 6) {
-            return Alert.alert('Error', 'La contraseña debe tener al menos 6 caracteres.');
-        }
+        setErrorMsg('');
+        if (!email || !password || !username) return setErrorMsg('Todos los campos son obligatorios.');
+        if (password.length < 6) return setErrorMsg('La contraseña necesita al menos 6 caracteres.');
         setLoading(true);
         const { error } = await signUp(email, password);
         setLoading(false);
-
-        if (error) {
-            Alert.alert('Error en el registro', error.message);
-        } else {
-            // Store username in profile after email confirmation (done in onboarding)
-            setMode('check_email');
-        }
+        if (error) setErrorMsg(error.message);
+        else setMode('check_email');
     };
 
-    const handleSelectTeam = (team: any) => {
-        setSelectedTeam(team);
-        fetchPlayers(team.id);
-        setMode('onboarding_player');
-    };
-
-    const handleFinishOnboarding = async () => {
-        if (!selectedPlayer || !session?.user) return;
+    const handleConfirmChild = async () => {
+        setErrorMsg('');
+        if (!selectedPlayer) return setErrorMsg('Selecciona a tu hijo de la lista.');
+        if (!session?.user) return setErrorMsg('Sesión no disponible. Inicia sesión de nuevo.');
         setLoading(true);
 
         try {
-            // 1. Save username to profiles table
+            // 1. Upsert parent profile
             await supabase.from('profiles').upsert({
                 id: session.user.id,
-                username: username || email.split('@')[0],
-                role: 'padre'
+                role: 'padre',
             });
 
-            // 2. Link parent → child
-            const { error } = await supabase.from('parent_child_links').insert({
-                parent_id: session.user.id,
-                player_id: selectedPlayer.id
-            });
+            // 2. Create parent → child link referencing real FFCV player
+            const { error: linkError } = await supabase
+                .from('parent_child_links')
+                .insert({
+                    parent_id: session.user.id,
+                    player_id: selectedPlayer.id,
+                });
 
-            if (error) throw error;
+            if (linkError) {
+                // If duplicate link, just proceed (player already linked)
+                if (!linkError.message.includes('duplicate')) throw linkError;
+            }
 
-            // 3. Navigate to main app
             router.replace('/(tabs)');
         } catch (e: any) {
-            Alert.alert('Error', e.message);
+            console.error('[ONBOARDING]', e.message);
+            setErrorMsg(e.message || 'Error al guardar. Inténtalo de nuevo.');
         } finally {
             setLoading(false);
         }
     };
 
-    // ─── RENDERS ───────────────────────────────────────────────────
-
+    // ─── EMAIL CONFIRMATION ──────────────────────────────────────
     if (mode === 'check_email') {
         return (
             <SafeAreaView style={localStyles.container}>
                 <View style={localStyles.centerBox}>
-                    <CheckCircle color={COLORS.accent} size={64} />
+                    <CheckCircle color={COLORS.accent} size={72} />
                     <Text style={localStyles.bigTitle}>¡Revisa tu correo!</Text>
                     <Text style={localStyles.helperText}>
-                        Te enviamos un enlace de confirmación a{' '}
-                        <Text style={{ color: COLORS.accent, fontWeight: 'bold' }}>{email}</Text>.{'\n\n'}
-                        Confirma tu email y luego vuelve aquí para iniciar sesión.
+                        Enviamos un enlace a{' '}
+                        <Text style={{ color: COLORS.accent, fontWeight: 'bold' }}>{email}</Text>.
+                        {'\n\n'}Confirma tu email y vuelve aquí para continuar.
                     </Text>
                     <TouchableOpacity style={localStyles.primaryBtn} onPress={() => setMode('login')}>
-                        <Text style={localStyles.primaryBtnText}>YA CONFIRMÉ MI EMAIL</Text>
+                        <Text style={localStyles.primaryBtnText}>YA CONFIRMÉ MI EMAIL ✓</Text>
                     </TouchableOpacity>
                 </View>
             </SafeAreaView>
         );
     }
 
-    if (mode === 'onboarding_team') {
+    // ─── ONBOARDING — SEARCH REAL FFCV PLAYER ───────────────────
+    if (mode === 'onboarding') {
+        const teamName = selectedPlayer?.teams?.name ?? selectedPlayer?.team_name ?? '';
         return (
             <SafeAreaView style={localStyles.container}>
-                <ScrollView contentContainerStyle={localStyles.scrollContent}>
-                    <View style={localStyles.stepHeader}>
-                        <View style={localStyles.stepDots}>
-                            <StepDot step={1} current={1} />
-                            <StepDot step={2} current={1} />
+                <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
+                    <ScrollView contentContainerStyle={localStyles.scrollContent} keyboardShouldPersistTaps="handled">
+                        <View style={localStyles.stepHeader}>
+                            <View style={localStyles.stepDots}>
+                                <StepDot step={1} current={2} />
+                                <StepDot step={2} current={2} />
+                            </View>
+                            <Text style={localStyles.bigTitle}>⚽ Busca a tu hijo</Text>
+                            <Text style={localStyles.helperText}>
+                                Escribe el nombre de tu hijo para encontrarlo entre los jugadores registrados en la FFCV.
+                            </Text>
                         </View>
-                        <Text style={localStyles.bigTitle}>¿A qué equipo{'\n'}pertenece tu hijo?</Text>
-                        <Text style={localStyles.helperText}>Selecciona el club y categoría</Text>
-                    </View>
-                    <View style={localStyles.listContainer}>
-                        {teams.map(team => (
-                            <TouchableOpacity
-                                key={team.id}
-                                style={localStyles.listItem}
-                                onPress={() => handleSelectTeam(team)}
-                            >
-                                <Shield color={COLORS.accent} size={28} />
-                                <Text style={localStyles.listItemText}>{team.name}</Text>
-                                <ChevronRight color={COLORS.textSecondary} size={20} />
-                            </TouchableOpacity>
-                        ))}
-                        {teams.length === 0 && (
-                            <ActivityIndicator color={COLORS.accent} size="large" style={{ marginTop: 40 }} />
-                        )}
-                    </View>
-                </ScrollView>
-            </SafeAreaView>
-        );
-    }
 
-    if (mode === 'onboarding_player') {
-        return (
-            <SafeAreaView style={localStyles.container}>
-                <ScrollView contentContainerStyle={localStyles.scrollContent}>
-                    <View style={localStyles.stepHeader}>
-                        <View style={localStyles.stepDots}>
-                            <StepDot step={1} current={2} />
-                            <StepDot step={2} current={2} />
+                        {/* Search Box */}
+                        <View style={localStyles.searchBox}>
+                            <Search color={COLORS.accent} size={20} />
+                            <TextInput
+                                style={localStyles.searchInput}
+                                placeholder="Nombre o apellido del jugador..."
+                                placeholderTextColor={COLORS.textSecondary}
+                                value={searchQuery}
+                                onChangeText={text => {
+                                    setSearchQuery(text);
+                                    setSelectedPlayer(null);
+                                }}
+                                autoCapitalize="none"
+                            />
+                            {searching && <ActivityIndicator color={COLORS.accent} size="small" />}
                         </View>
-                        <Text style={localStyles.bigTitle}>¿Cuál es tu hijo?</Text>
-                        <Text style={localStyles.helperText}>{selectedTeam?.name}</Text>
-                    </View>
-                    <View style={localStyles.listContainer}>
-                        {players.map(player => (
-                            <TouchableOpacity
-                                key={player.id}
-                                style={[
-                                    localStyles.listItem,
-                                    selectedPlayer?.id === player.id && localStyles.listItemSelected
-                                ]}
-                                onPress={() => setSelectedPlayer(player)}
-                            >
-                                <Users color={selectedPlayer?.id === player.id ? COLORS.accent : COLORS.textSecondary} size={28} />
-                                <View style={{ flex: 1, marginLeft: 15 }}>
-                                    <Text style={localStyles.listItemText}>
-                                        {player.first_name} {player.last_name}
+
+                        {/* Selected Player preview */}
+                        {selectedPlayer && (
+                            <View style={localStyles.selectedCard}>
+                                <CheckCircle color={COLORS.accent} size={22} />
+                                <View style={{ flex: 1, marginLeft: 12 }}>
+                                    <Text style={{ color: COLORS.textMain, fontFamily: 'Oswald_700Bold', fontSize: 16 }}>
+                                        {selectedPlayer.first_name} {selectedPlayer.last_name}
                                     </Text>
-                                    <Text style={{ color: COLORS.textSecondary, fontSize: 13 }}>
-                                        {player.position} · {player.overall_rating ?? '–'} OVR
+                                    <Text style={{ color: COLORS.textSecondary, fontSize: 13, marginTop: 2 }}>
+                                        {teamName}
                                     </Text>
                                 </View>
-                                {selectedPlayer?.id === player.id && (
-                                    <CheckCircle color={COLORS.accent} size={22} />
-                                )}
-                            </TouchableOpacity>
-                        ))}
-                        {players.length === 0 && (
-                            <ActivityIndicator color={COLORS.accent} size="large" style={{ marginTop: 40 }} />
+                            </View>
                         )}
-                    </View>
-                    {selectedPlayer && (
+
+                        {/* Results list */}
+                        {searchResults.length > 0 && !selectedPlayer && (
+                            <View style={{ gap: 8 }}>
+                                {searchResults.map(player => {
+                                    const pTeam = player.teams?.name ?? '';
+                                    return (
+                                        <TouchableOpacity
+                                            key={player.id}
+                                            style={localStyles.resultItem}
+                                            onPress={() => {
+                                                setSelectedPlayer(player);
+                                                setSearchResults([]);
+                                            }}
+                                        >
+                                            <Shield color={COLORS.accent} size={20} />
+                                            <View style={{ flex: 1, marginLeft: 12 }}>
+                                                <Text style={{ color: COLORS.textMain, fontWeight: '700', fontSize: 15 }}>
+                                                    {player.first_name} {player.last_name}
+                                                </Text>
+                                                <Text style={{ color: COLORS.textSecondary, fontSize: 12, marginTop: 2 }}>
+                                                    {pTeam}
+                                                </Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                    );
+                                })}
+                            </View>
+                        )}
+
+                        {/* No results message */}
+                        {searchQuery.length >= 2 && !searching && searchResults.length === 0 && !selectedPlayer && (
+                            <View style={localStyles.noResultBox}>
+                                <Text style={{ fontSize: 32, marginBottom: 10 }}>🤷</Text>
+                                <Text style={{ color: COLORS.textMain, fontWeight: '700', fontSize: 15, textAlign: 'center' }}>
+                                    No se encontró ningún jugador
+                                </Text>
+                                <Text style={{ color: COLORS.textSecondary, fontSize: 13, textAlign: 'center', marginTop: 6, lineHeight: 20 }}>
+                                    Verifica que el nombre coincide exactamente con el registro oficial de la FFCV o contacta con tu club.
+                                </Text>
+                            </View>
+                        )}
+
+                        {!!errorMsg && (
+                            <View style={localStyles.errorBox}>
+                                <Text style={localStyles.errorText}>⚠️ {errorMsg}</Text>
+                            </View>
+                        )}
+
                         <TouchableOpacity
-                            style={[localStyles.primaryBtn, { marginTop: 20 }]}
-                            onPress={handleFinishOnboarding}
-                            disabled={loading}
+                            style={[localStyles.primaryBtn, { marginTop: 24, opacity: selectedPlayer ? 1 : 0.4 }]}
+                            onPress={handleConfirmChild}
+                            disabled={!selectedPlayer || loading}
                         >
                             {loading
                                 ? <ActivityIndicator color="white" />
-                                : <Text style={localStyles.primaryBtnText}>¡LISTO! IR AL FEED 🚀</Text>
+                                : <Text style={localStyles.primaryBtnText}>
+                                    {selectedPlayer ? `CONFIRMAR — ${selectedPlayer.first_name} ${selectedPlayer.last_name}` : 'BUSCA A TU HIJO PRIMERO'}
+                                </Text>
                             }
                         </TouchableOpacity>
-                    )}
-                    <TouchableOpacity onPress={() => setMode('onboarding_team')} style={{ marginTop: 16, alignItems: 'center' }}>
-                        <Text style={{ color: COLORS.textSecondary }}>← Cambiar equipo</Text>
-                    </TouchableOpacity>
-                </ScrollView>
+                        <View style={{ height: 60 }} />
+                    </ScrollView>
+                </KeyboardAvoidingView>
             </SafeAreaView>
         );
     }
 
-    // ─── LOGIN / REGISTER VIEW ─────────────────────────────────────
+    // ─── LOGIN / REGISTER ────────────────────────────────────────
     return (
         <SafeAreaView style={localStyles.container}>
             <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={localStyles.keyboardView}>
-
                 <View style={localStyles.headerArea}>
                     <Text style={globalStyles.logo}>KICKBASE</Text>
                     <Text style={localStyles.subtitle}>
@@ -262,45 +315,37 @@ export default function AuthScreen() {
                 </View>
 
                 <View style={localStyles.authCard}>
-
                     {mode === 'register' && (
-                        <View style={localStyles.inputContainer}>
-                            <User color={COLORS.textSecondary} size={20} style={localStyles.inputIcon} />
-                            <TextInput
-                                style={localStyles.input}
-                                placeholder="Nombre de usuario"
-                                placeholderTextColor={COLORS.textSecondary}
-                                value={username}
-                                onChangeText={setUsername}
-                                autoCapitalize="none"
-                            />
+                        <InputRow
+                            icon={<User color={COLORS.textSecondary} size={18} />}
+                            placeholder="Nombre de usuario"
+                            value={username}
+                            onChangeText={setUsername}
+                            autoCapitalize="none"
+                        />
+                    )}
+                    <InputRow
+                        icon={<Mail color={COLORS.textSecondary} size={18} />}
+                        placeholder="Correo electrónico"
+                        value={email}
+                        onChangeText={setEmail}
+                        keyboardType="email-address"
+                        autoCapitalize="none"
+                    />
+                    <InputRow
+                        icon={<Lock color={COLORS.textSecondary} size={18} />}
+                        placeholder="Contraseña"
+                        value={password}
+                        onChangeText={setPassword}
+                        secureTextEntry={true}
+                        autoCapitalize="none"
+                    />
+
+                    {!!errorMsg && (
+                        <View style={localStyles.errorBox}>
+                            <Text style={localStyles.errorText}>⚠️ {errorMsg}</Text>
                         </View>
                     )}
-
-                    <View style={localStyles.inputContainer}>
-                        <Mail color={COLORS.textSecondary} size={20} style={localStyles.inputIcon} />
-                        <TextInput
-                            style={localStyles.input}
-                            placeholder="Correo electrónico"
-                            placeholderTextColor={COLORS.textSecondary}
-                            value={email}
-                            onChangeText={setEmail}
-                            autoCapitalize="none"
-                            keyboardType="email-address"
-                        />
-                    </View>
-
-                    <View style={localStyles.inputContainer}>
-                        <Lock color={COLORS.textSecondary} size={20} style={localStyles.inputIcon} />
-                        <TextInput
-                            style={localStyles.input}
-                            placeholder="Contraseña"
-                            placeholderTextColor={COLORS.textSecondary}
-                            value={password}
-                            onChangeText={setPassword}
-                            secureTextEntry
-                        />
-                    </View>
 
                     <TouchableOpacity
                         style={localStyles.primaryBtn}
@@ -326,61 +371,78 @@ export default function AuthScreen() {
                         </Text>
                     </TouchableOpacity>
                 </View>
-
             </KeyboardAvoidingView>
         </SafeAreaView>
     );
 }
 
-// ─── STYLES ────────────────────────────────────────────────────────
+// ─── STYLES ───────────────────────────────────────────────────────
 const localStyles = StyleSheet.create({
     container: { flex: 1, backgroundColor: COLORS.bg },
     keyboardView: { flex: 1, justifyContent: 'center', paddingHorizontal: 30 },
-    scrollContent: { paddingHorizontal: 25, paddingBottom: 40 },
+    scrollContent: { paddingHorizontal: 25, paddingBottom: 40, paddingTop: 20 },
     centerBox: { flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 35 },
 
-    headerArea: { alignItems: 'center', marginBottom: 50 },
+    headerArea: { alignItems: 'center', marginBottom: 40 },
     subtitle: { color: COLORS.textSecondary, fontSize: 16, marginTop: 10, fontWeight: '500' },
 
     bigTitle: {
         color: COLORS.textMain, fontSize: 26, fontFamily: 'Oswald_700Bold',
-        textAlign: 'center', marginTop: 16, marginBottom: 8
+        textAlign: 'center', marginTop: 16, marginBottom: 8,
     },
     helperText: { color: COLORS.textSecondary, fontSize: 14, textAlign: 'center', lineHeight: 22, marginBottom: 20 },
 
-    stepHeader: { alignItems: 'center', paddingTop: 30, marginBottom: 20 },
+    stepHeader: { alignItems: 'center', paddingTop: 20, marginBottom: 20 },
     stepDots: { flexDirection: 'row', gap: 8, marginBottom: 12 },
     dot: { width: 8, height: 8, borderRadius: 4, backgroundColor: COLORS.glassBorder },
     dotActive: { backgroundColor: COLORS.accent, width: 24 },
 
-    listContainer: { gap: 12 },
-    listItem: {
-        flexDirection: 'row', alignItems: 'center', gap: 15,
-        backgroundColor: COLORS.surface, borderRadius: 18, padding: 18,
-        borderWidth: 1, borderColor: COLORS.glassBorder
+    searchBox: {
+        flexDirection: 'row', alignItems: 'center', gap: 12,
+        backgroundColor: COLORS.surface, borderRadius: 18, padding: 16,
+        borderWidth: 1.5, borderColor: COLORS.accent + '40', marginBottom: 16,
     },
-    listItemSelected: { borderColor: COLORS.accent, backgroundColor: `${COLORS.accent}18` },
-    listItemText: { flex: 1, color: COLORS.textMain, fontSize: 16, fontWeight: '600' },
+    searchInput: { flex: 1, color: COLORS.textMain, fontSize: 15 },
 
+    resultItem: {
+        flexDirection: 'row', alignItems: 'center',
+        backgroundColor: COLORS.surface, borderRadius: 14, padding: 14,
+        borderWidth: 1, borderColor: COLORS.glassBorder,
+    },
+    selectedCard: {
+        flexDirection: 'row', alignItems: 'center',
+        backgroundColor: COLORS.accent + '18', borderRadius: 14, padding: 14,
+        borderWidth: 1.5, borderColor: COLORS.accent, marginBottom: 16,
+    },
+    noResultBox: {
+        alignItems: 'center', backgroundColor: COLORS.surface,
+        borderRadius: 16, padding: 24, borderWidth: 1, borderColor: COLORS.glassBorder,
+        marginTop: 8,
+    },
     authCard: {
         backgroundColor: COLORS.surface, borderRadius: 30, padding: 25,
-        shadowColor: '#000', shadowOffset: { width: 0, height: 10 },
-        shadowOpacity: 0.1, shadowRadius: 20,
         borderWidth: 1, borderColor: COLORS.glassBorder,
     },
     inputContainer: {
         flexDirection: 'row', alignItems: 'center', backgroundColor: COLORS.bg,
-        borderRadius: 15, marginBottom: 20, paddingHorizontal: 15, height: 55,
+        borderRadius: 15, marginBottom: 16, paddingHorizontal: 15, height: 55,
         borderWidth: 1, borderColor: COLORS.glassBorder,
     },
-    inputIcon: { marginRight: 15 },
+    inputIcon: { marginRight: 12 },
     input: { flex: 1, color: COLORS.textMain, fontSize: 15 },
+
+    errorBox: {
+        backgroundColor: '#FF4B4B18', borderRadius: 12, padding: 12,
+        borderWidth: 1, borderColor: '#FF4B4B40', marginTop: 8,
+    },
+    errorText: { color: '#FF4B4B', fontSize: 13, textAlign: 'center' },
+
     primaryBtn: {
         backgroundColor: COLORS.accent, height: 60, borderRadius: 20,
-        justifyContent: 'center', alignItems: 'center', marginTop: 10,
+        justifyContent: 'center', alignItems: 'center', marginTop: 8,
     },
-    primaryBtnText: { color: 'white', fontSize: 16, fontFamily: 'Oswald_700Bold', letterSpacing: 1 },
-    toggleArea: { flexDirection: 'row', justifyContent: 'center', marginTop: 40 },
+    primaryBtnText: { color: 'white', fontSize: 15, fontFamily: 'Oswald_700Bold', letterSpacing: 0.8 },
+    toggleArea: { flexDirection: 'row', justifyContent: 'center', marginTop: 36 },
     toggleText: { color: COLORS.textSecondary, fontSize: 14 },
     toggleAction: { color: COLORS.accent, fontSize: 14, fontWeight: 'bold' },
 });

@@ -130,4 +130,9 @@ export const styles = StyleSheet.create({
     fieldInput: { height: 50, backgroundColor: COLORS.surface, borderRadius: 12, paddingHorizontal: 15, color: COLORS.textMain, borderWidth: 1, borderColor: COLORS.glassBorder, marginTop: 15 },
     finalUploadBtn: { height: 64, backgroundColor: COLORS.accent, borderRadius: 20, alignItems: 'center', justifyContent: 'center', marginTop: 25 },
     finalUploadText: { color: 'white', fontWeight: 'bold', fontSize: 16, letterSpacing: 1 },
+
+    // Progress Bar
+    progressContainer: { height: 6, backgroundColor: COLORS.surface, borderRadius: 3, marginTop: 15, overflow: 'hidden' },
+    progressBar: { height: '100%', backgroundColor: COLORS.accent },
+    progressText: { color: COLORS.textSecondary, fontSize: 10, fontWeight: 'bold', textAlign: 'center', marginTop: 5 },
 });
