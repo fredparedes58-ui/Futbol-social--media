@@ -1,4 +1,4 @@
-name: Flutter CI/CD Pipeline
+name: Expo CI/CD Pipeline
 
 on:
   push:
@@ -12,7 +12,7 @@ on:
 
 jobs:
   build_and_test:
-    name: Build & Test Flutter App
+    name: Build & Lint Expo App
     runs-on: ubuntu-latest
 
     steps:
@@ -20,52 +20,40 @@ jobs:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Configurar Java (Requerido para compilar Android)
-      - name: ⚙️ Setup Java
-        uses: actions/setup-java@v3
+      # 2. Setup Node.js
+      - name: ⚙️ Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          distribution: 'zulu'
-          java-version: '17'
+          node-version: '20'
+          cache: 'npm'
 
-      # 3. Configurar Flutter
-      - name: 🐦 Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
-          cache: true
-
-      # 4. Instalar dependencias
+      # 3. Install dependencies
       - name: 📦 Install dependencies
-        run: flutter pub get
+        run: npm ci
 
-      # 5. Ejecutar pruebas
-      - name: 🧪 Run tests
-        run: flutter test
+      # 4. TypeScript type-check
+      - name: 🔍 TypeScript Check
+        run: npx tsc --noEmit --skipLibCheck
+        continue-on-error: true
 
-      # 6. Compilar APK (Android)
-      - name: 🔨 Build APK
-        run: flutter build apk --release
+      # 5. Expo Doctor (validates config)
+      - name: 🩺 Expo Doctor
+        run: npx expo-doctor@latest
+        continue-on-error: true
 
-      # 7. Compilar AAB (Android App Bundle)
-      - name: 🔨 Build AAB
-        run: flutter build appbundle --release
+      # 6. Export web build (validates compilation)
+      - name: 🔨 Export Web Build
+        run: npx expo export --platform web
 
-      # 8. (Opcional) Subir los artefactos generados
-      - name: 📤 Upload APK Artifact
+      # 7. Upload web build artifact
+      - name: 📤 Upload Web Build
         uses: actions/upload-artifact@v4
         with:
-          name: release-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          name: web-build
+          path: dist/
 
-      - name: 📤 Upload AAB Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: release-aab
-          path: build/app/outputs/bundle/release/app-release.aab
-
-      # 9. Notificación Webhook (Ej. WhatsApp)
-      # Referencia: EJECUTAR_CHAT_WHATSAPP.md (Se puede integrar con la API de WhatsApp para notificar a los devs)
-      - name: 🔔 Notificar resultado por Webhook
+      # 8. Notification Webhook
+      - name: 🔔 Notify build result
         if: always()
         run: |
           if [ "${{ job.status }}" = "success" ]; then
@@ -73,13 +61,14 @@ jobs:
           else
             STATUS_MSG="❌ Build Fallido"
           fi
-          
-          # Configura el WEBHOOK_URL en los Secrets de tu repositorio en GitHub
-          curl -X POST "${{ secrets.WEBHOOK_URL }}" \
-            -H "Content-Type: application/json" \
-            -d '{
-              "mensaje": "'"$STATUS_MSG"'",
-              "proyecto": "${{ github.repository }}",
-              "rama": "${{ github.ref_name }}",
-              "commit": "${{ github.sha }}"
-            }'
+
+          if [ -n "${{ secrets.WEBHOOK_URL }}" ]; then
+            curl -X POST "${{ secrets.WEBHOOK_URL }}" \
+              -H "Content-Type: application/json" \
+              -d '{
+                "mensaje": "'"$STATUS_MSG"'",
+                "proyecto": "${{ github.repository }}",
+                "rama": "${{ github.ref_name }}",
+                "commit": "${{ github.sha }}"
+              }' || true
+          fi
