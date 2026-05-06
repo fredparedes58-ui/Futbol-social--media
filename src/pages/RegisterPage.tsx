@@ -69,7 +69,7 @@ export default function RegisterPage() {
               marginBottom: 12, textShadow: '0 0 12px rgba(204, 255, 0, 0.5)',
             }}
           >
-            FutbolBase · Registro
+            GRADA · Registro
           </div>
           <div
             style={{

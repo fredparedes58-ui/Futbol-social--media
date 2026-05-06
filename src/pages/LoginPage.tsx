@@ -67,7 +67,7 @@ export default function LoginPage() {
               marginBottom: 12, textShadow: '0 0 12px rgba(204, 255, 0, 0.5)',
             }}
           >
-            FutbolBase · Acceso
+            GRADA · Acceso
           </div>
           <div
             style={{

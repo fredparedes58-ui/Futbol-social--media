@@ -8,7 +8,7 @@ interface ThemeCtx {
   setMode: (m: ThemeMode) => void
 }
 
-const STORAGE_KEY = 'futbolbase_theme_v1'
+const STORAGE_KEY = 'grada_theme_v1'
 
 const Ctx = createContext<ThemeCtx | null>(null)
 

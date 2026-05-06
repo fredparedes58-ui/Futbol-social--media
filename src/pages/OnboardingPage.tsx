@@ -79,7 +79,7 @@ export default function OnboardingPage() {
             fontSize: 17, color: '#FAF5EB', letterSpacing: '0.02em',
           }}
         >
-          FutbolBase
+          GRADA
         </div>
       </div>
 

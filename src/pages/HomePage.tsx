@@ -205,7 +205,7 @@ export default function HomePage() {
 
   function copyLink() {
     if (!shareOpen) return
-    navigator.clipboard?.writeText(`futbolbase.app/post/${shareOpen.id}`).catch(() => {})
+    navigator.clipboard?.writeText(`grada.app/post/${shareOpen.id}`).catch(() => {})
     setToast('Enlace copiado al portapapeles')
     setShareOpen(null)
   }

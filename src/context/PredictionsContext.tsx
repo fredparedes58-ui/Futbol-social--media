@@ -39,7 +39,7 @@ interface PredictionsCtx {
   totalParticipants: (matchId: string) => number
 }
 
-const STORAGE_KEY = 'futbolbase_predictions_v1'
+const STORAGE_KEY = 'grada_predictions_v1'
 
 const MATCHES: PredictionMatch[] = [
   {

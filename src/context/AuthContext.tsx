@@ -16,7 +16,7 @@ interface AuthCtx {
   setToast: (s: string) => void
 }
 
-const STORAGE_KEY = 'futbolbase_user_v1'
+const STORAGE_KEY = 'grada_user_v1'
 
 const Ctx = createContext<AuthCtx | null>(null)
 
