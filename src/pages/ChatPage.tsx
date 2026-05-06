@@ -4,6 +4,7 @@ import { Skeleton, SkeletonCircle } from '../components/ui/Skeleton'
 import { useSimulatedLoad } from '../hooks/useSimulatedLoad'
 
 const CHATS = [
+  { name: 'Asistente FútbolBase', badge: '🤖', color: '#B347FF', preview: 'Preguntame lo que quieras de la app', time: 'Ahora', unread: 0, active: true, bot: true },
   { name: 'Los Pumas FC',   badge: 'LP', color: '#CCFF00', preview: 'Reunión el sábado 10am', time: '10:24', unread: 3, active: true },
   { name: 'Carlos Méndez',  badge: 'CM', color: '#FFB800', preview: '¡Vamos por ese hat-trick! 🔥', time: '09:15', unread: 1, active: true },
   { name: 'Entrenadores',   badge: 'EN', color: '#FF5B3A', preview: 'Táctica nueva para el domingo', time: 'Ayer', unread: 0, active: false },
@@ -55,7 +56,7 @@ export default function ChatPage() {
           {!loading && CHATS.map((c, i) => (
             <div
               key={i}
-              onClick={() => nav('/chat/conversation', { state: { name: c.name, badge: c.badge, color: c.color, active: c.active } })}
+              onClick={() => nav('/chat/conversation', { state: { name: c.name, badge: c.badge, color: c.color, active: c.active, bot: (c as { bot?: boolean }).bot } })}
               style={{
                 display: 'flex', alignItems: 'center', gap: 14,
                 padding: '12px 8px',

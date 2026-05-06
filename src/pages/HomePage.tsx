@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { Flame, Trophy, Zap, Heart, MessageCircle, Share2, Copy, Link as LinkIcon, Send, Bell, Sparkles, RefreshCw, Newspaper } from 'lucide-react'
+import { Flame, Trophy, Zap, Heart, MessageCircle, Share2, Copy, Link as LinkIcon, Send, Bell, Sparkles, RefreshCw, Newspaper, Film, Play, Scissors } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import BottomNav from '../components/ui/BottomNav'
 import GlassCard from '../components/ui/GlassCard'
@@ -10,7 +10,18 @@ import { Skeleton, SkeletonCircle } from '../components/ui/Skeleton'
 import NotificationsPanel from '../components/ui/NotificationsPanel'
 import { useSimulatedLoad } from '../hooks/useSimulatedLoad'
 import { useNotifications } from '../context/NotificationsContext'
-import { generateMatchRecap, suggestMediaTags, generateWeeklyDigest, type MatchFact, type MatchRecap, type Tone, type Lang } from '../lib/aiMocks'
+import { generateMatchRecap, suggestMediaTags, generateWeeklyDigest, suggestVideoClips, clipEmoji, formatClipTime, type MatchFact, type MatchRecap, type Tone, type Lang, type VideoClip } from '../lib/aiMocks'
+import LiveTicker from '../components/ui/LiveTicker'
+import AIBorder from '../components/ui/AIBorder'
+import LineupSheet from '../components/ui/LineupSheet'
+import RivalScoutSheet from '../components/ui/RivalScoutSheet'
+import RippleButton from '../components/ui/RippleButton'
+import LiveMatchSheet from '../components/ui/LiveMatchSheet'
+import StoriesStrip from '../features/stories/StoriesStrip'
+import TacticsBoardSheet from '../features/tactics/TacticsBoardSheet'
+import EventsSheet from '../features/events/EventsSheet'
+import PollCard from '../features/polls/PollCard'
+import { Calendar as CalendarIcon } from 'lucide-react'
 
 interface Post {
   id: number
@@ -90,6 +101,25 @@ export default function HomePage() {
   )
   const [recapOpen, setRecapOpen] = useState(false)
   const [recapRegen, setRecapRegen] = useState(false)
+  const [clips, setClips] = useState<VideoClip[] | null>(null)
+  const [clipsLoading, setClipsLoading] = useState(false)
+
+  function generateClips() {
+    if (clipsLoading) return
+    setClipsLoading(true)
+    if ('vibrate' in navigator) navigator.vibrate(12)
+    setTimeout(() => {
+      setClips(suggestVideoClips({
+        duration: 5400,
+        title: `${RECAP_FACTS.home} vs ${RECAP_FACTS.away}`,
+        homeScore: RECAP_FACTS.homeScore,
+        awayScore: RECAP_FACTS.awayScore,
+        topScorer: RECAP_FACTS.topScorer?.name,
+      }))
+      setClipsLoading(false)
+      setToast('Clips generados')
+    }, 900)
+  }
 
   function regenerateRecap(overrideTone?: Tone, overrideLang?: Lang) {
     const t = overrideTone ?? recapTone
@@ -119,6 +149,14 @@ export default function HomePage() {
 
   // Weekly Digest (Tier 3)
   const [digestOpen, setDigestOpen] = useState(false)
+
+  // Tier 5 — auto-alineación + rival scouting
+  const [lineupOpen, setLineupOpen] = useState(false)
+  const [scoutOpen, setScoutOpen] = useState(false)
+  const [liveOpen, setLiveOpen] = useState(false)
+  const [tacticsOpen, setTacticsOpen] = useState(false)
+  const [eventsOpen, setEventsOpen] = useState(false)
+  const NEXT_OPPONENT = 'Águilas Doradas'
   const digest = useMemo(() => generateWeeklyDigest({
     userName: user?.name ?? 'Alex Rivera',
     matchesPlayed: 3,
@@ -177,8 +215,10 @@ export default function HomePage() {
       <div style={{ position: 'absolute', inset: 0, zIndex: 1 }}>
         <FloatingOrbs
           orbs={[
-            { x: 85, y: 10, size: 200, color: '#CCFF00', opacity: 0.15, dur: 16 },
-            { x: 10, y: 60, size: 240, color: '#FFB800', opacity: 0.12, dur: 20 },
+            { x: 85, y: 6,  size: 260, color: '#CCFF00', opacity: 0.22, dur: 16 },
+            { x: 8,  y: 58, size: 300, color: '#FFB800', opacity: 0.18, dur: 20 },
+            { x: 55, y: 92, size: 380, color: '#B347FF', opacity: 0.20, dur: 26 },
+            { x: 90, y: 75, size: 220, color: '#FF5B3A', opacity: 0.14, dur: 22 },
           ]}
         />
       </div>
@@ -240,6 +280,228 @@ export default function HomePage() {
             )}
           </button>
           </div>
+        </div>
+
+        {/* Live ticker */}
+        <div style={{ marginBottom: 10 }}>
+          <LiveTicker />
+        </div>
+
+        {/* Stories */}
+        <div style={{ marginBottom: 14 }}>
+          <StoriesStrip />
+        </div>
+
+        {/* Encuesta de la comunidad */}
+        <div style={{ padding: '0 20px 14px' }}>
+          <PollCard
+            id="mvp-jornada-42"
+            question="¿Quién fue el MVP de la jornada?"
+            options={[
+              { id: 'o1', label: 'Carlos Méndez',  votes: 48, color: '#CCFF00' },
+              { id: 'o2', label: 'Leo Vargas',     votes: 31, color: '#FFB800' },
+              { id: 'o3', label: 'Diego Pérez',    votes: 22, color: '#00D4FF' },
+              { id: 'o4', label: 'Martín Ríos',    votes: 14, color: '#B347FF' },
+            ]}
+            totalVoters={140}
+          />
+        </div>
+
+        {/* Eventos CTA */}
+        <div style={{ padding: '0 20px 14px' }}>
+          <button
+            onClick={() => setEventsOpen(true)}
+            style={{
+              width: '100%', padding: '14px 16px', borderRadius: 14,
+              background: 'linear-gradient(135deg, rgba(0,212,255,0.16), rgba(179,71,255,0.08))',
+              border: '1px solid rgba(0,212,255,0.45)',
+              color: '#FAF5EB', cursor: 'pointer',
+              display: 'flex', alignItems: 'center', gap: 12,
+              boxShadow: '0 0 18px rgba(0,212,255,0.14)',
+            }}
+          >
+            <div style={{
+              width: 40, height: 40, borderRadius: 10,
+              background: 'rgba(0,212,255,0.18)', color: '#00D4FF',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <CalendarIcon size={18} />
+            </div>
+            <div style={{ flex: 1, textAlign: 'left' }}>
+              <div style={{ fontFamily: 'Archivo', fontWeight: 800, fontSize: 14 }}>
+                Eventos cerca tuyo
+              </div>
+              <div style={{ fontFamily: 'Space Grotesk', fontSize: 11, color: 'rgba(250,245,235,0.55)' }}>
+                4 partidos abiertos · RSVP en 1 tap
+              </div>
+            </div>
+            <span style={{ color: '#00D4FF', fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 12 }}>Ver →</span>
+          </button>
+        </div>
+
+        {/* CTAs Tier 5: alineación + scouting */}
+        <div style={{ padding: '0 20px 16px', display: 'flex', gap: 10 }}>
+          <button
+            onClick={() => setLineupOpen(true)}
+            style={{
+              flex: 1, padding: '10px 12px', borderRadius: 12,
+              background: 'linear-gradient(135deg, rgba(204,255,0,0.15), rgba(255,184,0,0.10))',
+              border: '1px solid rgba(204, 255, 0, 0.4)',
+              color: '#FAF5EB',
+              display: 'flex', alignItems: 'center', gap: 10,
+              cursor: 'pointer',
+              fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 12,
+              textAlign: 'left',
+            }}
+          >
+            <div style={{
+              width: 30, height: 30, borderRadius: 8,
+              background: 'rgba(204,255,0,0.18)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              color: '#CCFF00',
+              fontFamily: 'Archivo', fontWeight: 900, fontSize: 10,
+              flexShrink: 0, letterSpacing: '0.04em',
+            }}>
+              11
+            </div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{
+                fontFamily: 'Space Grotesk', fontSize: 9,
+                color: 'rgba(250,245,235,0.5)',
+                letterSpacing: '0.12em', textTransform: 'uppercase',
+              }}>
+                Alineación AI
+              </div>
+              <div style={{ fontSize: 12, fontWeight: 700, color: '#FAF5EB' }}>
+                Ver formación
+              </div>
+            </div>
+          </button>
+
+          <button
+            onClick={() => setScoutOpen(true)}
+            style={{
+              flex: 1, padding: '10px 12px', borderRadius: 12,
+              background: 'linear-gradient(135deg, rgba(255,91,58,0.12), rgba(179,71,255,0.10))',
+              border: '1px solid rgba(255, 91, 58, 0.4)',
+              color: '#FAF5EB',
+              display: 'flex', alignItems: 'center', gap: 10,
+              cursor: 'pointer',
+              fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 12,
+              textAlign: 'left',
+            }}
+          >
+            <div style={{
+              width: 30, height: 30, borderRadius: 8,
+              background: 'rgba(255,91,58,0.2)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              color: '#FF5B3A',
+              flexShrink: 0,
+            }}>
+              <Sparkles size={14} />
+            </div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{
+                fontFamily: 'Space Grotesk', fontSize: 9,
+                color: 'rgba(250,245,235,0.5)',
+                letterSpacing: '0.12em', textTransform: 'uppercase',
+              }}>
+                Scouting
+              </div>
+              <div style={{
+                fontSize: 12, fontWeight: 700, color: '#FAF5EB',
+                overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+              }}>
+                {NEXT_OPPONENT}
+              </div>
+            </div>
+          </button>
+
+          <button
+            onClick={() => setLiveOpen(true)}
+            style={{
+              flex: 1, padding: '10px 12px', borderRadius: 12,
+              background: 'linear-gradient(135deg, rgba(0,212,255,0.14), rgba(179,71,255,0.10))',
+              border: '1px solid rgba(0, 212, 255, 0.4)',
+              color: '#FAF5EB',
+              display: 'flex', alignItems: 'center', gap: 10,
+              cursor: 'pointer',
+              fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 12,
+              textAlign: 'left',
+            }}
+          >
+            <div style={{
+              width: 30, height: 30, borderRadius: 8,
+              background: 'rgba(0,212,255,0.2)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              color: '#00D4FF',
+              flexShrink: 0,
+              position: 'relative',
+            }}>
+              <span style={{
+                position: 'absolute', top: 3, right: 3,
+                width: 6, height: 6, borderRadius: '50%',
+                background: '#FF5B3A', boxShadow: '0 0 6px #FF5B3A',
+                animation: 'pulse-glow 1.2s ease-in-out infinite',
+              }} />
+              <Play size={14} />
+            </div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{
+                fontFamily: 'Space Grotesk', fontSize: 9,
+                color: 'rgba(250,245,235,0.5)',
+                letterSpacing: '0.12em', textTransform: 'uppercase',
+              }}>
+                Live · AI
+              </div>
+              <div style={{ fontSize: 12, fontWeight: 700, color: '#FAF5EB' }}>
+                Partido en vivo
+              </div>
+            </div>
+          </button>
+        </div>
+
+        {/* 4° CTA — pizarra táctica (fila separada) */}
+        <div style={{ padding: '0 20px 16px' }}>
+          <button
+            onClick={() => setTacticsOpen(true)}
+            style={{
+              width: '100%',
+              padding: '10px 14px', borderRadius: 12,
+              background: 'linear-gradient(135deg, rgba(0,212,255,0.12), rgba(204,255,0,0.08))',
+              border: '1px solid rgba(0, 212, 255, 0.35)',
+              color: '#FAF5EB',
+              display: 'flex', alignItems: 'center', gap: 10,
+              cursor: 'pointer',
+              fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 13,
+              textAlign: 'left',
+              boxShadow: '0 0 12px rgba(0,212,255,0.12)',
+            }}
+          >
+            <div style={{
+              width: 34, height: 34, borderRadius: 10,
+              background: 'rgba(0,212,255,0.18)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              color: '#00D4FF',
+              fontFamily: 'Archivo', fontWeight: 900, fontSize: 12,
+              flexShrink: 0, letterSpacing: '0.04em',
+            }}>
+              TAC
+            </div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{
+                fontFamily: 'Space Grotesk', fontSize: 9,
+                color: 'rgba(250,245,235,0.5)',
+                letterSpacing: '0.12em', textTransform: 'uppercase',
+              }}>
+                Pizarra táctica
+              </div>
+              <div style={{ fontSize: 12, fontWeight: 700, color: '#FAF5EB' }}>
+                Arrastrá tus 11 — drag-drop
+              </div>
+            </div>
+            <span style={{ color: '#00D4FF', fontSize: 18 }}>→</span>
+          </button>
         </div>
 
         {/* Stats strip */}
@@ -310,14 +572,12 @@ export default function HomePage() {
           ))}
           {/* AI Recap card — generated post */}
           {!loading && (
+          <AIBorder colors={['#B347FF', '#00D4FF', '#CCFF00', '#B347FF']} radius={16} speed={9} halo={0.45}>
             <div
               onClick={() => setRecapOpen(true)}
               style={{
-                borderRadius: 16,
                 padding: 16,
-                background: 'linear-gradient(135deg, rgba(179, 71, 255, 0.16), rgba(204, 255, 0, 0.08))',
-                border: '1px solid rgba(179, 71, 255, 0.45)',
-                boxShadow: '0 6px 24px rgba(179, 71, 255, 0.22)',
+                background: 'linear-gradient(135deg, rgba(179, 71, 255, 0.18), rgba(204, 255, 0, 0.08))',
                 cursor: 'pointer',
                 position: 'relative',
               }}
@@ -391,6 +651,7 @@ export default function HomePage() {
                 Leer recap completo →
               </div>
             </div>
+          </AIBorder>
           )}
 
           {!loading && posts.map(p => {
@@ -893,6 +1154,133 @@ export default function HomePage() {
           ))}
         </div>
 
+        {/* Video highlights auto-cut */}
+        <div style={{ marginBottom: 18 }}>
+          <div style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            marginBottom: 10,
+          }}>
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: 6,
+              fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 11,
+              color: 'rgba(250, 245, 235, 0.5)', letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+            }}>
+              <Film size={12} color="#00D4FF" />
+              Clips auto-cut
+            </div>
+            {!clips && (
+              <button
+                onClick={generateClips}
+                disabled={clipsLoading}
+                style={{
+                  padding: '6px 12px', borderRadius: 999,
+                  background: 'rgba(0, 212, 255, 0.12)',
+                  border: '1px solid rgba(0, 212, 255, 0.45)',
+                  color: '#00D4FF',
+                  fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 11,
+                  letterSpacing: '0.06em', textTransform: 'uppercase',
+                  cursor: clipsLoading ? 'default' : 'pointer',
+                  display: 'inline-flex', alignItems: 'center', gap: 6,
+                  opacity: clipsLoading ? 0.6 : 1,
+                }}
+              >
+                <Scissors size={11} style={{ animation: clipsLoading ? 'spin 700ms linear infinite' : 'none' }} />
+                {clipsLoading ? 'Analizando…' : 'Generar'}
+              </button>
+            )}
+            {clips && (
+              <button
+                onClick={generateClips}
+                disabled={clipsLoading}
+                style={{
+                  padding: '6px 10px', borderRadius: 8,
+                  background: 'transparent',
+                  border: '1px solid rgba(0, 212, 255, 0.3)',
+                  color: '#00D4FF',
+                  fontFamily: 'Space Grotesk', fontWeight: 600, fontSize: 10,
+                  cursor: 'pointer',
+                  display: 'inline-flex', alignItems: 'center', gap: 4,
+                }}
+              >
+                <RefreshCw size={10} style={{ animation: clipsLoading ? 'spin 700ms linear infinite' : 'none' }} />
+                Re-analizar
+              </button>
+            )}
+          </div>
+
+          {!clips && !clipsLoading && (
+            <div style={{
+              padding: '14px 12px', borderRadius: 10,
+              background: 'rgba(0, 212, 255, 0.04)',
+              border: '1px dashed rgba(0, 212, 255, 0.25)',
+              fontFamily: 'Space Grotesk', fontSize: 12,
+              color: 'rgba(250, 245, 235, 0.55)',
+              textAlign: 'center',
+            }}>
+              La AI detecta goles, atajadas y jugadas destacadas del video completo.
+            </div>
+          )}
+
+          {clips && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {clips.map((c, i) => (
+                <div
+                  key={c.id}
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: 12,
+                    padding: '10px 12px', borderRadius: 10,
+                    background: 'rgba(0, 212, 255, 0.05)',
+                    border: '1px solid rgba(0, 212, 255, 0.18)',
+                    animation: 'slide-up-fade 260ms ease-out backwards',
+                    animationDelay: `${i * 50}ms`,
+                  }}
+                >
+                  <div style={{
+                    width: 36, height: 36, borderRadius: '50%',
+                    background: 'rgba(0, 212, 255, 0.15)',
+                    border: '1px solid rgba(0, 212, 255, 0.5)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    flexShrink: 0,
+                    fontSize: 16,
+                  }}>
+                    {clipEmoji(c.type)}
+                  </div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{
+                      fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 13,
+                      color: '#FAF5EB',
+                    }}>
+                      {c.label}
+                    </div>
+                    <div style={{
+                      fontFamily: 'Space Grotesk', fontSize: 10,
+                      color: 'rgba(250, 245, 235, 0.5)',
+                      marginTop: 2,
+                    }}>
+                      {formatClipTime(c.start)} – {formatClipTime(c.end)} · {Math.round(c.confidence * 100)}% match
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setToast(`▶ ${c.label}`)}
+                    style={{
+                      width: 32, height: 32, borderRadius: '50%',
+                      background: 'linear-gradient(135deg, #00D4FF, #B347FF)',
+                      border: 'none',
+                      color: '#0F0D0A',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      cursor: 'pointer', flexShrink: 0,
+                      boxShadow: '0 4px 12px rgba(0, 212, 255, 0.3)',
+                    }}
+                  >
+                    <Play size={13} fill="#0F0D0A" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
         {/* Tone + Language switchers */}
         <div style={{ display: 'flex', gap: 8, marginBottom: 10, flexWrap: 'wrap' }}>
           <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
@@ -959,11 +1347,12 @@ export default function HomePage() {
             <RefreshCw size={13} style={{ animation: recapRegen ? 'spin 700ms linear infinite' : 'none' }} />
             {recapRegen ? 'Regenerando…' : 'Regenerar'}
           </button>
-          <button
+          <RippleButton
             onClick={() => {
               navigator.clipboard?.writeText(`${recap.headline}\n\n${recap.body}`).catch(() => {})
               setToast('Recap copiado')
             }}
+            rippleColor="rgba(15, 13, 10, 0.35)"
             style={{
               flex: 1, padding: '12px 14px', borderRadius: 12,
               background: 'linear-gradient(135deg, #CCFF00, #FFB800)',
@@ -977,9 +1366,16 @@ export default function HomePage() {
             }}
           >
             <Copy size={13} /> Copiar recap
-          </button>
+          </RippleButton>
         </div>
       </BottomSheet>
+
+      {/* Tier 5 sheets */}
+      <LineupSheet open={lineupOpen} onClose={() => setLineupOpen(false)} opponent={NEXT_OPPONENT} />
+      <RivalScoutSheet open={scoutOpen} onClose={() => setScoutOpen(false)} opponent={NEXT_OPPONENT} />
+      <LiveMatchSheet open={liveOpen} onClose={() => setLiveOpen(false)} home="Los Pumas FC" away={NEXT_OPPONENT} />
+      <TacticsBoardSheet open={tacticsOpen} onClose={() => setTacticsOpen(false)} />
+      <EventsSheet open={eventsOpen} onClose={() => setEventsOpen(false)} />
     </div>
   )
 }

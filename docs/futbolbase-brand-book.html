@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FutbolBase · Brand Book Interactivo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,700;0,800;0,900;1,800;1,900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --obsidian-deep:#0F0D0A;
+  --obsidian-base:#141009;
+  --surface-1:#1A1612;
+  --surface-2:#241F18;
+  --lime:#CCFF00;
+  --amber:#FFB800;
+  --coral:#FF5B3A;
+  --violet:#B347FF;
+  --cyan:#00D4FF;
+  --warm-text:#FAF5EB;
+  --warm-muted:rgba(250,245,235,0.6);
+  --warm-dim:rgba(250,245,235,0.4);
+  --border-warm:rgba(255,220,180,0.08);
+  --border-warm-2:rgba(255,220,180,0.14);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Space Grotesk',Inter,system-ui,sans-serif;
+  background:var(--obsidian-deep);color:var(--warm-text);
+  overflow-x:hidden;line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--lime);color:var(--obsidian-deep)}
+
+/* aurora background */
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 80% 55% at 50% 8%,  rgba(204,255,0,0.18), transparent 62%),
+    radial-gradient(ellipse 70% 55% at 88% 82%, rgba(255,91,58,0.16), transparent 62%),
+    radial-gradient(ellipse 60% 45% at 12% 72%, rgba(255,184,0,0.12), transparent 62%),
+    radial-gradient(ellipse 85% 60% at 50% 110%, rgba(179,71,255,0.14), transparent 65%),
+    radial-gradient(circle at 50% 50%, transparent 42%, rgba(0,0,0,0.55) 100%),
+    var(--obsidian-deep);
+  animation:aurora 24s ease-in-out infinite alternate;
+}
+body::after{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  opacity:0.045;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.9 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+@keyframes aurora{
+  0%{filter:hue-rotate(0deg)}
+  50%{filter:hue-rotate(-8deg)}
+  100%{filter:hue-rotate(6deg)}
+}
+
+main, nav, footer{position:relative;z-index:1}
+
+/* nav */
+nav.top{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(15,13,10,0.85);backdrop-filter:blur(20px) saturate(180%);
+  border-bottom:1px solid var(--border-warm);
+  padding:14px 32px;display:flex;align-items:center;gap:32px;
+}
+.brand-mark{display:flex;align-items:center;gap:10px}
+.brand-mark .ball{
+  width:18px;height:18px;border-radius:50%;background:var(--lime);
+  box-shadow:0 0 14px var(--lime),0 0 28px rgba(204,255,0,0.5);
+}
+.brand-mark .name{
+  font-family:'Archivo',sans-serif;font-weight:900;font-style:italic;font-size:20px;
+  letter-spacing:-0.02em;color:var(--warm-text);
+}
+nav.top ul{display:flex;gap:20px;list-style:none;margin-left:auto;flex-wrap:wrap}
+nav.top a{color:var(--warm-muted);text-decoration:none;font-size:12px;font-weight:600;letter-spacing:0.05em;transition:color .2s;font-family:'JetBrains Mono'}
+nav.top a:hover{color:var(--lime)}
+
+/* sections */
+section{padding:120px 32px 80px;max-width:1280px;margin:0 auto}
+section h2.title{
+  font-family:'Archivo',sans-serif;font-weight:900;font-style:italic;
+  font-size:clamp(40px,6vw,72px);letter-spacing:-0.03em;line-height:1;margin-bottom:8px;
+  background:linear-gradient(135deg,var(--lime) 0%,var(--amber) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+section h2.title::before{content:attr(data-num);display:block;font-family:'JetBrains Mono';font-style:normal;font-weight:700;font-size:11px;letter-spacing:0.3em;color:var(--lime);background:none;-webkit-text-fill-color:var(--lime);margin-bottom:14px;text-transform:uppercase}
+section .lead{color:var(--warm-muted);font-size:16px;max-width:680px;margin-bottom:48px;line-height:1.6}
+h3.sub{font-family:'Archivo',sans-serif;font-weight:900;font-style:italic;font-size:24px;letter-spacing:-0.02em;color:var(--warm-text);margin:32px 0 16px}
+
+/* hero */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:100px 32px 60px;position:relative}
+.hero .pill{
+  display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:999px;
+  background:rgba(204,255,0,0.12);border:1px solid rgba(204,255,0,0.4);
+  color:var(--lime);font-family:'Space Grotesk';font-size:11px;font-weight:700;
+  text-transform:uppercase;letter-spacing:0.18em;margin-bottom:32px;
+}
+.hero .pill .spark{width:8px;height:8px;border-radius:50%;background:var(--lime);box-shadow:0 0 10px var(--lime);animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.6;transform:scale(.9)}50%{opacity:1;transform:scale(1.3)}}
+.hero h1{font-family:'Archivo',sans-serif;font-weight:900;font-style:italic;font-size:clamp(56px,10vw,140px);letter-spacing:-0.04em;line-height:0.92;margin-bottom:20px;text-shadow:0 4px 30px rgba(204,255,0,0.25)}
+.hero h1 .grad{background:linear-gradient(135deg,var(--lime) 0%,var(--amber) 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.tagline{color:rgba(250,245,235,0.75);font-size:18px;max-width:580px;margin-bottom:36px}
+.hero .meta{display:flex;gap:14px;font-family:'JetBrains Mono';font-size:11px;color:var(--warm-muted);text-transform:uppercase;letter-spacing:0.18em;flex-wrap:wrap;justify-content:center}
+.hero .meta span.dot{color:var(--lime)}
+
+/* generic cards */
+.grid{display:grid;gap:18px}
+.grid.c2{grid-template-columns:repeat(auto-fit,minmax(380px,1fr))}
+.grid.c3{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.grid.c4{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.card{
+  background:rgba(26,22,18,0.55);backdrop-filter:blur(20px) saturate(180%);
+  border:1px solid var(--border-warm);border-radius:16px;padding:22px;
+  transition:all .3s;
+}
+.card:hover{transform:translateY(-3px);border-color:rgba(204,255,0,0.4);box-shadow:0 10px 40px rgba(204,255,0,0.1)}
+.card.lime{border-color:rgba(204,255,0,0.35)}
+.card.amber{border-color:rgba(255,184,0,0.35)}
+.card.coral{border-color:rgba(255,91,58,0.35)}
+.card.violet{border-color:rgba(179,71,255,0.35)}
+.card.cyan{border-color:rgba(0,212,255,0.35)}
+.card .icon-square{
+  width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  font-size:18px;margin-bottom:12px;
+}
+.card.lime .icon-square{background:rgba(204,255,0,0.15);color:var(--lime)}
+.card.amber .icon-square{background:rgba(255,184,0,0.15);color:var(--amber)}
+.card.coral .icon-square{background:rgba(255,91,58,0.15);color:var(--coral)}
+.card.violet .icon-square{background:rgba(179,71,255,0.15);color:var(--violet)}
+.card.cyan .icon-square{background:rgba(0,212,255,0.15);color:var(--cyan)}
+.card h4{font-family:'Archivo';font-weight:800;font-size:16px;margin-bottom:6px}
+.card p{color:var(--warm-muted);font-size:13px;line-height:1.5}
+
+/* color swatches */
+.swatch{
+  border-radius:14px;overflow:hidden;cursor:pointer;
+  border:1px solid var(--border-warm);transition:transform .25s;position:relative;
+}
+.swatch:hover{transform:scale(1.03)}
+.swatch .top{height:130px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono';font-weight:600;font-size:16px;position:relative}
+.swatch .copy-tip{position:absolute;top:10px;right:10px;font-size:9px;background:rgba(0,0,0,.35);padding:4px 8px;border-radius:6px;opacity:0;transition:opacity .2s;letter-spacing:0.1em;text-transform:uppercase}
+.swatch:hover .copy-tip{opacity:1}
+.swatch.copied .copy-tip{opacity:1;background:var(--lime);color:var(--obsidian-deep)}
+.swatch .info{padding:14px;background:var(--surface-1)}
+.swatch .info .name{font-weight:700;font-size:14px;font-family:'Archivo'}
+.swatch .info .meta{font-size:10px;color:var(--warm-muted);margin-top:2px;font-family:'JetBrains Mono'}
+.swatch .info .use{font-size:11px;color:var(--warm-muted);margin-top:8px}
+
+/* logo stages */
+.logo-stage{
+  border-radius:18px;padding:50px 28px;display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;min-height:180px;border:1px solid var(--border-warm);
+}
+.logo-stage.dark{background:var(--obsidian-deep)}
+.logo-stage.surface{background:var(--surface-1)}
+.logo-stage.light{background:#FAF5EB}
+.logo-stage.gradient{background:linear-gradient(135deg,var(--lime) 0%,var(--amber) 100%)}
+.logo-stage .grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(204,255,0,0.08) 1px,transparent 1px),linear-gradient(90deg,rgba(204,255,0,0.08) 1px,transparent 1px);background-size:32px 32px;opacity:.6}
+.logo-mark{display:flex;align-items:center;gap:14px;position:relative;z-index:2}
+.logo-symbol{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:'Archivo',sans-serif;font-style:italic;font-weight:900;font-size:24px;letter-spacing:-0.04em}
+.logo-stage.dark .logo-symbol,.logo-stage.surface .logo-symbol{background:var(--lime);color:var(--obsidian-deep);box-shadow:0 0 24px rgba(204,255,0,0.5)}
+.logo-stage.light .logo-symbol{background:var(--obsidian-deep);color:var(--lime)}
+.logo-stage.gradient .logo-symbol{background:var(--obsidian-deep);color:var(--lime)}
+.logo-text{font-family:'Archivo',sans-serif;font-weight:900;font-style:italic;font-size:34px;letter-spacing:-0.03em}
+.logo-stage.dark .logo-text,.logo-stage.surface .logo-text{color:var(--warm-text)}
+.logo-stage.light .logo-text{color:var(--obsidian-deep)}
+.logo-stage.gradient .logo-text{color:var(--obsidian-deep)}
+.stage-label{text-align:center;color:var(--warm-muted);font-size:11px;margin-top:10px;font-family:'JetBrains Mono';letter-spacing:0.2em;text-transform:uppercase}
+
+/* typography demos */
+.type-card{padding:22px;background:var(--surface-1);border-radius:14px;border:1px solid var(--border-warm)}
+.type-card .label{font-family:'JetBrains Mono';font-size:10px;color:var(--lime);letter-spacing:0.25em;text-transform:uppercase;margin-bottom:14px}
+.type-card .display{font-family:'Archivo';font-weight:900;font-style:italic;font-size:56px;line-height:0.95;letter-spacing:-0.04em;color:var(--lime);text-shadow:0 4px 30px rgba(204,255,0,0.25)}
+.type-card .h1d{font-family:'Archivo';font-weight:900;font-style:italic;font-size:36px;line-height:1.05;letter-spacing:-0.03em}
+.type-card .h2d{font-family:'Archivo';font-weight:800;font-size:22px;letter-spacing:-0.02em}
+.type-card .bodyd{font-family:'Space Grotesk';font-size:15px;line-height:1.55;color:rgba(250,245,235,0.85)}
+.type-card .smalld{font-family:'Space Grotesk';font-size:13px;color:var(--warm-muted)}
+.type-card .codes{font-family:'JetBrains Mono';font-size:13px;color:var(--lime)}
+.type-card .specs{font-family:'JetBrains Mono';font-size:11px;color:var(--warm-muted);margin-top:10px}
+
+/* screenshots showcase */
+.screens-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px;justify-items:center;margin-top:24px}
+.phone-frame{
+  width:100%;max-width:280px;border-radius:36px;background:var(--obsidian-deep);
+  border:7px solid #1A1612;padding:0;position:relative;overflow:hidden;
+  box-shadow:0 30px 80px rgba(0,0,0,.6),0 0 60px rgba(204,255,0,0.12);
+  transition:transform .4s ease,box-shadow .4s ease;aspect-ratio:9/19.5;
+}
+.phone-frame:hover{transform:translateY(-10px);box-shadow:0 40px 100px rgba(0,0,0,.7),0 0 80px rgba(204,255,0,0.25)}
+.phone-frame img{width:100%;height:100%;display:block;object-fit:cover}
+.phone-frame .notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:80px;height:22px;background:#000;border-radius:0 0 14px 14px;z-index:5}
+.phone-caption{text-align:center;margin-top:14px}
+.phone-caption .ttl{font-family:'Archivo';font-weight:900;font-style:italic;font-size:16px;letter-spacing:-0.02em;color:var(--lime)}
+.phone-caption .desc{font-size:12px;color:var(--warm-muted);margin-top:4px;max-width:240px;margin-left:auto;margin-right:auto}
+
+/* features matrix */
+.feat-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.feat-item{padding:16px;background:var(--surface-1);border-radius:12px;border:1px solid var(--border-warm);display:flex;flex-direction:column;gap:6px}
+.feat-item .tag{font-family:'JetBrains Mono';font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--lime)}
+.feat-item .name{font-family:'Archivo';font-weight:900;font-style:italic;font-size:18px;letter-spacing:-0.02em;color:var(--warm-text)}
+.feat-item .desc{font-size:12px;color:var(--warm-muted);line-height:1.5}
+
+/* video stage */
+.video-stage{
+  border-radius:18px;overflow:hidden;background:var(--surface-1);border:1px solid var(--border-warm);
+  position:relative;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;
+  margin-bottom:18px;
+}
+.video-stage video{width:100%;height:100%;object-fit:cover}
+.video-stage .placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at center,rgba(204,255,0,0.18),transparent 60%);text-align:center;padding:24px}
+.video-stage .play{width:80px;height:80px;border-radius:50%;background:var(--lime);color:var(--obsidian-deep);display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 0 60px rgba(204,255,0,0.6);cursor:pointer;transition:transform .3s;border:none;font-weight:900}
+.video-stage .play:hover{transform:scale(1.1)}
+.video-caption{font-family:'JetBrains Mono';font-size:10px;color:var(--lime);letter-spacing:0.25em;text-transform:uppercase;margin-top:14px}
+
+/* voice */
+.voice-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px}
+.voice{padding:24px;border-radius:16px;background:var(--surface-1)}
+.voice.yes{border:1px solid rgba(204,255,0,0.4);box-shadow:0 0 30px rgba(204,255,0,0.08) inset}
+.voice.no{border:1px solid rgba(255,91,58,0.4)}
+.voice h4{font-family:'Archivo';font-weight:900;font-style:italic;font-size:22px;letter-spacing:-0.02em;margin-bottom:14px}
+.voice.yes h4{color:var(--lime)}
+.voice.no h4{color:var(--coral)}
+.voice ul{list-style:none}
+.voice li{padding:8px 0;border-bottom:1px solid var(--border-warm);font-size:14px;line-height:1.4}
+.voice li::before{margin-right:10px;font-weight:900}
+.voice.yes li::before{content:'✓';color:var(--lime)}
+.voice.no li::before{content:'✗';color:var(--coral)}
+
+/* tokens block */
+pre.tokens{
+  background:#0A0805;border:1px solid var(--border-warm);border-radius:14px;
+  padding:24px;font-family:'JetBrains Mono';font-size:13px;color:var(--cyan);
+  overflow-x:auto;line-height:1.7;
+}
+pre.tokens .key{color:var(--lime)}
+pre.tokens .str{color:var(--amber)}
+pre.tokens .com{color:var(--warm-dim)}
+
+button.copy-btn{
+  background:var(--lime);color:var(--obsidian-deep);border:none;padding:14px 28px;
+  border-radius:10px;font-weight:700;font-size:13px;letter-spacing:0.12em;text-transform:uppercase;
+  cursor:pointer;box-shadow:0 0 24px rgba(204,255,0,0.5);transition:all .3s;font-family:'Space Grotesk';
+}
+button.copy-btn:hover{transform:translateY(-2px);box-shadow:0 0 50px rgba(204,255,0,0.7)}
+
+/* AI agents grid */
+.agents{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.agent{padding:16px;background:var(--surface-1);border:1px solid var(--border-warm);border-radius:14px;text-align:center}
+.agent .ic{width:42px;height:42px;border-radius:50%;background:rgba(179,71,255,0.18);color:var(--violet);display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:18px}
+.agent .nm{font-family:'Archivo';font-weight:900;font-style:italic;font-size:14px;letter-spacing:-0.02em;color:var(--warm-text)}
+.agent .ds{font-size:11px;color:var(--warm-muted);margin-top:4px;line-height:1.4}
+
+/* footer */
+footer{padding:48px 32px;text-align:center;border-top:1px solid var(--border-warm);background:var(--surface-1)}
+footer p{color:var(--warm-muted);font-size:13px;margin-bottom:6px}
+footer a{color:var(--lime);text-decoration:none}
+
+.toast{
+  position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(120%);
+  background:var(--lime);color:var(--obsidian-deep);padding:14px 28px;border-radius:10px;
+  font-weight:700;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;
+  box-shadow:0 0 40px rgba(204,255,0,0.6);z-index:200;transition:transform .4s;font-family:'Space Grotesk';
+}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+@media (max-width:600px){
+  nav.top{padding:12px 16px;gap:12px}
+  nav.top ul{gap:10px}
+  section{padding:80px 16px 40px}
+}
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <div class="brand-mark"><span class="ball"></span><span class="name">FutbolBase</span></div>
+  <ul>
+    <li><a href="#esencia">01 Esencia</a></li>
+    <li><a href="#logo">02 Logo</a></li>
+    <li><a href="#color">03 Color</a></li>
+    <li><a href="#tipo">04 Tipografía</a></li>
+    <li><a href="#producto">05 Producto</a></li>
+    <li><a href="#ia">06 IA</a></li>
+    <li><a href="#video">07 Demo</a></li>
+    <li><a href="#voz">08 Voz</a></li>
+    <li><a href="#tokens">09 Tokens</a></li>
+  </ul>
+</nav>
+
+<main>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="pill"><span class="spark"></span>POWERED BY AI AGENTS · RAG</div>
+  <h1>El fútbol amateur<br><span class="grad">con cerebro propio.</span></h1>
+  <p class="tagline">Agentes deterministas, predicciones, coach AI y comunidad en una PWA instalable.</p>
+  <div class="meta">
+    <span>Brand Book v1.0</span><span class="dot">●</span>
+    <span>Electric Citrus Premium</span><span class="dot">●</span>
+    <span>2026</span>
+  </div>
+</section>
+
+<!-- 01 ESENCIA -->
+<section id="esencia">
+  <h2 class="title" data-num="01 / Esencia">El por qué.</h2>
+  <p class="lead">FutbolBase es una PWA para el fútbol amateur con agentes de IA deterministas (RAG), comunidad en tiempo real, ligas con badges desbloqueables y un coach AI personalizado para cada jugador.</p>
+
+  <div class="grid c3">
+    <div class="card lime">
+      <div class="icon-square">◎</div>
+      <h4>Propósito</h4>
+      <p>Darle al fútbol amateur las herramientas que hasta ahora solo tenían los clubes profesionales: análisis, scouting y coach impulsados por IA.</p>
+    </div>
+    <div class="card amber">
+      <div class="icon-square">★</div>
+      <h4>Visión</h4>
+      <p>Que cada jugador amateur tenga su tarjeta tipo videojuego con stats reales y que cada equipo compita en una liga regional con ranking y logros.</p>
+    </div>
+    <div class="card coral">
+      <div class="icon-square">⚡</div>
+      <h4>Misión</h4>
+      <p>Construir la PWA instalable más rápida y completa del fútbol base hispanohablante, con IA que se entiende y comunidad que se vive.</p>
+    </div>
+  </div>
+
+  <h3 class="sub">Pilares de producto</h3>
+  <div class="feat-list">
+    <div class="feat-item"><span class="tag" style="color:var(--violet)">⬣ IA DEPORTIVA</span><span class="name">Agentes + RAG</span><span class="desc">Coach, scouting, predicciones y más con 9 agentes y 15 docs en la base de conocimiento.</span></div>
+    <div class="feat-item"><span class="tag" style="color:var(--amber)">★ LIGA + LOGROS</span><span class="name">12 badges</span><span class="desc">Ranking regional semanal y badges desbloqueables por gestas reales.</span></div>
+    <div class="feat-item"><span class="tag" style="color:var(--cyan)">◉ COMUNIDAD REAL</span><span class="name">Stories · Duelos</span><span class="desc">Chats, stories 24h, eventos con RSVP en 1 tap y duelos 1v1.</span></div>
+    <div class="feat-item"><span class="tag" style="color:var(--lime)">⚡ TIEMPO REAL</span><span class="name">Live + Haptic</span><span class="desc">Partidos en vivo, ticker global, voz y haptic feedback.</span></div>
+  </div>
+</section>
+
+<!-- 02 LOGO -->
+<section id="logo">
+  <h2 class="title" data-num="02 / Logo">La marca.</h2>
+  <p class="lead">El símbolo es una "F" en Archivo Black Italic dentro de una pastilla redondeada lima sobre obsidiana cálida. El wordmark va siempre en cursiva y con tracking negativo.</p>
+
+  <div class="grid c2">
+    <div>
+      <div class="logo-stage dark">
+        <div class="grid-bg"></div>
+        <div class="logo-mark">
+          <div class="logo-symbol">F</div>
+          <span class="logo-text">FutbolBase</span>
+        </div>
+      </div>
+      <p class="stage-label">PRIMARY · ON OBSIDIAN</p>
+    </div>
+    <div>
+      <div class="logo-stage surface">
+        <div class="logo-mark">
+          <div class="logo-symbol">F</div>
+          <span class="logo-text">FutbolBase</span>
+        </div>
+      </div>
+      <p class="stage-label">SURFACE · APP UI</p>
+    </div>
+    <div>
+      <div class="logo-stage gradient">
+        <div class="logo-mark">
+          <div class="logo-symbol">F</div>
+          <span class="logo-text">FutbolBase</span>
+        </div>
+      </div>
+      <p class="stage-label">GRADIENT · CAMPAIGNS</p>
+    </div>
+    <div>
+      <div class="logo-stage light">
+        <div class="logo-mark">
+          <div class="logo-symbol">F</div>
+          <span class="logo-text">FutbolBase</span>
+        </div>
+      </div>
+      <p class="stage-label">MONO · LIGHT THEME</p>
+    </div>
+  </div>
+
+  <h3 class="sub">Reglas de uso</h3>
+  <div class="grid c2">
+    <div class="card lime">
+      <strong style="color:var(--lime);font-family:'Archivo';font-style:italic;font-size:18px">✓ Sí</strong>
+      <ul style="margin-top:12px;list-style:none">
+        <li style="padding:7px 0;color:var(--warm-muted);font-size:14px;border-bottom:1px solid var(--border-warm)">Usar Archivo 900 italic SIEMPRE en wordmark</li>
+        <li style="padding:7px 0;color:var(--warm-muted);font-size:14px;border-bottom:1px solid var(--border-warm)">Tracking -0.03em en wordmark</li>
+        <li style="padding:7px 0;color:var(--warm-muted);font-size:14px;border-bottom:1px solid var(--border-warm)">Glow lima en versión dark (box-shadow rgba(204,255,0,0.5))</li>
+        <li style="padding:7px 0;color:var(--warm-muted);font-size:14px">Pastilla cuadrada radius 12px para el símbolo</li>
+      </ul>
+    </div>
+    <div class="card coral">
+      <strong style="color:var(--coral);font-family:'Archivo';font-style:italic;font-size:18px">✗ No</strong>
+      <ul style="margin-top:12px;list-style:none">
+        <li style="padding:7px 0;color:var(--warm-muted);font-size:14px;border-bottom:1px solid var(--border-warm)">Usar versión vertical recta (no italic)</li>
+        <li style="padding:7px 0;color:var(--warm-muted);font-size:14px;border-bottom:1px solid var(--border-warm)">Sustituir Archivo por otra display</li>
+        <li style="padding:7px 0;color:var(--warm-muted);font-size:14px;border-bottom:1px solid var(--border-warm)">Aplicar glow en theme light</li>
+        <li style="padding:7px 0;color:var(--warm-muted);font-size:14px">Combinar con neón frío (cyan/magenta puro)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 03 COLOR -->
+<section id="color">
+  <h2 class="title" data-num="03 / Color">Electric Citrus Premium.</h2>
+  <p class="lead">Sistema cálido sobre obsidiana — no es navy frío, es marrón profundo con auroras lima/ámbar/coral. Click en cualquier color para copiar el HEX.</p>
+
+  <h3 class="sub">Obsidian (base cálida)</h3>
+  <div class="grid c4">
+    <div class="swatch" data-hex="#0F0D0A"><div class="top" style="background:#0F0D0A;color:#FAF5EB">#0F0D0A<span class="copy-tip">Copiar</span></div><div class="info"><div class="name">Obsidian Deep</div><div class="meta">RGB 15, 13, 10</div><div class="use">Fondo principal de toda la app</div></div></div>
+    <div class="swatch" data-hex="#141009"><div class="top" style="background:#141009;color:#FAF5EB">#141009<span class="copy-tip">Copiar</span></div><div class="info"><div class="name">Obsidian Base</div><div class="meta">RGB 20, 16, 9</div><div class="use">Fondo de bottom-nav y áreas elevadas</div></div></div>
+    <div class="swatch" data-hex="#1A1612"><div class="top" style="background:#1A1612;color:#FAF5EB">#1A1612<span class="copy-tip">Copiar</span></div><div class="info"><div class="name">Surface 1</div><div class="meta">RGB 26, 22, 18</div><div class="use">Cards y glassmorphism</div></div></div>
+    <div class="swatch" data-hex="#241F18"><div class="top" style="background:#241F18;color:#FAF5EB">#241F18<span class="copy-tip">Copiar</span></div><div class="info"><div class="name">Surface 2</div><div class="meta">RGB 36, 31, 24</div><div class="use">Hover y elevación máxima</div></div></div>
+  </div>
+
+  <h3 class="sub">Citrus (acentos)</h3>
+  <div class="grid c4">
+    <div class="swatch" data-hex="#CCFF00"><div class="top" style="background:#CCFF00;color:#0F0D0A">#CCFF00<span class="copy-tip">Copiar</span></div><div class="info"><div class="name">Citrus Lime</div><div class="meta">RGB 204, 255, 0</div><div class="use">Acento primario · CTA · marca</div></div></div>
+    <div class="swatch" data-hex="#FFB800"><div class="top" style="background:#FFB800;color:#0F0D0A">#FFB800<span class="copy-tip">Copiar</span></div><div class="info"><div class="name">Citrus Amber</div><div class="meta">RGB 255, 184, 0</div><div class="use">Logros · ranking · stats medias</div></div></div>
+    <div class="swatch" data-hex="#FF5B3A"><div class="top" style="background:#FF5B3A;color:#FAF5EB">#FF5B3A<span class="copy-tip">Copiar</span></div><div class="info"><div class="name">Citrus Coral</div><div class="meta">RGB 255, 91, 58</div><div class="use">Live · alertas · scouting urgente</div></div></div>
+    <div class="swatch" data-hex="#B347FF"><div class="top" style="background:#B347FF;color:#FAF5EB">#B347FF<span class="copy-tip">Copiar</span></div><div class="info"><div class="name">AI Violet</div><div class="meta">RGB 179, 71, 255</div><div class="use">IA · Coach AI · Match AI</div></div></div>
+  </div>
+
+  <h3 class="sub">Texto cálido</h3>
+  <div class="grid c4">
+    <div class="swatch" data-hex="#FAF5EB"><div class="top" style="background:#FAF5EB;color:#0F0D0A">#FAF5EB<span class="copy-tip">Copiar</span></div><div class="info"><div class="name">Warm Text</div><div class="meta">RGB 250, 245, 235</div><div class="use">Texto primario sobre obsidian</div></div></div>
+    <div class="swatch" data-hex="#00D4FF"><div class="top" style="background:#00D4FF;color:#0F0D0A">#00D4FF<span class="copy-tip">Copiar</span></div><div class="info"><div class="name">Info Cyan</div><div class="meta">RGB 0, 212, 255</div><div class="use">Comunidad · stats secundarios</div></div></div>
+    <div class="swatch" data-hex="rgba(250,245,235,0.6)"><div class="top" style="background:rgba(250,245,235,0.15);color:rgba(250,245,235,0.6)">rgba 60%<span class="copy-tip">Copiar</span></div><div class="info"><div class="name">Warm Muted</div><div class="meta">opacity 0.6</div><div class="use">Texto secundario / labels</div></div></div>
+    <div class="swatch" data-hex="rgba(255,220,180,0.08)"><div class="top" style="background:rgba(255,220,180,0.08);color:#FAF5EB;border:1px dashed rgba(255,220,180,0.4)">rgba 8%<span class="copy-tip">Copiar</span></div><div class="info"><div class="name">Warm Border</div><div class="meta">opacity 0.08</div><div class="use">Bordes de cards y separadores</div></div></div>
+  </div>
+</section>
+
+<!-- 04 TIPOGRAFÍA -->
+<section id="tipo">
+  <h2 class="title" data-num="04 / Tipografía">Italic, condensed, mono.</h2>
+  <p class="lead">Archivo Black Italic para todo lo que tenga que sonar fuerte. Space Grotesk para la UI. JetBrains Mono para etiquetas técnicas y stats.</p>
+
+  <div class="grid c2">
+    <div class="type-card">
+      <div class="label">DISPLAY · ARCHIVO 900 ITALIC</div>
+      <div class="display">FÚTBOL.</div>
+      <div class="specs">font-size: 56–140px · letter-spacing: -0.03em · italic</div>
+    </div>
+    <div class="type-card">
+      <div class="label">H1 · ARCHIVO 900 ITALIC</div>
+      <div class="h1d">El fútbol amateur<br>con cerebro propio.</div>
+      <div class="specs">font-size: 36px · tracking -0.03em</div>
+    </div>
+    <div class="type-card">
+      <div class="label">H2 · ARCHIVO 800</div>
+      <div class="h2d">Tu feed · Liga Regional · Comunidad</div>
+      <div class="specs">font-size: 22px · tracking -0.02em</div>
+    </div>
+    <div class="type-card">
+      <div class="label">BODY · SPACE GROTESK 400</div>
+      <div class="bodyd">Agentes deterministas, predicciones, coach AI y comunidad en una PWA instalable. Cada jugador tiene su tarjeta tipo videojuego.</div>
+      <div class="specs">font-size: 15px · line-height: 1.55</div>
+    </div>
+    <div class="type-card">
+      <div class="label">SMALL · SPACE GROTESK 500</div>
+      <div class="smalld">4 partidos abiertos · RSVP en 1 tap · 140 votos</div>
+      <div class="specs">font-size: 13px</div>
+    </div>
+    <div class="type-card">
+      <div class="label">MONO · JETBRAINS MONO 700</div>
+      <div class="codes">POWERED BY AI · RAG</div>
+      <div class="specs">font-size: 11px · letter-spacing 0.18em · UPPERCASE</div>
+    </div>
+  </div>
+</section>
+
+<!-- 05 PRODUCTO REAL -->
+<section id="producto">
+  <h2 class="title" data-num="05 / Producto">La marca aplicada.</h2>
+  <p class="lead">Capturas reales de la PWA en producción. Hover sobre cada teléfono para verlo de cerca.</p>
+
+  <div class="screens-grid">
+    <div>
+      <div class="phone-frame"><div class="notch"></div><img src="./assets/screenshots/1-landing.png" alt="Landing FutbolBase"></div>
+      <div class="phone-caption"><div class="ttl">Landing</div><div class="desc">Pill "Powered by AI Agents · RAG" + hero italic + 4 features.</div></div>
+    </div>
+    <div>
+      <div class="phone-frame"><div class="notch"></div><img src="./assets/screenshots/2-home.png" alt="Home Tu feed"></div>
+      <div class="phone-caption"><div class="ttl">Tu feed</div><div class="desc">Stories de equipos, encuesta MVP de la jornada, eventos cerca tuyo.</div></div>
+    </div>
+    <div>
+      <div class="phone-frame"><div class="notch"></div><img src="./assets/screenshots/3-profile.png" alt="Perfil jugador"></div>
+      <div class="phone-caption"><div class="ttl">Perfil</div><div class="desc">Tarjeta tipo videojuego · rating 80 · stats PAC/DRI/SHO + heatmap.</div></div>
+    </div>
+    <div>
+      <div class="phone-frame"><div class="notch"></div><img src="./assets/screenshots/4-league.png" alt="Liga Regional"></div>
+      <div class="phone-caption"><div class="ttl">Liga Regional</div><div class="desc">Tabla, goleadores y partidos · Temporada 2026 · Jornada 16.</div></div>
+    </div>
+    <div>
+      <div class="phone-frame"><div class="notch"></div><img src="./assets/screenshots/5-community.png" alt="Comunidad"></div>
+      <div class="phone-caption"><div class="ttl">Comunidad</div><div class="desc">Match AI, quinielas de la jornada y equipos cerca tuyo.</div></div>
+    </div>
+  </div>
+
+  <h3 class="sub" style="margin-top:48px">Componentes UI del sistema</h3>
+  <p class="lead" style="margin-bottom:20px">28 componentes ya construidos en <code style="font-family:'JetBrains Mono';color:var(--lime)">/src/components/ui</code></p>
+  <div class="grid c4">
+    <div class="card lime"><h4>NeonButton</h4><p>Variantes lime / amber / coral / violet con glow.</p></div>
+    <div class="card amber"><h4>GlassCard</h4><p>backdrop-filter blur + saturate(180%).</p></div>
+    <div class="card coral"><h4>BottomNav</h4><p>5 tabs: Inicio · Comunidad · Liga · Chat · Perfil.</p></div>
+    <div class="card violet"><h4>LiveMatchSheet</h4><p>Partido en vivo con ticker y predicciones.</p></div>
+    <div class="card cyan"><h4>RivalScoutSheet</h4><p>Scouting AI del rival próximo.</p></div>
+    <div class="card lime"><h4>LineupSheet</h4><p>Alineación táctica drag-and-drop.</p></div>
+    <div class="card amber"><h4>NotificationsPanel</h4><p>Centro con duelos, eventos y AI tips.</p></div>
+    <div class="card coral"><h4>EpicStadiumBackground</h4><p>Fondo aurora animado de estadio.</p></div>
+  </div>
+</section>
+
+<!-- 06 IA -->
+<section id="ia">
+  <h2 class="title" data-num="06 / IA">9 agentes deterministas.</h2>
+  <p class="lead">El cerebro de FutbolBase: 9 agentes especializados orquestados sobre una base de conocimiento (RAG) de 15 documentos. Cada agente tiene un único trabajo y lo hace bien.</p>
+
+  <div class="agents">
+    <div class="agent"><div class="ic">⚙</div><div class="nm">Coach AI</div><div class="ds">Tips personalizados según stats del jugador.</div></div>
+    <div class="agent"><div class="ic" style="background:rgba(255,184,0,0.18);color:var(--amber)">⚔</div><div class="nm">Duels</div><div class="ds">1v1 ranked con matchmaking por nivel.</div></div>
+    <div class="agent"><div class="ic" style="background:rgba(255,91,58,0.18);color:var(--coral)">◎</div><div class="nm">Rival Scout</div><div class="ds">Análisis del próximo rival con weak spots.</div></div>
+    <div class="agent"><div class="ic" style="background:rgba(0,212,255,0.18);color:var(--cyan)">⌕</div><div class="nm">Match AI</div><div class="ds">Encuentra equipo ideal según posición y zona.</div></div>
+    <div class="agent"><div class="ic" style="background:rgba(204,255,0,0.18);color:var(--lime)">▤</div><div class="nm">Tactics</div><div class="ds">Sugiere formación según rival y plantilla.</div></div>
+    <div class="agent"><div class="ic">★</div><div class="nm">Achievements</div><div class="ds">Detecta gestas y desbloquea 12 badges.</div></div>
+    <div class="agent"><div class="ic" style="background:rgba(255,184,0,0.18);color:var(--amber)">▲</div><div class="nm">Leaderboard</div><div class="ds">Ranking regional semanal con cohorts.</div></div>
+    <div class="agent"><div class="ic" style="background:rgba(255,91,58,0.18);color:var(--coral)">◉</div><div class="nm">Polls</div><div class="ds">MVP de jornada con votación cerrada.</div></div>
+    <div class="agent"><div class="ic" style="background:rgba(0,212,255,0.18);color:var(--cyan)">⟳</div><div class="nm">Replay</div><div class="ds">Highlights generados desde resúmenes.</div></div>
+  </div>
+
+  <h3 class="sub" style="margin-top:36px">Visual identity de la IA</h3>
+  <div class="grid c3">
+    <div class="card violet"><h4>Color · #B347FF</h4><p>Todo lo que sea AI lleva violeta. Es la única función con color propio.</p></div>
+    <div class="card violet"><h4>Pill · POWERED BY AI</h4><p>Mono uppercase, tracking 0.18em, lima sobre fondo translúcido lima 12%.</p></div>
+    <div class="card violet"><h4>Borde animado · AIBorder</h4><p>Componente real <code style="font-family:'JetBrains Mono';font-size:11px;color:var(--lime)">AIBorder.tsx</code> con sweep ring.</p></div>
+  </div>
+</section>
+
+<!-- 07 VIDEO -->
+<section id="video">
+  <h2 class="title" data-num="07 / Demo">Vídeo y motion.</h2>
+  <p class="lead">Coloca tus clips en <code style="font-family:'JetBrains Mono';color:var(--lime)">/docs/assets/</code> con los nombres indicados y se cargan automáticamente.</p>
+
+  <div class="video-stage" id="hero-video">
+    <video muted loop playsinline><source src="./assets/futbolbase-hero.mp4" type="video/mp4"></video>
+    <div class="placeholder">
+      <button class="play" onclick="playVideo('hero-video')">▶</button>
+      <div class="video-caption">Hero reel · 30s · 1920×1080</div>
+      <p style="color:var(--warm-muted);font-size:13px;margin-top:12px;max-width:480px">Reel principal: aurora cálida, balón rebotando, transición a la app.</p>
+    </div>
+  </div>
+
+  <div class="grid c2">
+    <div>
+      <div class="video-stage" id="d1"><video muted loop playsinline><source src="./assets/demo-onboarding.mp4" type="video/mp4"></video><div class="placeholder"><button class="play" onclick="playVideo('d1')">▶</button><div class="video-caption">Demo · Onboarding</div></div></div>
+      <p style="color:var(--warm-muted);font-size:13px;text-align:center">Cómo se da de alta un jugador en 30 segundos.</p>
+    </div>
+    <div>
+      <div class="video-stage" id="d2"><video muted loop playsinline><source src="./assets/demo-coachai.mp4" type="video/mp4"></video><div class="placeholder"><button class="play" onclick="playVideo('d2')">▶</button><div class="video-caption">Demo · Coach AI</div></div></div>
+      <p style="color:var(--warm-muted);font-size:13px;text-align:center">El agente Coach analiza y sugiere mejoras.</p>
+    </div>
+    <div>
+      <div class="video-stage" id="d3"><video muted loop playsinline><source src="./assets/demo-liga.mp4" type="video/mp4"></video><div class="placeholder"><button class="play" onclick="playVideo('d3')">▶</button><div class="video-caption">Demo · Liga Regional</div></div></div>
+      <p style="color:var(--warm-muted);font-size:13px;text-align:center">Tabla, goleadores y partidos en directo.</p>
+    </div>
+    <div>
+      <div class="video-stage" id="d4"><video muted loop playsinline><source src="./assets/demo-perfil.mp4" type="video/mp4"></video><div class="placeholder"><button class="play" onclick="playVideo('d4')">▶</button><div class="video-caption">Demo · Tarjeta jugador</div></div></div>
+      <p style="color:var(--warm-muted);font-size:13px;text-align:center">Rating, stats PAC/DRI/SHO/DEF/PAS/FÍS y heatmap.</p>
+    </div>
+  </div>
+
+  <h3 class="sub" style="margin-top:36px">Reglas de motion (extraídas del código real)</h3>
+  <div class="grid c3">
+    <div class="card lime"><h4>screen-in</h4><p>280 ms · ease-out · translateX 24px → 0. Transición entre páginas.</p></div>
+    <div class="card amber"><h4>glow-breathe</h4><p>3 s loop · drop-shadow lima 8→14px. Solo en CTA principal.</p></div>
+    <div class="card coral"><h4>ken-burns</h4><p>12 s ease-out · scale 1.08 → 1.18. Hero imágenes.</p></div>
+    <div class="card violet"><h4>aurora-drift</h4><p>24 s alternate · hue-rotate ±8°. Background global.</p></div>
+    <div class="card cyan"><h4>twinkle</h4><p>2.5 s loop · opacity 0.3 → 1. Estrellas decorativas.</p></div>
+    <div class="card lime"><h4>chip-sweep</h4><p>3.2 s · barrido diagonal blanco 18→35% sobre chips.</p></div>
+  </div>
+</section>
+
+<!-- 08 VOZ -->
+<section id="voz">
+  <h2 class="title" data-num="08 / Voz">Italic, directo, AI-first.</h2>
+  <p class="lead">Hablamos como una marca de gaming/eSports más que como una app de gestión. Italic en titulares, mono en etiquetas, español neutro.</p>
+
+  <div class="voice-grid">
+    <div class="voice yes">
+      <h4>Sí decimos</h4>
+      <ul>
+        <li>"El fútbol amateur con cerebro propio."</li>
+        <li>"Powered by AI Agents · RAG"</li>
+        <li>"Tu tarjeta. Tus stats. Tu liga."</li>
+        <li>"Encuentra tu equipo ideal."</li>
+        <li>"Eventos cerca tuyo · RSVP en 1 tap."</li>
+        <li>"9 agentes. 12 logros. 1 PWA."</li>
+      </ul>
+    </div>
+    <div class="voice no">
+      <h4>No decimos</h4>
+      <ul>
+        <li>"Plataforma de gestión integral para clubes."</li>
+        <li>"Solución 360 con sinergias B2B."</li>
+        <li>"Inteligencia artificial generativa de última generación."</li>
+        <li>"El líder indiscutido del mercado."</li>
+        <li>"Revolucionamos para siempre el fútbol amateur."</li>
+        <li>"Dashboard ejecutivo data-driven."</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 class="sub" style="margin-top:36px">Reglas de redacción</h3>
+  <div class="grid c3">
+    <div class="card"><h4>Italic en titulares</h4><p>Archivo 900 italic SIEMPRE. Es la firma tipográfica.</p></div>
+    <div class="card"><h4>Mono uppercase para tags</h4><p>Etiquetas como "POWERED BY AI" o "EN VIVO" en JetBrains Mono.</p></div>
+    <div class="card"><h4>Verbos en imperativo</h4><p>"Empezar ahora", "Instalar como app", "Ver formación".</p></div>
+    <div class="card"><h4>Números reales</h4><p>"140 votos", "342 miembros", "Jornada 16". Nunca redondear.</p></div>
+    <div class="card"><h4>Sin tecnicismos</h4><p>"Tu feed" no "Dashboard de actividad". "Liga" no "Competición".</p></div>
+    <div class="card"><h4>Emojis controlados</h4><p>Solo iconos lucide-react. Cero emojis Unicode en UI oficial.</p></div>
+  </div>
+</section>
+
+<!-- 09 TOKENS -->
+<section id="tokens">
+  <h2 class="title" data-num="09 / Tokens">Design tokens reales.</h2>
+  <p class="lead">Extraídos directamente del <code style="font-family:'JetBrains Mono';color:var(--lime)">tailwind.config.js</code> en producción.</p>
+
+  <pre class="tokens" id="tokens-block"><span class="com">// FutbolBase · Electric Citrus Premium · v1.0</span>
+<span class="key">colors</span>: {
+  obsidian: {
+    DEFAULT:    <span class="str">'#0F0D0A'</span>,
+    deep:       <span class="str">'#0F0D0A'</span>,
+    base:       <span class="str">'#141009'</span>,
+    surface:    <span class="str">'#1A1612'</span>,
+    surfaceAlt: <span class="str">'#241F18'</span>,
+  },
+  citrus: {
+    DEFAULT: <span class="str">'#CCFF00'</span>,
+    lime:    <span class="str">'#CCFF00'</span>,
+    amber:   <span class="str">'#FFB800'</span>,
+    coral:   <span class="str">'#FF5B3A'</span>,
+  },
+  warm: {
+    text:   <span class="str">'#FAF5EB'</span>,
+    border: <span class="str">'rgba(255, 220, 180, 0.08)'</span>,
+    muted:  <span class="str">'rgba(250, 245, 235, 0.6)'</span>,
+    dim:    <span class="str">'rgba(250, 245, 235, 0.4)'</span>,
+  },
+  ai:      <span class="str">'#B347FF'</span>,   <span class="com">// IA Violet</span>
+  info:    <span class="str">'#00D4FF'</span>    <span class="com">// Info Cyan</span>
+},
+<span class="key">boxShadow</span>: {
+  <span class="str">'glow-lime'</span>:    <span class="str">'0 0 20px rgba(204,255,0,0.5), 0 0 40px rgba(204,255,0,0.2)'</span>,
+  <span class="str">'glow-lime-sm'</span>: <span class="str">'0 0 10px rgba(204,255,0,0.4)'</span>,
+  <span class="str">'glow-amber'</span>:   <span class="str">'0 0 20px rgba(255,184,0,0.5), 0 0 40px rgba(255,184,0,0.2)'</span>,
+  <span class="str">'glow-coral'</span>:   <span class="str">'0 0 20px rgba(255,91,58,0.5), 0 0 40px rgba(255,91,58,0.2)'</span>,
+},
+<span class="key">fontFamily</span>: {
+  condensed: [<span class="str">'Archivo'</span>, <span class="str">'Barlow Condensed'</span>, <span class="str">'sans-serif'</span>],
+  sans:      [<span class="str">'Space Grotesk'</span>, <span class="str">'Inter'</span>, <span class="str">'sans-serif'</span>],
+  mono:      [<span class="str">'JetBrains Mono'</span>, <span class="str">'monospace'</span>],
+},
+<span class="key">animation</span>: {
+  <span class="str">'pulse-slow'</span>:   <span class="str">'pulse 3s cubic-bezier(0.4,0,0.6,1) infinite'</span>,
+  <span class="str">'float'</span>:        <span class="str">'float 6s ease-in-out infinite'</span>,
+  <span class="str">'glow-breathe'</span>: <span class="str">'glow-breathe 3s ease-in-out infinite'</span>,
+  <span class="str">'screen-in'</span>:    <span class="str">'screen-in 280ms ease-out'</span>,
+  <span class="str">'twinkle'</span>:      <span class="str">'twinkle 2.5s ease-in-out infinite'</span>,
+}</pre>
+
+  <div style="text-align:center;margin-top:24px">
+    <button class="copy-btn" onclick="copyTokens()">Copiar tokens</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p><strong style="color:var(--lime);font-family:'Archivo';font-style:italic">FutbolBase</strong> · Brand Book Interactivo v1.0 · Electric Citrus Premium · 2026</p>
+  <p>PWA con React 19 + Vite 8 · 9 AI agents · 28 UI components · 5 pantallas core</p>
+  <p>Una vertical de Krujens Holding · <a href="mailto:brand@krujens.com">brand@krujens.com</a></p>
+</footer>
+
+<div class="toast" id="toast">Copiado</div>
+
+<script>
+const toast = document.getElementById('toast');
+function showToast(msg){toast.textContent=msg;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1600)}
+
+document.querySelectorAll('.swatch').forEach(s=>{
+  s.addEventListener('click',()=>{
+    const hex = s.dataset.hex;
+    navigator.clipboard.writeText(hex);
+    s.classList.add('copied');
+    setTimeout(()=>s.classList.remove('copied'),1200);
+    showToast('Copiado '+hex);
+  });
+});
+
+function copyTokens(){
+  const txt = document.getElementById('tokens-block').innerText;
+  navigator.clipboard.writeText(txt);
+  showToast('Tokens copiados');
+}
+
+function playVideo(id){
+  const stage = document.getElementById(id);
+  const v = stage.querySelector('video');
+  const p = stage.querySelector('.placeholder');
+  if(v.querySelector('source').src && v.readyState >= 1){
+    v.play(); p.style.display='none';
+  } else {
+    showToast('Coloca tu vídeo en /docs/assets/');
+  }
+}
+</script>
+</body>
+</html>

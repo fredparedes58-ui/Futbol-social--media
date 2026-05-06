@@ -1,4 +1,5 @@
 import { type ReactNode, type CSSProperties, type MouseEvent } from 'react'
+import { useRipple, RippleLayer } from './useRipple'
 
 type Variant = 'lime' | 'amber' | 'coral' | 'gradient'
 
@@ -23,7 +24,11 @@ export default function NeonButton({
   children, onClick, variant = 'lime', fullWidth = true, disabled, style, type = 'button',
 }: NeonButtonProps) {
   const c = COLORS[variant]
-  const press = (e: MouseEvent<HTMLButtonElement>) => { e.currentTarget.style.transform = 'scale(0.98)' }
+  const { ripples, spawn } = useRipple()
+  const press = (e: MouseEvent<HTMLButtonElement>) => {
+    e.currentTarget.style.transform = 'scale(0.98)'
+    spawn(e)
+  }
   const release = (e: MouseEvent<HTMLButtonElement>) => { e.currentTarget.style.transform = 'scale(1)' }
 
   return (
@@ -66,6 +71,7 @@ export default function NeonButton({
         }}
       />
       <span style={{ position: 'relative', zIndex: 1 }}>{children}</span>
+      <RippleLayer ripples={ripples} color={c.text === '#0F0D0A' ? 'rgba(15,13,10,0.3)' : 'rgba(255,255,255,0.4)'} />
     </button>
   )
 }

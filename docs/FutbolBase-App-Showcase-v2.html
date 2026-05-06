@@ -1,0 +1,837 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>FutbolBase — Product Showcase v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --obsidian:#0F0D0A;
+    --obsidian-base:#141009;
+    --obsidian-surface:#1A1612;
+    --obsidian-alt:#241F18;
+    --lime:#CCFF00;
+    --amber:#FFB800;
+    --coral:#FF5B3A;
+    --violet:#B347FF;
+    --cyan:#00D4FF;
+    --warm:#FAF5EB;
+    --warm-muted:rgba(250,245,235,.62);
+    --warm-dim:rgba(250,245,235,.38);
+    --border:rgba(255,220,180,.10);
+    --shadow-lime:0 0 24px rgba(204,255,0,.45),0 0 48px rgba(204,255,0,.18);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--obsidian);color:var(--warm);font-family:'Space Grotesk',Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.5;overflow-x:hidden}
+  body{min-height:100vh;cursor:none}
+  /* Custom cursor */
+  .cur,.cur-trail{position:fixed;top:0;left:0;pointer-events:none;z-index:9999;border-radius:50%;mix-blend-mode:screen;transition:transform .15s ease-out,width .25s,height .25s,background .25s}
+  .cur{width:14px;height:14px;background:#CCFF00;box-shadow:0 0 24px #CCFF00,0 0 48px rgba(204,255,0,.4);transform:translate(-50%,-50%)}
+  .cur-trail{width:42px;height:42px;border:1px solid rgba(204,255,0,.5);transform:translate(-50%,-50%);transition:transform .35s cubic-bezier(.2,.6,.2,1)}
+  .cur.hover{width:50px;height:50px;background:rgba(204,255,0,.14);box-shadow:0 0 32px rgba(204,255,0,.7)}
+  .cur-trail.hover{width:80px;height:80px;border-color:rgba(255,184,0,.7)}
+  @media(hover:none){body{cursor:auto}.cur,.cur-trail{display:none}}
+
+  /* Aurora bg with parallax */
+  .aurora{position:fixed;inset:-30%;pointer-events:none;z-index:-1;filter:blur(80px);opacity:.7;transition:transform .3s cubic-bezier(.2,.6,.2,1)}
+  .aurora::before,.aurora::after{content:'';position:absolute;border-radius:50%}
+  .aurora::before{top:5%;left:10%;width:60%;height:60%;background:radial-gradient(circle,rgba(204,255,0,.35),transparent 60%)}
+  .aurora::after{bottom:5%;right:10%;width:55%;height:55%;background:radial-gradient(circle,rgba(255,91,58,.25),transparent 60%)}
+  .aurora-2{position:fixed;top:30%;left:40%;width:40%;height:40%;background:radial-gradient(circle,rgba(255,184,0,.22),transparent 60%);filter:blur(100px);pointer-events:none;z-index:-1;transition:transform .5s cubic-bezier(.2,.6,.2,1)}
+
+  h1,h2,h3,h4{font-family:'Archivo','Barlow Condensed',sans-serif;font-weight:900;letter-spacing:-.02em;line-height:1.05}
+  .mono{font-family:'JetBrains Mono',monospace}
+  .container{max-width:1240px;margin:0 auto;padding:0 24px}
+  .grad{background:linear-gradient(135deg,#CCFF00 0%,#FFB800 50%,#FF5B3A 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+  a,button,.clickable{cursor:none}
+
+  /* NAV */
+  .nav{position:sticky;top:0;z-index:50;backdrop-filter:saturate(140%) blur(18px);background:rgba(15,13,10,.75);border-bottom:1px solid var(--border)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:68px}
+  .logo{display:flex;align-items:center;gap:10px;font-family:'Archivo';font-weight:900;letter-spacing:-.02em;font-size:20px;cursor:none}
+  .logo-mark{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#CCFF00,#FFB800);display:grid;place-items:center;color:#0F0D0A;font-weight:900;box-shadow:var(--shadow-lime);transition:transform .3s}
+  .logo:hover .logo-mark{transform:rotate(-12deg) scale(1.1)}
+  .nav-links{display:flex;gap:6px}
+  .nav-links a{position:relative;color:var(--warm-muted);text-decoration:none;font-size:14px;font-weight:600;padding:8px 14px;border-radius:8px;transition:color .25s,background .25s}
+  .nav-links a::after{content:'';position:absolute;bottom:4px;left:50%;width:0;height:2px;background:var(--lime);transition:width .3s,left .3s}
+  .nav-links a:hover{color:var(--lime);background:rgba(204,255,0,.06)}
+  .nav-links a:hover::after{width:50%;left:25%}
+  .nav-cta{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border-radius:10px;background:var(--lime);color:#0F0D0A;font-weight:800;text-decoration:none;font-size:14px;box-shadow:var(--shadow-lime);transition:transform .2s,box-shadow .3s}
+  .nav-cta:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 0 32px rgba(204,255,0,.7),0 0 60px rgba(204,255,0,.3)}
+
+  /* HERO */
+  .hero{padding:96px 0 64px;position:relative}
+  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center}
+  .pill{display:inline-flex;align-items:center;gap:8px;padding:7px 16px;border-radius:999px;background:rgba(204,255,0,.10);border:1px solid rgba(204,255,0,.4);color:var(--lime);font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;transition:transform .3s,background .3s}
+  .pill:hover{transform:translateY(-2px);background:rgba(204,255,0,.18)}
+  .hero h1{font-size:clamp(46px,6.6vw,82px);margin:18px 0 18px}
+  .hero h1 .word{display:inline-block;transition:transform .4s,color .3s}
+  .hero h1 .word:hover{transform:translateY(-6px) rotate(-2deg);color:var(--lime)}
+  .hero p.lead{font-size:18px;color:var(--warm-muted);max-width:540px;margin-bottom:28px}
+  .cta-row{display:flex;gap:12px;flex-wrap:wrap}
+  .btn-primary{position:relative;overflow:hidden;padding:14px 24px;border-radius:12px;background:var(--lime);color:#0F0D0A;font-weight:800;text-decoration:none;border:none;font-size:15px;box-shadow:var(--shadow-lime);transition:transform .25s,box-shadow .3s}
+  .btn-primary::before{content:'';position:absolute;inset:0;background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.5) 50%,transparent 70%);transform:translateX(-100%);transition:transform .6s}
+  .btn-primary:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 0 36px rgba(204,255,0,.8),0 0 72px rgba(204,255,0,.4)}
+  .btn-primary:hover::before{transform:translateX(100%)}
+  .btn-ghost{padding:14px 24px;border-radius:12px;background:transparent;border:1px solid var(--border);color:var(--warm);font-weight:700;text-decoration:none;font-size:15px;transition:border-color .25s,color .25s,transform .25s}
+  .btn-ghost:hover{border-color:var(--lime);color:var(--lime);transform:translateY(-2px)}
+  .stats-row{display:flex;gap:36px;margin-top:36px;flex-wrap:wrap}
+  .stat-mini{transition:transform .3s}
+  .stat-mini:hover{transform:translateY(-4px)}
+  .stat-mini .v{font-family:'Archivo';font-size:32px;font-weight:900;color:var(--lime)}
+  .stat-mini .l{font-size:12px;color:var(--warm-dim);text-transform:uppercase;letter-spacing:.12em;font-weight:600}
+
+  /* PHONE — tilt 3D on cursor */
+  .phone-wrap{display:grid;place-items:center;perspective:1200px}
+  .phone{width:310px;height:640px;border-radius:46px;background:#0a0805;padding:14px;border:1px solid var(--border);box-shadow:0 30px 90px rgba(0,0,0,.6),var(--shadow-lime);position:relative;transform-style:preserve-3d;transition:transform .25s cubic-bezier(.2,.6,.2,1)}
+  .phone:hover{box-shadow:0 30px 100px rgba(0,0,0,.7),0 0 60px rgba(204,255,0,.6)}
+  .phone-screen{width:100%;height:100%;border-radius:32px;background:radial-gradient(circle at 50% 0%,#1a1510 0%,#0F0D0A 60%);overflow:hidden;position:relative;display:flex;flex-direction:column}
+  .phone-notch{position:absolute;top:8px;left:50%;transform:translateX(-50%) translateZ(20px);width:96px;height:24px;background:#000;border-radius:14px;z-index:5}
+  .phone-status{padding:18px 18px 10px;display:flex;justify-content:space-between;align-items:center;font-size:11px;font-weight:700;color:var(--warm)}
+  .ph-hero{padding:14px 18px 8px}
+  .ph-hero .pillet{display:inline-block;padding:4px 10px;border-radius:999px;background:rgba(204,255,0,.12);border:1px solid rgba(204,255,0,.4);color:var(--lime);font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+  .ph-hero h2{font-size:25px;margin:8px 0 4px;line-height:1.05}
+  .ph-hero h2 span.gd{background:linear-gradient(135deg,#CCFF00,#FFB800);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .ph-hero p{font-size:11px;color:var(--warm-muted)}
+  .ph-features{padding:8px 18px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .ph-feat{padding:10px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid var(--border);transition:transform .25s,background .25s}
+  .ph-feat:hover{transform:translateY(-2px) translateZ(15px);background:rgba(255,255,255,.07)}
+  .ph-feat .d{width:22px;height:22px;border-radius:6px;display:grid;place-items:center;margin-bottom:6px;color:#0F0D0A;font-weight:900;font-size:11px}
+  .ph-feat .t{font-size:11px;font-weight:800;color:var(--warm)}
+  .ph-feat .s{font-size:9px;color:var(--warm-dim)}
+  .ph-cta{margin:auto 18px 16px;padding:11px;border-radius:12px;background:var(--lime);color:#0F0D0A;font-weight:800;font-size:13px;text-align:center;box-shadow:var(--shadow-lime)}
+  .ph-bottom-nav{display:flex;justify-content:space-around;padding:10px 0;border-top:1px solid var(--border);background:rgba(15,13,10,.6)}
+  .ph-bn-item{font-size:9px;color:var(--warm-dim);text-align:center;transition:color .2s,transform .25s}
+  .ph-bn-item.active{color:var(--lime)}
+  .ph-bn-item:hover{color:var(--lime);transform:translateY(-2px)}
+  .ph-bn-item .ic{font-size:14px;display:block;margin-bottom:2px}
+
+  /* SECTION HEADERS */
+  section{padding:104px 0;position:relative}
+  .section-eyebrow{font-size:12px;color:var(--lime);font-weight:800;letter-spacing:.18em;text-transform:uppercase}
+  .section-title{font-size:clamp(36px,5vw,58px);margin:10px 0 14px}
+  .section-lead{font-size:17px;color:var(--warm-muted);max-width:720px}
+  .section-head{margin-bottom:56px}
+
+  /* VIDEO */
+  .video-frame{border-radius:18px;border:1px solid var(--border);background:var(--obsidian-base);overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.5);transition:transform .4s,box-shadow .4s}
+  .video-frame:hover{transform:translateY(-6px);box-shadow:0 40px 100px rgba(0,0,0,.7),0 0 60px rgba(204,255,0,.25)}
+  .video-bar{display:flex;align-items:center;gap:8px;padding:12px 14px;background:#1A1612;border-bottom:1px solid var(--border)}
+  .vb-dot{width:11px;height:11px;border-radius:50%}
+  .vb-dot.r{background:#FF5B3A}.vb-dot.y{background:#FFB800}.vb-dot.g{background:#CCFF00}
+  .vb-url{margin-left:auto;font-size:12px;color:var(--warm-dim);font-family:'JetBrains Mono'}
+  .video-stage{aspect-ratio:16/9;position:relative;background:radial-gradient(circle at 50% 50%,#241F18 0%,#0F0D0A 70%);display:grid;place-items:center;overflow:hidden}
+  .play-btn{width:88px;height:88px;border-radius:50%;background:var(--lime);color:#0F0D0A;display:grid;place-items:center;font-size:32px;box-shadow:var(--shadow-lime);transition:transform .3s,box-shadow .3s;animation:pulseRing 2.4s ease-out infinite}
+  @keyframes pulseRing{0%{box-shadow:0 0 0 0 rgba(204,255,0,.6),var(--shadow-lime)}100%{box-shadow:0 0 0 40px rgba(204,255,0,0),var(--shadow-lime)}}
+  .play-btn:hover{transform:scale(1.15)}
+  .video-stage video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}
+
+  /* SCREENS — Tabs interactivos */
+  .screens-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px;justify-content:center}
+  .screens-tab{padding:9px 18px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--warm-muted);font-weight:700;font-size:13px;transition:all .25s}
+  .screens-tab:hover{color:var(--warm);border-color:rgba(204,255,0,.4)}
+  .screens-tab.active{background:var(--lime);color:#0F0D0A;border-color:var(--lime);box-shadow:var(--shadow-lime)}
+  .screen-stage{display:grid;grid-template-columns:1.1fr 1fr;gap:48px;align-items:center;min-height:560px}
+  .screen-stage-img{border-radius:24px;border:1px solid var(--border);background:#0a0805;padding:14px;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+  .screen-stage-img img{width:100%;border-radius:16px;display:block;transition:transform .6s}
+  .screen-stage-info h3{font-size:36px;margin-bottom:14px}
+  .screen-stage-info .desc{font-size:16px;color:var(--warm-muted);margin-bottom:20px}
+  .screen-stage-info ul{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
+  .screen-stage-info li{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--warm-muted)}
+  .screen-stage-info li::before{content:'▸';color:var(--lime);font-weight:900;flex-shrink:0}
+  .screen-meta{display:flex;gap:20px;flex-wrap:wrap;padding-top:18px;border-top:1px solid var(--border)}
+  .screen-meta .m .k{font-size:11px;color:var(--warm-dim);text-transform:uppercase;letter-spacing:.12em;font-weight:700}
+  .screen-meta .m .v{font-family:'JetBrains Mono';color:var(--lime);font-weight:700;font-size:14px}
+
+  /* BIG STATS */
+  .big-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:8px}
+  .big-stat{padding:36px 24px;border-radius:18px;background:rgba(255,255,255,.03);border:1px solid var(--border);text-align:center;transition:transform .35s,border-color .35s,background .35s}
+  .big-stat:hover{transform:translateY(-6px);border-color:rgba(204,255,0,.4);background:rgba(204,255,0,.04)}
+  .big-stat .n{font-family:'Archivo';font-size:60px;font-weight:900;line-height:1}
+  .big-stat .lb{font-size:13px;color:var(--warm-dim);text-transform:uppercase;letter-spacing:.14em;font-weight:700;margin-top:8px}
+
+  /* FEATURES — flip cards */
+  .feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px}
+  .feat{position:relative;height:240px;perspective:1000px}
+  .feat-inner{position:absolute;inset:0;border-radius:18px;transform-style:preserve-3d;transition:transform .8s cubic-bezier(.2,.6,.2,1)}
+  .feat:hover .feat-inner{transform:rotateY(180deg)}
+  .feat-face{position:absolute;inset:0;border-radius:18px;backface-visibility:hidden;padding:28px;background:rgba(255,255,255,.03);border:1px solid var(--border);display:flex;flex-direction:column}
+  .feat-back{transform:rotateY(180deg);background:linear-gradient(135deg,rgba(204,255,0,.10),rgba(255,184,0,.06));border-color:rgba(204,255,0,.4)}
+  .feat .ic{width:50px;height:50px;border-radius:12px;display:grid;place-items:center;font-size:24px;margin-bottom:16px}
+  .feat h3{font-size:20px;margin-bottom:8px}
+  .feat p{font-size:14px;color:var(--warm-muted)}
+  .feat-back h4{font-size:17px;margin-bottom:10px;color:var(--lime)}
+  .feat-back ul{list-style:none;display:flex;flex-direction:column;gap:6px}
+  .feat-back li{font-size:12.5px;color:var(--warm);display:flex;gap:8px;align-items:flex-start}
+  .feat-back li::before{content:'✓';color:var(--lime);font-weight:900;flex-shrink:0}
+  .feat-hint{margin-top:auto;font-size:11px;color:var(--warm-dim);text-transform:uppercase;letter-spacing:.14em;font-weight:700}
+
+  /* AGENTS */
+  .agents-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+  .agent{padding:24px;border-radius:16px;background:linear-gradient(135deg,rgba(204,255,0,.06),rgba(255,184,0,.04));border:1px solid var(--border);transition:transform .35s,border-color .35s}
+  .agent:hover{transform:translateY(-4px) scale(1.02);border-color:rgba(204,255,0,.5)}
+  .agent .nb{font-family:'JetBrains Mono';color:var(--lime);font-size:12px;font-weight:700;letter-spacing:.18em}
+  .agent h4{font-size:18px;margin:6px 0 6px}
+  .agent .d{font-size:13px;color:var(--warm-muted)}
+  .agent .ex{margin-top:14px;padding:10px;border-radius:8px;background:rgba(0,0,0,.4);font-family:'JetBrains Mono';font-size:11px;color:var(--lime);border-left:2px solid var(--lime)}
+
+  /* BUILDER */
+  .builder{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+  .builder-card{padding:32px;border-radius:22px;background:rgba(255,255,255,.04);border:1px solid var(--border)}
+  .input-row{display:flex;flex-direction:column;gap:6px;margin-bottom:18px}
+  .input-row label{font-size:12px;color:var(--warm-dim);text-transform:uppercase;letter-spacing:.12em;font-weight:700}
+  .input-row input,.input-row select{padding:12px 14px;border-radius:10px;background:var(--obsidian-base);border:1px solid var(--border);color:var(--warm);font-size:14px;font-family:inherit;transition:border-color .25s,box-shadow .25s}
+  .input-row input:focus,.input-row select:focus{outline:none;border-color:var(--lime);box-shadow:0 0 0 3px rgba(204,255,0,.18)}
+  .slider-row{display:grid;grid-template-columns:120px 1fr 50px;align-items:center;gap:14px;margin-bottom:14px}
+  .slider-row label{font-size:13px;font-weight:700}
+  .slider-row input[type=range]{accent-color:var(--lime);height:6px}
+  .slider-row .val{font-family:'JetBrains Mono';font-weight:800;color:var(--lime);text-align:right;transition:transform .15s}
+
+  .card-preview{padding:28px;border-radius:24px;background:linear-gradient(160deg,#241F18 0%,#141009 100%);border:1px solid rgba(204,255,0,.35);box-shadow:var(--shadow-lime);text-align:center;position:relative;overflow:hidden;transition:transform .3s}
+  .card-preview::before{content:'';position:absolute;inset:-30%;background:radial-gradient(circle at 30% 20%,rgba(204,255,0,.18),transparent 60%);pointer-events:none}
+  .ovr-circle{margin:0 auto 14px;width:150px;height:150px;border-radius:50%;display:grid;place-items:center;position:relative;background:conic-gradient(var(--lime) 0deg,var(--lime) calc(var(--ovr,75)*3.6deg),rgba(255,255,255,.05) calc(var(--ovr,75)*3.6deg),rgba(255,255,255,.05) 360deg);transition:background .4s}
+  .ovr-inner{width:124px;height:124px;border-radius:50%;background:#0F0D0A;display:grid;place-items:center}
+  .ovr-num{font-family:'Archivo';font-size:50px;font-weight:900;color:var(--lime);line-height:1;transition:color .4s}
+  .ovr-lab{font-size:10px;color:var(--warm-dim);text-transform:uppercase;letter-spacing:.18em;font-weight:700;margin-top:4px}
+  .card-preview .pname{font-family:'Archivo';font-weight:900;font-size:24px;letter-spacing:-.01em}
+  .card-preview .ppos{font-size:12px;color:var(--warm-muted);font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin-top:2px}
+  .card-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px;text-align:center}
+  .card-stats .cs{padding:10px 4px;border-radius:10px;background:rgba(0,0,0,.35);border:1px solid var(--border);transition:transform .2s}
+  .card-stats .cs:hover{transform:translateY(-2px)}
+  .card-stats .cs .v{font-family:'Archivo';font-weight:900;font-size:18px;color:var(--lime);transition:color .4s}
+  .card-stats .cs .l{font-size:9px;color:var(--warm-dim);font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+
+  /* PLANS — sin precio, comparativa interactiva */
+  .plans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;align-items:stretch}
+  .plan{position:relative;padding:36px 30px;border-radius:22px;background:rgba(255,255,255,.03);border:1px solid var(--border);transition:transform .4s cubic-bezier(.2,.6,.2,1),border-color .4s,box-shadow .4s}
+  .plan:hover{transform:translateY(-10px) scale(1.02);border-color:rgba(204,255,0,.5);box-shadow:0 30px 80px rgba(0,0,0,.5),0 0 60px rgba(204,255,0,.25)}
+  .plan.featured{border-color:rgba(204,255,0,.55);background:linear-gradient(160deg,rgba(204,255,0,.08),rgba(255,184,0,.04));box-shadow:var(--shadow-lime)}
+  .plan .ribbon{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--lime);color:#0F0D0A;padding:5px 16px;border-radius:999px;font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;box-shadow:var(--shadow-lime)}
+  .plan .icon-orb{width:64px;height:64px;border-radius:18px;display:grid;place-items:center;font-size:30px;background:linear-gradient(135deg,rgba(204,255,0,.15),rgba(255,184,0,.08));border:1px solid var(--border);margin-bottom:18px;transition:transform .4s}
+  .plan:hover .icon-orb{transform:rotate(-8deg) scale(1.1)}
+  .plan h3{font-size:30px;margin-bottom:6px}
+  .plan .tag{font-size:12px;color:var(--lime);font-weight:800;letter-spacing:.16em;text-transform:uppercase}
+  .plan .desc{font-size:14px;color:var(--warm-muted);margin:14px 0 22px;min-height:42px}
+  .plan ul{list-style:none;display:flex;flex-direction:column;gap:11px;margin-bottom:24px}
+  .plan li{font-size:13.5px;color:var(--warm);display:flex;gap:10px;align-items:flex-start;line-height:1.45;transition:color .25s,transform .2s}
+  .plan li:hover{color:var(--lime);transform:translateX(4px)}
+  .plan li::before{content:'✓';color:var(--lime);font-weight:900;flex-shrink:0;font-size:14px}
+  .plan .plan-cta{display:block;text-align:center;padding:14px;border-radius:12px;background:transparent;border:1px solid var(--border);color:var(--warm);font-weight:800;text-decoration:none;transition:all .25s;margin-top:auto}
+  .plan:hover .plan-cta,.plan.featured .plan-cta{background:var(--lime);color:#0F0D0A;border-color:var(--lime);box-shadow:var(--shadow-lime)}
+
+  /* COMPARISON TABLE */
+  .compare-wrap{margin-top:48px;padding:32px;border-radius:22px;background:rgba(255,255,255,.02);border:1px solid var(--border);overflow-x:auto}
+  .compare-wrap h3{font-size:22px;margin-bottom:18px;text-align:center}
+  table.compare{width:100%;border-collapse:collapse;min-width:680px}
+  table.compare th,table.compare td{padding:14px 16px;text-align:left;border-bottom:1px solid var(--border);font-size:14px}
+  table.compare th{font-family:'Archivo';font-weight:800;font-size:15px;color:var(--lime);background:rgba(204,255,0,.04);position:relative}
+  table.compare th:first-child{color:var(--warm-muted);background:transparent}
+  table.compare td{color:var(--warm-muted)}
+  table.compare td:first-child{color:var(--warm);font-weight:600}
+  table.compare tr{transition:background .2s}
+  table.compare tbody tr:hover{background:rgba(204,255,0,.04)}
+  table.compare .yes{color:var(--lime);font-weight:900;font-size:18px}
+  table.compare .no{color:var(--warm-dim);font-size:18px}
+
+  /* FAQ */
+  .faq{display:flex;flex-direction:column;gap:14px;max-width:880px;margin:0 auto}
+  .faq-item{padding:22px 26px;border-radius:14px;background:rgba(255,255,255,.03);border:1px solid var(--border);transition:border-color .25s,background .25s}
+  .faq-item:hover{border-color:rgba(204,255,0,.3);background:rgba(255,255,255,.05)}
+  .faq-item summary{font-weight:800;font-size:16px;list-style:none;display:flex;justify-content:space-between;align-items:center}
+  .faq-item summary::-webkit-details-marker{display:none}
+  .faq-item summary::after{content:'+';color:var(--lime);font-size:24px;font-weight:300;transition:transform .3s}
+  .faq-item[open] summary::after{content:'−';transform:rotate(180deg)}
+  .faq-item p{margin-top:14px;color:var(--warm-muted);font-size:14px}
+
+  /* CTA / FOOTER */
+  .cta-block{position:relative;text-align:center;padding:84px 32px;border-radius:30px;background:linear-gradient(135deg,rgba(204,255,0,.10),rgba(255,184,0,.06));border:1px solid rgba(204,255,0,.35);overflow:hidden}
+  .cta-block::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(204,255,0,.18),transparent 50%);pointer-events:none;transition:background .2s}
+  .cta-block h2{font-size:clamp(34px,5vw,54px);margin-bottom:14px;position:relative}
+  .cta-block p{font-size:17px;color:var(--warm-muted);margin-bottom:28px;max-width:560px;margin-left:auto;margin-right:auto;position:relative}
+  .cta-block .cta-row{position:relative;justify-content:center;display:flex}
+
+  footer{padding:48px 0 36px;border-top:1px solid var(--border);color:var(--warm-dim);font-size:13px}
+  .footer-inner{display:flex;justify-content:space-between;flex-wrap:wrap;gap:18px;align-items:center}
+  footer a{color:var(--warm-dim);text-decoration:none;transition:color .25s}
+  footer a:hover{color:var(--lime)}
+
+  @media (max-width: 920px){
+    .hero-grid{grid-template-columns:1fr;text-align:center}
+    .phone-wrap{margin:0 auto}
+    .builder,.screen-stage{grid-template-columns:1fr}
+    .plans-grid{grid-template-columns:1fr}
+    .big-stats{grid-template-columns:repeat(2,1fr)}
+    .nav-links{display:none}
+    body{cursor:auto}
+    .cur,.cur-trail{display:none}
+  }
+
+  .reveal{opacity:0;transform:translateY(28px);transition:opacity .9s,transform .9s}
+  .reveal.in{opacity:1;transform:none}
+</style>
+</head>
+<body>
+
+<div class="aurora"></div>
+<div class="aurora-2"></div>
+<div class="cur-trail" id="curTrail"></div>
+<div class="cur" id="cur"></div>
+
+<!-- NAV -->
+<header class="nav">
+  <div class="container nav-inner">
+    <div class="logo clickable"><span class="logo-mark">FB</span><span>FutbolBase</span></div>
+    <nav class="nav-links">
+      <a href="#producto" class="clickable">Producto</a>
+      <a href="#pantallas" class="clickable">Pantallas</a>
+      <a href="#features" class="clickable">Features</a>
+      <a href="#tarjeta" class="clickable">Tarjeta FIFA</a>
+      <a href="#planes" class="clickable">Planes</a>
+      <a href="#faq" class="clickable">FAQ</a>
+    </nav>
+    <a class="nav-cta clickable" href="#cta">▶ Empezar</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container hero-grid">
+    <div class="reveal in">
+      <span class="pill clickable">⚡ Powered by AI Agents · RAG · App nativa iOS · Android</span>
+      <h1 id="heroTitle"><span class="word">El</span> <span class="word">fútbol</span> <span class="word">amateur</span><br><span class="grad word">con</span> <span class="grad word">cerebro</span> <span class="grad word">propio.</span></h1>
+      <p class="lead">Una app nativa para iOS y Android pensada para clubs, equipos y familias del fútbol base. Feed social, liga FFCV en directo, coach AI, scouting con RAG y pizarra táctica — todo en una sola descarga desde la App Store y Google Play.</p>
+      <div class="cta-row">
+        <a class="btn-primary clickable" href="#cta">▶ Empezar ahora</a>
+        <a class="btn-ghost clickable" href="#pantallas">Ver pantallas</a>
+      </div>
+      <div class="stats-row">
+        <div class="stat-mini clickable"><div class="v">12</div><div class="l">Badges</div></div>
+        <div class="stat-mini clickable"><div class="v">13</div><div class="l">Equipos FFCV</div></div>
+        <div class="stat-mini clickable"><div class="v">4</div><div class="l">Agentes IA</div></div>
+        <div class="stat-mini clickable"><div class="v">100%</div><div class="l">Offline-first</div></div>
+      </div>
+    </div>
+
+    <div class="phone-wrap">
+      <div class="phone" id="tiltPhone">
+        <div class="phone-screen">
+          <div class="phone-notch"></div>
+          <div class="phone-status"><span>9:41</span><span>5G ◉◉◉</span></div>
+          <div class="ph-hero">
+            <span class="pillet">✨ Powered by AI · RAG</span>
+            <h2>El fútbol amateur<br><span class="gd">con cerebro propio.</span></h2>
+            <p>Agentes deterministas, predicciones, coach AI y comunidad en una app nativa iOS y Android.</p>
+          </div>
+          <div class="ph-features">
+            <div class="ph-feat clickable"><div class="d" style="background:#B347FF">🧠</div><div class="t">IA deportiva</div><div class="s">Coach + RAG</div></div>
+            <div class="ph-feat clickable"><div class="d" style="background:#FFB800">🏆</div><div class="t">Liga + logros</div><div class="s">12 badges</div></div>
+            <div class="ph-feat clickable"><div class="d" style="background:#00D4FF">👥</div><div class="t">Comunidad</div><div class="s">Stories · 1v1</div></div>
+            <div class="ph-feat clickable"><div class="d" style="background:#CCFF00">⚡</div><div class="t">Tiempo real</div><div class="s">Live · ticker</div></div>
+          </div>
+          <div class="ph-cta">▶ Empezar ahora</div>
+          <div class="ph-bottom-nav">
+            <div class="ph-bn-item active clickable"><span class="ic">🏠</span>Inicio</div>
+            <div class="ph-bn-item clickable"><span class="ic">🔍</span>Explorar</div>
+            <div class="ph-bn-item clickable"><span class="ic">⚽</span>Live</div>
+            <div class="ph-bn-item clickable"><span class="ic">💬</span>Chat</div>
+            <div class="ph-bn-item clickable"><span class="ic">👤</span>Perfil</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VIDEO -->
+<section id="producto">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="section-eyebrow">Walkthrough</div>
+      <h2 class="section-title">Mira la app <span class="grad">en acción.</span></h2>
+      <p class="section-lead">Recorrido por las pantallas reales: onboarding, feed con stories, liga FFCV en vivo, comunidad, chat y perfil con tarjeta FIFA.</p>
+    </div>
+    <div class="video-frame reveal clickable">
+      <div class="video-bar">
+        <div class="vb-dot r"></div><div class="vb-dot y"></div><div class="vb-dot g"></div>
+        <div class="vb-url">futbolbase.app — demo</div>
+      </div>
+      <div class="video-stage" id="videoStage" onclick="playDemo()">
+        <div class="play-btn clickable" id="playBtn">▶</div>
+        <video id="demoVid" muted playsinline controls preload="none">
+          <source src="assets/futbolbase-demo.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SCREENS — TABS INTERACTIVOS -->
+<section id="pantallas" style="padding-top:0">
+  <div class="container">
+    <div class="section-head reveal" style="text-align:center">
+      <div class="section-eyebrow">Las pantallas reales</div>
+      <h2 class="section-title">5 vistas, <span class="grad">1 app nativa.</span></h2>
+      <p class="section-lead" style="margin:0 auto">Capturas reales del build actual de FutbolBase. Haz click en cada pestaña para explorar.</p>
+    </div>
+    <div class="screens-tabs reveal">
+      <button class="screens-tab clickable active" data-tab="0">🚀 Onboarding</button>
+      <button class="screens-tab clickable" data-tab="1">📰 Feed Home</button>
+      <button class="screens-tab clickable" data-tab="2">⚽ Tarjeta FIFA</button>
+      <button class="screens-tab clickable" data-tab="3">🏆 Liga FFCV</button>
+      <button class="screens-tab clickable" data-tab="4">👥 Comunidad</button>
+    </div>
+    <div class="screen-stage reveal">
+      <div class="screen-stage-img"><img id="screenImg" src="assets/screenshots/1-landing.png" alt=""></div>
+      <div class="screen-stage-info" id="screenInfo"></div>
+    </div>
+  </div>
+</section>
+
+<!-- BIG STATS -->
+<section style="padding-top:0">
+  <div class="container">
+    <div class="big-stats">
+      <div class="big-stat reveal clickable"><div class="n grad" data-target="13">0</div><div class="lb">Equipos liga FFCV</div></div>
+      <div class="big-stat reveal clickable"><div class="n grad" data-target="12">0</div><div class="lb">Badges desbloqueables</div></div>
+      <div class="big-stat reveal clickable"><div class="n grad" data-target="14">0</div><div class="lb">Rutas implementadas</div></div>
+      <div class="big-stat reveal clickable"><div class="n grad" data-target="2">0</div><div class="lb">Plataformas nativas</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES — FLIP CARDS -->
+<section id="features">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="section-eyebrow">Funcionalidades</div>
+      <h2 class="section-title">Todo lo que necesita un club <span class="grad">de fútbol base.</span></h2>
+      <p class="section-lead">Pasa el cursor sobre cada tarjeta para ver el detalle técnico. Construido sobre React 19 + Supabase + Tailwind.</p>
+    </div>
+    <div class="feat-grid">
+
+      <div class="feat reveal clickable"><div class="feat-inner">
+        <div class="feat-face"><div class="ic" style="background:rgba(204,255,0,.14);color:#CCFF00">🧠</div><h3>IA deportiva</h3><p>Coach AI, Scouting RAG, Predictor de partidos y Tactic Generator. Pipeline determinista.</p><div class="feat-hint">↻ hover para detalle</div></div>
+        <div class="feat-face feat-back"><h4>Detalle técnico</h4><ul><li>4 agentes deterministas</li><li>RAG sobre corpus equipo</li><li>Voyage AI embeddings</li><li>Temperature controlada</li><li>Versionado de prompts</li></ul></div>
+      </div></div>
+
+      <div class="feat reveal clickable"><div class="feat-inner">
+        <div class="feat-face"><div class="ic" style="background:rgba(255,184,0,.14);color:#FFB800">🏆</div><h3>Liga FFCV + ranking</h3><p>13 equipos juveniles reales de Valencia, clasificación, goleadores live y ranking semanal.</p><div class="feat-hint">↻ hover para detalle</div></div>
+        <div class="feat-face feat-back"><h4>Datos en vivo</h4><ul><li>13 equipos cargados</li><li>Goleadores Supabase</li><li>Jornada actualizada</li><li>Mi equipo destacado</li><li>Ranking semanal</li></ul></div>
+      </div></div>
+
+      <div class="feat reveal clickable"><div class="feat-inner">
+        <div class="feat-face"><div class="ic" style="background:rgba(179,71,255,.14);color:#B347FF">👥</div><h3>Red social del equipo</h3><p>Feed con stories 24h, posts con fotos/vídeo, likes, comentarios y notificaciones realtime.</p><div class="feat-hint">↻ hover para detalle</div></div>
+        <div class="feat-face feat-back"><h4>Engagement</h4><ul><li>Stories 24h</li><li>Infinite scroll</li><li>Likes optimistas</li><li>Comentarios anidados</li><li>Mentions @</li></ul></div>
+      </div></div>
+
+      <div class="feat reveal clickable"><div class="feat-inner">
+        <div class="feat-face"><div class="ic" style="background:rgba(0,212,255,.14);color:#00D4FF">⚽</div><h3>Partidos + stats</h3><p>Crea partidos, registra resultado, stats por jugador y MVP voting post-partido.</p><div class="feat-hint">↻ hover para detalle</div></div>
+        <div class="feat-face feat-back"><h4>Métricas</h4><ul><li>Goles · asistencias</li><li>Tarjetas amarillas/rojas</li><li>Minutos jugados</li><li>MVP voting</li><li>Histórico por temporada</li></ul></div>
+      </div></div>
+
+      <div class="feat reveal clickable"><div class="feat-inner">
+        <div class="feat-face"><div class="ic" style="background:rgba(255,91,58,.14);color:#FF5B3A">📋</div><h3>Pizarra táctica</h3><p>Formaciones 4-3-3, 4-4-2, 5-3-2, 3-5-2 con drag-drop sobre pitch SVG y export PNG.</p><div class="feat-hint">↻ hover para detalle</div></div>
+        <div class="feat-face feat-back"><h4>Editor SVG</h4><ul><li>4 formaciones base</li><li>@dnd-kit drag-drop</li><li>Anotaciones a mano</li><li>Líneas de juego</li><li>Export PNG/PDF</li></ul></div>
+      </div></div>
+
+      <div class="feat reveal clickable"><div class="feat-inner">
+        <div class="feat-face"><div class="ic" style="background:rgba(204,255,0,.14);color:#CCFF00">💬</div><h3>Chat realtime</h3><p>Chat de equipo + 1-a-1 con Supabase Realtime, indicador de escritura y read receipts.</p><div class="feat-hint">↻ hover para detalle</div></div>
+        <div class="feat-face feat-back"><h4>Realtime stack</h4><ul><li>Supabase Realtime</li><li>Typing indicator</li><li>Read receipts</li><li>Push on mention</li><li>Adjuntos: foto/video</li></ul></div>
+      </div></div>
+
+      <div class="feat reveal clickable"><div class="feat-inner">
+        <div class="feat-face"><div class="ic" style="background:rgba(255,184,0,.14);color:#FFB800">🎯</div><h3>Reservas de campo</h3><p>Reserva campos F7/F11 por slot horario, gestiona disponibilidad y notifica al equipo.</p><div class="feat-hint">↻ hover para detalle</div></div>
+        <div class="feat-face feat-back"><h4>Booking engine</h4><ul><li>F7 · F11 · indoor</li><li>Slots de 60/90 min</li><li>Calendario semanal</li><li>Confirmaciones email</li><li>Cancel hasta 24h</li></ul></div>
+      </div></div>
+
+      <div class="feat reveal clickable"><div class="feat-inner">
+        <div class="feat-face"><div class="ic" style="background:rgba(179,71,255,.14);color:#B347FF">📣</div><h3>Tablón de avisos</h3><p>Avisos prioridad normal/urgente del entrenador con read-receipts y push.</p><div class="feat-hint">↻ hover para detalle</div></div>
+        <div class="feat-face feat-back"><h4>Notificaciones</h4><ul><li>Normal · urgente</li><li>Read receipts</li><li>Web Push API</li><li>Programación futura</li><li>Pin en feed</li></ul></div>
+      </div></div>
+
+      <div class="feat reveal clickable"><div class="feat-inner">
+        <div class="feat-face"><div class="ic" style="background:rgba(0,212,255,.14);color:#00D4FF">📱</div><h3>App nativa iOS · Android</h3><p>Disponible en App Store y Google Play. Push nativas, biometría, cámara y sincronización offline con SQLite local.</p><div class="feat-hint">↻ hover para detalle</div></div>
+        <div class="feat-face feat-back"><h4>Native stack</h4><ul><li>React Native + Expo</li><li>App Store + Google Play</li><li>Push APNs / FCM</li><li>Face ID · huella</li><li>Cámara + galería</li></ul></div>
+      </div></div>
+
+    </div>
+  </div>
+</section>
+
+<!-- AGENTS -->
+<section style="padding-top:0">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="section-eyebrow">Stack IA</div>
+      <h2 class="section-title">4 agentes <span class="grad">+ RAG.</span></h2>
+      <p class="section-lead">Cada agente con un rol determinista y prompt versionado. RAG indexa partidos, stats y feedback histórico.</p>
+    </div>
+    <div class="agents-grid">
+      <div class="agent reveal clickable"><div class="nb">AGENT 01</div><h4>Coach AI</h4><div class="d">Recomienda entrenamiento personal según posición, lesiones y rendimiento del último mes.</div><div class="ex">› "Sprints 30m · core 15min · finalización"</div></div>
+      <div class="agent reveal clickable"><div class="nb">AGENT 02</div><h4>Scouting RAG</h4><div class="d">Encuentra jugadores similares al perfil pedido recorriendo el corpus de equipos FFCV indexados.</div><div class="ex">› "MCO ofensivo 16 años · top 3 Valencia"</div></div>
+      <div class="agent reveal clickable"><div class="nb">AGENT 03</div><h4>Match Predictor</h4><div class="d">Predice resultado y goleadores del próximo partido según histórico, racha y bajas declaradas.</div><div class="ex">› "VCF 2-1 Levante · MVP: García"</div></div>
+      <div class="agent reveal clickable"><div class="nb">AGENT 04</div><h4>Tactic Generator</h4><div class="d">Genera formación + plan de partido contextualizado al rival, terreno y XI disponible esa jornada.</div><div class="ex">› "4-3-3 alta presión · banda izda libre"</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- BUILDER -->
+<section id="tarjeta">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="section-eyebrow">Construye tu tarjeta</div>
+      <h2 class="section-title">Tu jugador, <span class="grad">en formato FIFA.</span></h2>
+      <p class="section-lead">Mueve los sliders y observa cómo cambia tu tarjeta en tiempo real. Misma lógica que la pantalla de Perfil de la app.</p>
+    </div>
+    <div class="builder">
+      <div class="builder-card reveal">
+        <div class="input-row"><label>Nombre</label><input id="bName" value="Pedro Paredes" class="clickable" /></div>
+        <div class="input-row"><label>Posición</label>
+          <select id="bPos" class="clickable">
+            <option>POR</option><option>DFC</option><option>LD</option><option>LI</option>
+            <option>MCD</option><option selected>MCO</option><option>MD</option><option>MI</option>
+            <option>DC</option><option>ED</option><option>EI</option>
+          </select>
+        </div>
+        <div class="slider-row"><label>Velocidad</label><input type="range" min="40" max="99" value="78" id="s1" class="clickable"><span class="val" id="v1">78</span></div>
+        <div class="slider-row"><label>Tiro</label><input type="range" min="40" max="99" value="82" id="s2" class="clickable"><span class="val" id="v2">82</span></div>
+        <div class="slider-row"><label>Pase</label><input type="range" min="40" max="99" value="86" id="s3" class="clickable"><span class="val" id="v3">86</span></div>
+        <div class="slider-row"><label>Regate</label><input type="range" min="40" max="99" value="84" id="s4" class="clickable"><span class="val" id="v4">84</span></div>
+        <div class="slider-row"><label>Defensa</label><input type="range" min="40" max="99" value="62" id="s5" class="clickable"><span class="val" id="v5">62</span></div>
+        <div class="slider-row"><label>Físico</label><input type="range" min="40" max="99" value="74" id="s6" class="clickable"><span class="val" id="v6">74</span></div>
+      </div>
+
+      <div class="card-preview reveal">
+        <div class="ovr-circle" id="ovrCircle" style="--ovr:78">
+          <div class="ovr-inner"><div><div class="ovr-num" id="ovrNum">78</div><div class="ovr-lab">OVR</div></div></div>
+        </div>
+        <div class="pname" id="pName">Pedro Paredes</div>
+        <div class="ppos" id="pPos">MCO</div>
+        <div class="card-stats">
+          <div class="cs clickable"><div class="v" id="d1">78</div><div class="l">VEL</div></div>
+          <div class="cs clickable"><div class="v" id="d2">82</div><div class="l">TIR</div></div>
+          <div class="cs clickable"><div class="v" id="d3">86</div><div class="l">PAS</div></div>
+          <div class="cs clickable"><div class="v" id="d4">84</div><div class="l">REG</div></div>
+          <div class="cs clickable"><div class="v" id="d5">62</div><div class="l">DEF</div></div>
+          <div class="cs clickable"><div class="v" id="d6">74</div><div class="l">FÍS</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLANES — sin precio, comparativa interactiva -->
+<section id="planes">
+  <div class="container">
+    <div class="section-head reveal" style="text-align:center">
+      <div class="section-eyebrow">Planes a medida</div>
+      <h2 class="section-title">Elige tu nivel <span class="grad">de juego.</span></h2>
+      <p class="section-lead" style="margin:0 auto">Empieza con un equipo y escala a club entero o federación cuando lo necesites. Hablamos contigo para ajustar el plan a tu realidad.</p>
+    </div>
+
+    <div class="plans-grid">
+      <div class="plan reveal clickable">
+        <div class="icon-orb">🌱</div>
+        <span class="tag">Equipo</span>
+        <h3>Starter</h3>
+        <p class="desc">Para un solo equipo del fútbol base que quiere empezar a profesionalizarse.</p>
+        <ul>
+          <li>Hasta 25 jugadores · 1 equipo</li>
+          <li>Feed + stories + chat de equipo</li>
+          <li>Liga FFCV + tabla en vivo</li>
+          <li>Tarjeta FIFA básica</li>
+          <li>1 agente IA (Coach AI)</li>
+          <li>App nativa iOS y Android</li>
+          <li>Tablón de avisos</li>
+          <li>Soporte por email</li>
+        </ul>
+        <a href="#cta" class="plan-cta clickable">Hablamos →</a>
+      </div>
+
+      <div class="plan featured reveal clickable">
+        <span class="ribbon">Más elegido</span>
+        <div class="icon-orb">⚡</div>
+        <span class="tag">Club</span>
+        <h3>Pro</h3>
+        <p class="desc">Para clubs con varios equipos que quieren orquestar toda su estructura desde una sola app.</p>
+        <ul>
+          <li>Hasta 8 equipos · 200 jugadores</li>
+          <li>Todo de Starter +</li>
+          <li>4 agentes IA + RAG completo</li>
+          <li>Pizarra táctica drag-drop</li>
+          <li>Reservas de campos F7/F11</li>
+          <li>Web Push notifications</li>
+          <li>Reports PDF mensuales</li>
+          <li>MVP voting post-partido</li>
+          <li>Roles coach/player/parent</li>
+          <li>Soporte priorizado</li>
+        </ul>
+        <a href="#cta" class="plan-cta clickable">Hablamos →</a>
+      </div>
+
+      <div class="plan reveal clickable">
+        <div class="icon-orb">👑</div>
+        <span class="tag">Federación</span>
+        <h3>Elite</h3>
+        <p class="desc">Para federaciones, multi-club y entidades que necesitan white-label y SLA garantizado.</p>
+        <ul>
+          <li>Equipos ilimitados · multi-club</li>
+          <li>Todo de Pro +</li>
+          <li>Multi-tenant white-label</li>
+          <li>Dashboard federativo</li>
+          <li>API REST + webhooks</li>
+          <li>SSO + RBAC avanzado</li>
+          <li>SLA 99.9% garantizado</li>
+          <li>Onboarding dedicado</li>
+          <li>Custom domain + brand</li>
+          <li>Account manager</li>
+        </ul>
+        <a href="#cta" class="plan-cta clickable">Hablamos →</a>
+      </div>
+    </div>
+
+    <!-- COMPARATIVA -->
+    <div class="compare-wrap reveal">
+      <h3>📊 Compara los 3 planes en detalle</h3>
+      <table class="compare">
+        <thead>
+          <tr><th>Funcionalidad</th><th>Starter</th><th>Pro</th><th>Elite</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Equipos incluidos</td><td>1</td><td>8</td><td>∞</td></tr>
+          <tr><td>Jugadores</td><td>25</td><td>200</td><td>Ilimitados</td></tr>
+          <tr><td>Feed social + stories</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+          <tr><td>Chat realtime de equipo</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+          <tr><td>Liga FFCV en vivo</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+          <tr><td>Tarjeta FIFA</td><td>Básica</td><td>Avanzada</td><td>Custom</td></tr>
+          <tr><td>Agentes IA</td><td>1 (Coach)</td><td>4 + RAG</td><td>4 + RAG custom</td></tr>
+          <tr><td>Pizarra táctica drag-drop</td><td class="no">—</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+          <tr><td>Reservas de campo</td><td class="no">—</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+          <tr><td>Web Push notifications</td><td class="no">—</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+          <tr><td>Reports PDF</td><td class="no">—</td><td>Mensual</td><td>Custom</td></tr>
+          <tr><td>MVP voting</td><td class="no">—</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+          <tr><td>Multi-tenant white-label</td><td class="no">—</td><td class="no">—</td><td class="yes">✓</td></tr>
+          <tr><td>Dashboard federativo</td><td class="no">—</td><td class="no">—</td><td class="yes">✓</td></tr>
+          <tr><td>API REST + webhooks</td><td class="no">—</td><td class="no">—</td><td class="yes">✓</td></tr>
+          <tr><td>SSO + RBAC</td><td class="no">—</td><td class="no">—</td><td class="yes">✓</td></tr>
+          <tr><td>SLA</td><td class="no">—</td><td>99%</td><td>99.9%</td></tr>
+          <tr><td>Soporte</td><td>Email</td><td>Priorizado</td><td>Account manager</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="container">
+    <div class="section-head reveal" style="text-align:center">
+      <div class="section-eyebrow">Preguntas</div>
+      <h2 class="section-title">FAQ</h2>
+    </div>
+    <div class="faq">
+      <details class="faq-item reveal clickable"><summary>¿Funciona offline?</summary><p>Sí. FutbolBase es una app nativa con almacenamiento local en SQLite. Las pantallas principales funcionan sin red y la sincronización con el servidor se reanuda automáticamente al reconectar.</p></details>
+      <details class="faq-item reveal clickable"><summary>¿Qué stack usa por dentro?</summary><p>React Native + TypeScript + Expo + Supabase (auth, Postgres, Realtime, Storage) + TanStack Query v5 + React Navigation + Reanimated + Push notifications nativas (APNs / FCM).</p></details>
+      <details class="faq-item reveal clickable"><summary>¿Cómo es la seguridad de los datos?</summary><p>Row-Level Security en Supabase para todas las tablas, JWT por usuario, roles `coach`/`player`/`parent` con permisos granulares y backups diarios automáticos.</p></details>
+      <details class="faq-item reveal clickable"><summary>¿Qué es la liga FFCV?</summary><p>Federación de Fútbol de la Comunidad Valenciana. La app trae cargada la temporada juvenil con 13 equipos reales y permite seguir clasificación, jornadas y goleadores en vivo.</p></details>
+      <details class="faq-item reveal clickable"><summary>¿Los agentes IA son deterministas?</summary><p>Sí. Cada agente (Coach, Scouting, Predictor, Tactic) tiene un prompt versionado, temperature controlada y RAG sobre el corpus del equipo para reproducibilidad y trazabilidad.</p></details>
+      <details class="faq-item reveal clickable"><summary>¿Cómo se descarga?</summary><p>FutbolBase es una app nativa. Se descarga directamente desde la App Store (iOS) y Google Play (Android). Icono propio, splash screen, push notificaciones, biometría y acceso a cámara como cualquier app nativa.</p></details>
+      <details class="faq-item reveal clickable"><summary>¿Hay app para padres?</summary><p>Sí. El rol `parent` accede a feed, avisos urgentes, calendario de partidos, asistencia y notificaciones push. Sin permisos de edición.</p></details>
+      <details class="faq-item reveal clickable"><summary>¿Puedo migrar mis datos actuales?</summary><p>Sí. Importador CSV para plantilla, calendario y stats históricas. Soporte dedicado en plan Pro y Elite para la migración inicial.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="container">
+    <div class="cta-block reveal" id="ctaBlock">
+      <h2>Lleva tu club al <span class="grad">siguiente nivel.</span></h2>
+      <p>Cuéntanos en qué nivel está tu club y te ayudamos a elegir el plan adecuado. Sin compromiso, demo personalizada en 30 minutos.</p>
+      <div class="cta-row">
+        <a class="btn-primary clickable" href="#">▶ Solicitar demo</a>
+        <a class="btn-ghost clickable" href="#planes">Ver planes otra vez</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container footer-inner">
+    <div class="logo clickable"><span class="logo-mark">FB</span><span>FutbolBase</span></div>
+    <div>© 2026 FutbolBase · React 19 + Supabase · Build 1.0.0</div>
+    <div style="display:flex;gap:18px"><a href="#" class="clickable">Privacidad</a><a href="#" class="clickable">Términos</a><a href="#" class="clickable">Contacto</a></div>
+  </div>
+</footer>
+
+<script>
+  /* Custom cursor */
+  const cur = document.getElementById('cur');
+  const trail = document.getElementById('curTrail');
+  let mx=0,my=0,tx=0,ty=0;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cur.style.transform = `translate(${mx}px,${my}px) translate(-50%,-50%)`;
+  });
+  function loop(){
+    tx += (mx-tx)*0.15;
+    ty += (my-ty)*0.15;
+    trail.style.transform = `translate(${tx}px,${ty}px) translate(-50%,-50%)`;
+    requestAnimationFrame(loop);
+  }
+  loop();
+  document.querySelectorAll('.clickable, a, button, input, select, summary, .feat').forEach(el => {
+    el.addEventListener('mouseenter', () => { cur.classList.add('hover'); trail.classList.add('hover'); });
+    el.addEventListener('mouseleave', () => { cur.classList.remove('hover'); trail.classList.remove('hover'); });
+  });
+
+  /* Aurora parallax */
+  const aurora = document.querySelector('.aurora');
+  const aurora2 = document.querySelector('.aurora-2');
+  document.addEventListener('mousemove', e => {
+    const x = (e.clientX / window.innerWidth - 0.5) * 30;
+    const y = (e.clientY / window.innerHeight - 0.5) * 30;
+    aurora.style.transform = `translate(${x}px,${y}px)`;
+    aurora2.style.transform = `translate(${-x*1.5}px,${-y*1.5}px)`;
+  });
+
+  /* Phone tilt 3D */
+  const tilt = document.getElementById('tiltPhone');
+  const tiltWrap = tilt.parentElement;
+  tiltWrap.addEventListener('mousemove', e => {
+    const r = tiltWrap.getBoundingClientRect();
+    const x = (e.clientX - r.left)/r.width - 0.5;
+    const y = (e.clientY - r.top)/r.height - 0.5;
+    tilt.style.transform = `rotateY(${x*16}deg) rotateX(${-y*16}deg) translateY(${-y*8}px)`;
+  });
+  tiltWrap.addEventListener('mouseleave', () => {
+    tilt.style.transform = `rotateY(0) rotateX(0)`;
+  });
+
+  /* Reveal on scroll */
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  },{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  /* Animated counters */
+  const counterIO = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(!e.isIntersecting) return;
+      const el = e.target; const target = +el.dataset.target; const dur=1400; const start=performance.now();
+      function tick(now){
+        const t = Math.min(1,(now-start)/dur);
+        const eased = 1-Math.pow(1-t,3);
+        el.textContent = Math.round(eased*target).toLocaleString('es-ES');
+        if(t<1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+      counterIO.unobserve(el);
+    });
+  },{threshold:.4});
+  document.querySelectorAll('[data-target]').forEach(el=>counterIO.observe(el));
+
+  /* Video play */
+  function playDemo(){
+    const v = document.getElementById('demoVid');
+    const btn = document.getElementById('playBtn');
+    const src = v.querySelector('source').src;
+    fetch(src,{method:'HEAD'}).then(r=>{
+      if(r.ok){ v.style.display='block'; btn.style.display='none'; v.play(); }
+      else alert('Coloca el archivo de video en docs/assets/futbolbase-demo.mp4 para activar la reproducción.');
+    }).catch(()=>alert('Coloca el archivo de video en docs/assets/futbolbase-demo.mp4 para activar la reproducción.'));
+  }
+  window.playDemo = playDemo;
+
+  /* SCREENS TABS */
+  const screens = [
+    {img:'assets/screenshots/1-landing.png',title:'Onboarding nativo',desc:'Hero con partículas, 4 features animadas y CTAs directos a App Store y Google Play con deep-link al onboarding.',
+      bullets:['Partículas con Reanimated a 60 fps','4 feature cards con Lottie + Reanimated','Deep-links a App Store / Google Play','Splash screen nativo iOS y Android','Onboarding con biometría (Face ID / huella)'],
+      meta:[{k:'Stack',v:'React Native'},{k:'Stores',v:'iOS · Android'},{k:'Tipo',v:'App nativa'}]},
+    {img:'assets/screenshots/2-home.png',title:'Feed Home + Stories',desc:'Feed principal con stories 24h, posts con multimedia, infinite scroll y create-post modal.',
+      bullets:['Stories 24h con auto-expiración','Posts con foto, video y texto','Infinite scroll TanStack Query','Likes optimistas + sync Supabase','Comentarios anidados con mentions @'],
+      meta:[{k:'Ruta',v:'/feed'},{k:'Roles',v:'coach · player'},{k:'Realtime',v:'Sí'}]},
+    {img:'assets/screenshots/3-profile.png',title:'Perfil — Tarjeta FIFA',desc:'Perfil estilo FIFA con OVR, posición, stats radar de 6 dimensiones y editor inline para entrenadores.',
+      bullets:['OVR cónico animado','Radar SVG 6 dimensiones','Color por tier (≥85 / ≥75 / ≥65)','Editor inline solo para coach','Histórico de partidos con stats'],
+      meta:[{k:'Ruta',v:'/perfil/:userId'},{k:'Stats',v:'6 dimensiones'},{k:'Edit',v:'Coach only'}]},
+    {img:'assets/screenshots/4-league.png',title:'Liga FFCV — Clasificación',desc:'Tabla de los 13 equipos juveniles de Valencia, jornadas, goleadores en vivo desde Supabase.',
+      bullets:['13 equipos FFCV juveniles reales','Mi equipo (C.F. Fundació VCF) destacado','Goleadores live desde match_stats','Jornadas + resultados + próximos','Filtros por jornada y categoría'],
+      meta:[{k:'Ruta',v:'/liga'},{k:'Equipos',v:'13'},{k:'Datos',v:'ffcvTeams.ts + Supabase'}]},
+    {img:'assets/screenshots/5-community.png',title:'Comunidad — Equipos + 1v1',desc:'Buscador de equipos, stories de comunidad, duelos 1v1, eventos con RSVP y chat de equipo.',
+      bullets:['Buscador con filtros por categoría','Stories de toda la comunidad','Duelos 1v1 con voting','Eventos con RSVP confirmado','Chat realtime del equipo'],
+      meta:[{k:'Ruta',v:'/comunidad'},{k:'Tipo',v:'Hub social'},{k:'Roles',v:'Todos'}]},
+  ];
+  const tabs = document.querySelectorAll('.screens-tab');
+  const screenImg = document.getElementById('screenImg');
+  const screenInfo = document.getElementById('screenInfo');
+  function setScreen(i){
+    tabs.forEach((t,idx)=>t.classList.toggle('active',idx===i));
+    const s = screens[i];
+    screenImg.style.opacity = '0';
+    setTimeout(()=>{
+      screenImg.src = s.img;
+      screenImg.style.transition = 'opacity .4s';
+      screenImg.style.opacity = '1';
+    },200);
+    screenInfo.style.opacity='0';
+    setTimeout(()=>{
+      screenInfo.innerHTML = `
+        <h3>${s.title}</h3>
+        <p class="desc">${s.desc}</p>
+        <ul>${s.bullets.map(b=>`<li>${b}</li>`).join('')}</ul>
+        <div class="screen-meta">${s.meta.map(m=>`<div class="m"><div class="k">${m.k}</div><div class="v">${m.v}</div></div>`).join('')}</div>`;
+      screenInfo.style.transition='opacity .4s';
+      screenInfo.style.opacity='1';
+    },200);
+  }
+  tabs.forEach((t,i)=>t.addEventListener('click',()=>setScreen(i)));
+  setScreen(0);
+
+  /* FIFA Card builder */
+  const sliders = ['s1','s2','s3','s4','s5','s6'].map(id=>document.getElementById(id));
+  const vals = ['v1','v2','v3','v4','v5','v6'].map(id=>document.getElementById(id));
+  const dispEls = ['d1','d2','d3','d4','d5','d6'].map(id=>document.getElementById(id));
+  const ovrNum = document.getElementById('ovrNum');
+  const ovrCircle = document.getElementById('ovrCircle');
+  const pName = document.getElementById('pName');
+  const pPos = document.getElementById('pPos');
+  const bName = document.getElementById('bName');
+  const bPos = document.getElementById('bPos');
+
+  function colorFor(ovr){
+    if(ovr>=85) return '#CCFF00';
+    if(ovr>=75) return '#FFB800';
+    if(ovr>=65) return '#FF5B3A';
+    return '#B347FF';
+  }
+  function update(){
+    const v = sliders.map(s=>+s.value);
+    v.forEach((n,i)=>{ vals[i].textContent=n; dispEls[i].textContent=n; });
+    const ovr = Math.round(v.reduce((a,b)=>a+b,0)/v.length);
+    ovrNum.textContent = ovr;
+    const c = colorFor(ovr);
+    ovrCircle.style.setProperty('--ovr', ovr);
+    ovrCircle.style.background = `conic-gradient(${c} 0deg, ${c} ${ovr*3.6}deg, rgba(255,255,255,.05) ${ovr*3.6}deg, rgba(255,255,255,.05) 360deg)`;
+    ovrNum.style.color = c;
+    dispEls.forEach(el=>el.style.color = c);
+    document.querySelector('.card-preview').style.borderColor = c+'88';
+    document.querySelector('.card-preview').style.boxShadow = `0 0 24px ${c}55, 0 0 48px ${c}22`;
+  }
+  sliders.forEach(s=>s.addEventListener('input',update));
+  bName.addEventListener('input',()=>pName.textContent=bName.value||'—');
+  bPos.addEventListener('change',()=>pPos.textContent=bPos.value);
+  update();
+
+  /* CTA spotlight follow */
+  const ctaBlock = document.getElementById('ctaBlock');
+  ctaBlock.addEventListener('mousemove', e => {
+    const r = ctaBlock.getBoundingClientRect();
+    ctaBlock.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+    ctaBlock.style.setProperty('--my', (e.clientY - r.top) + 'px');
+  });
+</script>
+</body>
+</html>

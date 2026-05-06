@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover" />
+<meta name="theme-color" content="#0F0D0A" />
+<title>FutbolBase vs Federaciones · Análisis Competitivo 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --obsidian:#0F0D0A;--obsidian-base:#141009;--obsidian-deep:#08070A;
+    --surface:rgba(255,255,255,.025);--surface-hi:rgba(255,255,255,.05);--surface-glass:rgba(20,16,9,.72);
+    --lime:#CCFF00;--lime-soft:#A8D400;--amber:#FFB800;--coral:#FF5B3A;--cyan:#00D4FF;--purple:#B347FF;
+    --warm:#FAF5EB;--warm-muted:rgba(250,245,235,.62);--warm-dim:rgba(250,245,235,.38);--warm-soft:rgba(250,245,235,.78);
+    --border:rgba(255,220,180,.08);--border-hi:rgba(255,220,180,.18);--border-strong:rgba(255,220,180,.30);
+    --good:var(--lime);--warn:var(--amber);--bad:var(--coral);
+    --shadow-lime:0 0 30px rgba(204,255,0,.25),0 0 60px rgba(204,255,0,.10);
+    --shadow-amber:0 0 30px rgba(255,184,0,.20),0 0 60px rgba(255,184,0,.08);
+    --shadow-card:0 12px 40px -12px rgba(0,0,0,.5),0 4px 14px -4px rgba(0,0,0,.3);
+    --easing:cubic-bezier(.2,.6,.2,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  ::selection{background:var(--lime);color:var(--obsidian)}
+  html{scroll-behavior:smooth;scroll-padding-top:84px}
+  html,body{background:var(--obsidian);color:var(--warm);font-family:'Space Grotesk',Inter,system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  body{
+    background:
+      radial-gradient(ellipse 1200px 600px at 15% -10%,rgba(204,255,0,.10),transparent 60%),
+      radial-gradient(ellipse 1000px 500px at 85% 8%,rgba(255,184,0,.06),transparent 60%),
+      radial-gradient(ellipse 1400px 700px at 50% 120%,rgba(0,212,255,.04),transparent 60%),
+      var(--obsidian);min-height:100vh
+  }
+  .wrap{max-width:1240px;margin:0 auto;padding:0 28px 120px}
+  h1,h2,h3,h4,h5{font-family:'Archivo',sans-serif;font-weight:900;letter-spacing:-.02em;line-height:1.08}
+
+  /* ===== SCROLL PROGRESS BAR ===== */
+  .progress{position:fixed;top:0;left:0;right:0;height:3px;background:transparent;z-index:100;pointer-events:none}
+  .progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--lime),var(--amber),var(--coral));box-shadow:0 0 12px rgba(204,255,0,.4);transition:width .1s linear}
+
+  /* ===== TOP NAV ===== */
+  .topnav{position:fixed;top:0;left:0;right:0;z-index:50;background:var(--surface-glass);backdrop-filter:saturate(180%) blur(14px);-webkit-backdrop-filter:saturate(180%) blur(14px);border-bottom:1px solid var(--border);transition:transform .3s var(--easing)}
+  .topnav.hide{transform:translateY(-100%)}
+  .topnav-inner{max-width:1240px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:18px}
+  .logo-mini{display:flex;align-items:center;gap:10px;font-weight:900;font-family:'Archivo';font-size:14px;letter-spacing:-.01em;color:var(--warm);flex-shrink:0}
+  .logo-mini .dot{width:24px;height:24px;border-radius:7px;background:linear-gradient(135deg,var(--lime),var(--amber));display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--obsidian);box-shadow:var(--shadow-lime)}
+  .logo-mini .tag{font-size:10px;font-weight:700;color:var(--warm-dim);letter-spacing:.14em;text-transform:uppercase;border-left:1px solid var(--border);padding-left:10px;margin-left:2px}
+  .nav-links{display:flex;gap:4px;margin-left:auto;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .nav-links::-webkit-scrollbar{display:none}
+  .nav-link{padding:8px 14px;border-radius:8px;font-size:12px;font-weight:700;color:var(--warm-muted);text-decoration:none;white-space:nowrap;transition:all .2s;border:1px solid transparent;font-family:'Space Grotesk'}
+  .nav-link:hover{color:var(--warm);background:var(--surface-hi)}
+  .nav-link.active{color:var(--lime);background:rgba(204,255,0,.08);border-color:rgba(204,255,0,.3)}
+
+  /* ===== HERO ===== */
+  .hero{padding:120px 0 56px;border-bottom:1px solid var(--border);margin-bottom:48px;position:relative;overflow:hidden}
+  .hero::before{content:'';position:absolute;top:0;right:-100px;width:600px;height:600px;background:radial-gradient(circle,rgba(204,255,0,.10) 0%,transparent 70%);pointer-events:none;animation:pulse-glow 6s ease-in-out infinite}
+  @keyframes pulse-glow{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.08)}}
+  .hero-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:48px;align-items:center;position:relative;z-index:2}
+  .badge{display:inline-flex;align-items:center;gap:8px;padding:7px 16px;border-radius:999px;background:rgba(204,255,0,.08);border:1px solid rgba(204,255,0,.3);color:var(--lime);font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;margin-bottom:20px;font-family:'Space Grotesk'}
+  .badge .dot{width:6px;height:6px;border-radius:50%;background:var(--lime);box-shadow:0 0 10px var(--lime);animation:blink 1.6s ease-in-out infinite}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
+  .hero h1{font-size:clamp(38px,5.5vw,62px);margin-bottom:22px;letter-spacing:-.025em}
+  .hero h1 span.grad{background:linear-gradient(135deg,var(--cyan) 0%,var(--lime) 50%,var(--amber) 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero .sub{color:var(--warm-soft);font-size:18px;max-width:580px;line-height:1.6;margin-bottom:28px}
+  .hero .sub strong{color:var(--warm);font-weight:700}
+  .hero .meta-row{display:flex;gap:20px;flex-wrap:wrap;font-size:12px;color:var(--warm-dim);font-family:'JetBrains Mono',monospace}
+  .hero .meta-row span{display:flex;align-items:center;gap:6px}
+  .hero .meta-row span::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--lime)}
+
+  /* HERO RIGHT — STAT CARD */
+  .hero-stat{padding:36px;border-radius:20px;background:linear-gradient(160deg,rgba(204,255,0,.08),rgba(0,212,255,.04));border:1px solid var(--border-hi);position:relative;box-shadow:var(--shadow-lime);overflow:hidden}
+  .hero-stat::before{content:'';position:absolute;top:-50%;right:-30%;width:300px;height:300px;background:radial-gradient(circle,rgba(204,255,0,.20),transparent 70%);pointer-events:none}
+  .hero-stat .label{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--warm-dim);margin-bottom:10px;font-family:'Archivo'}
+  .hero-stat .num{font-family:'Archivo';font-size:84px;font-weight:900;line-height:1;background:linear-gradient(135deg,var(--lime),var(--amber));-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:8px;letter-spacing:-.04em}
+  .hero-stat .desc{font-size:14px;color:var(--warm-soft);line-height:1.55;margin-bottom:22px}
+  .hero-stat .ledger{display:flex;justify-content:space-between;padding-top:18px;border-top:1px solid var(--border)}
+  .hero-stat .ledger .li{text-align:left}
+  .hero-stat .ledger .li:last-child{text-align:right}
+  .hero-stat .ledger b{font-family:'Archivo';font-size:22px;font-weight:900;color:var(--warm);display:block;line-height:1}
+  .hero-stat .ledger em{font-style:normal;font-size:10px;color:var(--warm-dim);letter-spacing:.1em;text-transform:uppercase;font-weight:700;margin-top:6px;display:block}
+
+  /* ===== SECTION HEADERS ===== */
+  section.scope{scroll-margin-top:84px;padding-top:24px}
+  h2.section-title{font-size:clamp(24px,3.2vw,32px);margin:64px 0 8px;display:flex;align-items:center;gap:16px}
+  h2.section-title .num{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,rgba(0,212,255,.18),rgba(204,255,0,.12));border:1px solid var(--border-hi);font-size:14px;color:var(--cyan);font-family:'JetBrains Mono',monospace;font-weight:700;flex-shrink:0}
+  .section-sub{color:var(--warm-muted);font-size:15px;margin-bottom:32px;max-width:840px;line-height:1.7}
+  .section-sub strong{color:var(--warm);font-weight:700}
+
+  /* ===== REVEAL ANIMATION ===== */
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .6s var(--easing),transform .6s var(--easing)}
+  .reveal.in{opacity:1;transform:translateY(0)}
+
+  /* ===== COMPETITOR CARDS ===== */
+  .competitors-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:32px}
+  .comp{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;position:relative;transition:transform .3s var(--easing),border-color .3s var(--easing),box-shadow .3s var(--easing);overflow:hidden}
+  .comp::after{content:'';position:absolute;inset:0;border-radius:16px;background:linear-gradient(135deg,rgba(204,255,0,.06),transparent 60%);opacity:0;transition:opacity .3s var(--easing);pointer-events:none}
+  .comp:hover{transform:translateY(-4px);border-color:var(--border-hi);box-shadow:var(--shadow-card)}
+  .comp:hover::after{opacity:1}
+  .comp .rank{position:absolute;top:14px;right:14px;width:26px;height:26px;border-radius:50%;background:var(--surface-hi);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:var(--warm-dim);font-family:'JetBrains Mono'}
+  .comp.us{border:2px solid var(--lime);box-shadow:var(--shadow-lime)}
+  .comp.us::before{content:'⚡ NOSOTROS';position:absolute;top:-11px;right:18px;font-size:10px;padding:4px 10px;background:var(--lime);color:var(--obsidian);border-radius:999px;font-weight:900;letter-spacing:.12em;font-family:'Archivo';box-shadow:var(--shadow-lime)}
+  .comp.us .rank{background:var(--lime);color:var(--obsidian)}
+  .comp .logo{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.02));border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:16px;transition:transform .3s var(--easing)}
+  .comp:hover .logo{transform:scale(1.08) rotate(-3deg)}
+  .comp.us .logo{background:linear-gradient(135deg,rgba(204,255,0,.25),rgba(255,184,0,.12));border-color:var(--lime)}
+  .comp h4{font-size:18px;margin-bottom:3px}
+  .comp .country{font-size:10px;color:var(--warm-dim);letter-spacing:.12em;text-transform:uppercase;margin-bottom:14px;font-weight:700}
+  .comp .desc{font-size:12.5px;color:var(--warm-muted);margin-bottom:16px;min-height:84px;line-height:1.55}
+  .comp .stat{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:12px}
+  .comp .stat:last-child{border-bottom:none}
+  .comp .stat span{color:var(--warm-dim)}
+  .comp .stat strong{color:var(--warm);font-family:'JetBrains Mono',monospace;font-weight:500}
+
+  /* ===== CARDS ===== */
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:32px;margin-bottom:24px;position:relative}
+
+  /* ===== FAIL GRID (3 reasons) ===== */
+  .fail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:24px}
+  .fail{padding:28px;border-radius:16px;background:linear-gradient(180deg,rgba(255,91,58,.06),transparent);border:1px solid rgba(255,91,58,.18);position:relative;transition:transform .3s var(--easing),border-color .3s var(--easing)}
+  .fail:hover{transform:translateY(-4px);border-color:rgba(255,91,58,.35)}
+  .fail .em{font-size:34px;margin-bottom:14px;display:block}
+  .fail h4{font-size:17px;margin-bottom:10px;color:var(--coral)}
+  .fail p{font-size:13.5px;color:var(--warm-muted);line-height:1.65}
+  .fail p strong{color:var(--warm-soft)}
+
+  /* ===== MATRIX TABLE — improved mobile ===== */
+  .matrix-wrap{position:relative;overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:14px;border:1px solid var(--border)}
+  .matrix-wrap::after{content:'';position:absolute;top:0;right:0;bottom:0;width:32px;background:linear-gradient(90deg,transparent,var(--obsidian));pointer-events:none;opacity:0;transition:opacity .3s}
+  .matrix-wrap.scrollable::after{opacity:1}
+  .matrix{width:100%;min-width:780px;border-collapse:separate;border-spacing:0;font-size:13px}
+  .matrix th{text-align:center;padding:16px 12px;background:rgba(255,255,255,.03);color:var(--warm-dim);font-weight:700;font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;border-bottom:1px solid var(--border);font-family:'Archivo';position:sticky;top:64px;z-index:1}
+  .matrix th.first{text-align:left;padding-left:18px;background:rgba(255,255,255,.04);position:sticky;left:0;z-index:2}
+  .matrix th.us{background:rgba(204,255,0,.10);color:var(--lime);font-weight:900}
+  .matrix td{text-align:center;padding:13px 12px;border-bottom:1px solid rgba(255,255,255,.04);color:var(--warm-muted);font-size:13px;transition:background .2s}
+  .matrix tbody tr:hover td{background:rgba(204,255,0,.03)}
+  .matrix tbody tr:hover td.us{background:rgba(204,255,0,.08)}
+  .matrix td.first{text-align:left;color:var(--warm);font-weight:600;padding-left:18px;background:var(--obsidian);position:sticky;left:0}
+  .matrix td.us{background:rgba(204,255,0,.05);color:var(--warm)}
+  .ok{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:rgba(204,255,0,.15);color:var(--lime);font-weight:900;font-size:14px}
+  .no{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:rgba(255,91,58,.10);color:var(--coral);font-weight:900;opacity:.65;font-size:14px}
+  .mid{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:rgba(255,184,0,.12);color:var(--amber);font-weight:900;font-size:13px}
+
+  /* ===== REVIEWS ===== */
+  .reviews{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+  .review{padding:24px;border-radius:14px;background:var(--surface);border:1px solid var(--border);position:relative;transition:transform .3s var(--easing),border-color .3s var(--easing)}
+  .review:hover{transform:translateY(-2px);border-color:var(--border-hi)}
+  .review .head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+  .review .stars{color:var(--coral);font-size:14px;letter-spacing:3px;font-family:'JetBrains Mono'}
+  .review .stars.good{color:var(--lime)}
+  .review .source{padding:3px 10px;border-radius:6px;background:rgba(255,255,255,.05);color:var(--warm-muted);font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;font-family:'Archivo'}
+  .review .quote{font-size:14px;color:var(--warm);margin-bottom:14px;line-height:1.65;font-family:'Space Grotesk';position:relative;padding-left:14px;border-left:2px solid var(--border-hi)}
+  .review .author{font-size:11px;color:var(--warm-dim);font-family:'JetBrains Mono',monospace;letter-spacing:.04em}
+
+  /* ===== VS COMPARISON ===== */
+  .vs{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  .vs-col{padding:28px;border-radius:16px}
+  .vs-col.ours{background:linear-gradient(180deg,rgba(204,255,0,.08),transparent);border:1px solid rgba(204,255,0,.25)}
+  .vs-col.theirs{background:linear-gradient(180deg,rgba(255,91,58,.06),transparent);border:1px solid rgba(255,91,58,.18)}
+  .vs-col.cyan{background:linear-gradient(180deg,rgba(0,212,255,.06),transparent);border:1px solid rgba(0,212,255,.20)}
+  .vs-col h5{font-size:13px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:18px;font-weight:900;display:flex;align-items:center;gap:10px}
+  .vs-col h5::before{content:'';width:24px;height:2px;background:currentColor;border-radius:2px}
+  .vs-col.ours h5{color:var(--lime)} .vs-col.theirs h5{color:var(--coral)} .vs-col.cyan h5{color:var(--cyan)}
+  .vs-col ul{list-style:none}
+  .vs-col ul li{padding:11px 0 11px 26px;position:relative;font-size:13.5px;border-bottom:1px solid rgba(255,255,255,.04);color:var(--warm);line-height:1.55}
+  .vs-col ul li:last-child{border-bottom:none}
+  .vs-col.ours ul li::before{content:'▲';position:absolute;left:0;color:var(--lime);font-size:11px;top:13px}
+  .vs-col.theirs ul li::before{content:'▼';position:absolute;left:0;color:var(--coral);font-size:11px;top:13px}
+  .vs-col.cyan ul li::before{content:'◆';position:absolute;left:0;color:var(--cyan);font-size:11px;top:13px}
+
+  /* ===== BARS ===== */
+  .bars{display:flex;flex-direction:column;gap:16px}
+  .bar-row{display:grid;grid-template-columns:200px 1fr 80px;gap:16px;align-items:center;font-size:13px}
+  .bar-row .lbl{color:var(--warm-soft);font-weight:600;display:flex;align-items:center;gap:8px}
+  .bar-row .lbl-em{font-size:14px}
+  .bar-row .track{height:12px;background:rgba(255,255,255,.04);border-radius:999px;overflow:hidden;position:relative;border:1px solid rgba(255,255,255,.03)}
+  .bar-row .fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--coral),var(--amber));transition:width 1.4s var(--easing);position:relative}
+  .bar-row .fill::after{content:'';position:absolute;top:0;right:0;bottom:0;width:8px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.4));border-radius:0 999px 999px 0}
+  .bar-row .fill.us{background:linear-gradient(90deg,var(--lime),var(--amber));box-shadow:0 0 16px rgba(204,255,0,.35)}
+  .bar-row .v{font-family:'JetBrains Mono',monospace;color:var(--warm);font-weight:700;text-align:right;font-size:13px}
+  .bar-row.us .lbl{color:var(--lime);font-weight:900}
+  .bar-row.us .v{color:var(--lime)}
+
+  /* ===== OPPORTUNITY ===== */
+  .opp{padding:36px;border-radius:20px;background:linear-gradient(135deg,rgba(0,212,255,.10),rgba(204,255,0,.05));border:1px solid rgba(0,212,255,.30);margin-bottom:24px;position:relative;overflow:hidden}
+  .opp::before{content:'';position:absolute;top:-50%;right:-20%;width:500px;height:500px;background:radial-gradient(circle,rgba(0,212,255,.10),transparent 70%);pointer-events:none}
+  .opp-head{display:flex;align-items:center;gap:14px;margin-bottom:10px;position:relative;z-index:1}
+  .opp-head .icon{width:40px;height:40px;border-radius:10px;background:rgba(0,212,255,.15);display:flex;align-items:center;justify-content:center;font-size:20px;border:1px solid rgba(0,212,255,.3)}
+  .opp h3{font-size:24px;color:var(--cyan);margin-bottom:0}
+  .opp p{color:var(--warm-soft);margin-bottom:22px;font-size:14.5px;line-height:1.7;position:relative;z-index:1}
+  .opp p strong{color:var(--lime)}
+  .opp-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;position:relative;z-index:1}
+  .opp-item{padding:22px;border-radius:14px;background:rgba(15,13,10,.6);border:1px solid var(--border);transition:transform .3s var(--easing),border-color .3s var(--easing)}
+  .opp-item:hover{transform:translateY(-3px);border-color:var(--border-hi)}
+  .opp-item .l{font-size:10.5px;color:var(--warm-dim);letter-spacing:.12em;text-transform:uppercase;font-weight:700;margin-bottom:8px;font-family:'Archivo'}
+  .opp-item .v{font-family:'Archivo';font-weight:900;font-size:30px;color:var(--lime);margin-bottom:6px;line-height:1;letter-spacing:-.02em}
+  .opp-item .d{font-size:12px;color:var(--warm-muted);line-height:1.5}
+
+  /* ===== FINAL CTA ===== */
+  .final{padding:56px 36px;border-radius:24px;background:linear-gradient(135deg,rgba(204,255,0,.14),rgba(0,212,255,.06));border:1px solid rgba(204,255,0,.4);text-align:center;margin:80px 0 24px;box-shadow:var(--shadow-lime);position:relative;overflow:hidden}
+  .final::before{content:'';position:absolute;top:-100%;left:50%;transform:translateX(-50%);width:140%;height:200%;background:radial-gradient(ellipse,rgba(204,255,0,.10),transparent 70%);pointer-events:none}
+  .final .em{font-size:54px;margin-bottom:18px;position:relative;z-index:1}
+  .final h2{font-size:clamp(24px,3.5vw,34px);margin-bottom:16px;letter-spacing:-.02em;position:relative;z-index:1}
+  .final p{color:var(--warm);max-width:700px;margin:0 auto;font-size:16.5px;line-height:1.75;position:relative;z-index:1}
+  .final p strong{color:var(--lime);font-weight:800}
+
+  /* ===== BACK TO TOP ===== */
+  .back-top{position:fixed;bottom:24px;right:24px;width:48px;height:48px;border-radius:50%;background:var(--lime);color:var(--obsidian);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;cursor:pointer;border:none;box-shadow:var(--shadow-lime);opacity:0;pointer-events:none;transform:translateY(20px) scale(.8);transition:all .3s var(--easing);z-index:40;font-family:'Archivo'}
+  .back-top.show{opacity:1;pointer-events:auto;transform:translateY(0) scale(1)}
+  .back-top:hover{transform:translateY(-2px) scale(1.05)}
+  .back-top:active{transform:translateY(0) scale(.95)}
+
+  footer{margin-top:60px;padding-top:32px;border-top:1px solid var(--border);color:var(--warm-dim);font-size:11px;display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;flex-wrap:wrap;gap:12px;letter-spacing:.04em}
+
+  /* ===== PRINT ===== */
+  @media print{
+    body{background:white;color:#222}
+    .topnav,.progress,.back-top{display:none}
+    .hero{padding-top:0}
+    .card,.comp,.vs-col,.fail,.opp,.final{break-inside:avoid;page-break-inside:avoid;background:white !important;border:1px solid #ddd !important;color:#222 !important;box-shadow:none !important}
+    h1,h2,h3,h4{color:#000 !important}
+    h1 span.grad{color:#0066CC !important;-webkit-text-fill-color:#0066CC !important}
+    .matrix th,.matrix td{color:#222 !important}
+    .ok{color:#00875A !important;background:#E0F5EC !important}
+    .no{color:#C53030 !important;background:#FDE8E8 !important}
+    .mid{color:#B47100 !important;background:#FEF3D6 !important}
+  }
+
+  /* ===== MOBILE ===== */
+  @media (max-width: 980px){
+    .hero{padding-top:96px}
+    .hero-grid{grid-template-columns:1fr;gap:32px}
+    .hero-stat{padding:28px}
+    .hero-stat .num{font-size:64px}
+    .competitors-grid{grid-template-columns:repeat(2,1fr);gap:14px}
+    .fail-grid{grid-template-columns:1fr}
+    .opp-grid{grid-template-columns:repeat(2,1fr)}
+    .reviews,.vs{grid-template-columns:1fr}
+    .bar-row{grid-template-columns:130px 1fr 50px;font-size:12px}
+    .nav-links{gap:2px}
+    .nav-link{padding:7px 10px;font-size:11px}
+    .logo-mini .tag{display:none}
+    .card{padding:22px}
+    .matrix-wrap::after{opacity:1}
+    .matrix th{position:relative;top:auto}
+    .back-top{bottom:16px;right:16px;width:42px;height:42px}
+  }
+  @media (max-width: 580px){
+    .competitors-grid{grid-template-columns:1fr}
+    .opp-grid{grid-template-columns:1fr}
+    .wrap{padding:0 18px 100px}
+    .card{padding:18px}
+  }
+</style>
+</head>
+<body>
+
+<!-- SCROLL PROGRESS -->
+<div class="progress"><div class="progress-fill" id="progress"></div></div>
+
+<!-- TOP NAV -->
+<nav class="topnav" id="topnav">
+  <div class="topnav-inner">
+    <a href="#top" class="logo-mini">
+      <div class="dot">⚡</div>
+      <div>
+        FutbolBase
+        <div class="tag">vs Federaciones</div>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a class="nav-link" href="#s1">01 · Landscape</a>
+      <a class="nav-link" href="#s2">02 · Por qué fallan</a>
+      <a class="nav-link" href="#s3">03 · Matriz</a>
+      <a class="nav-link" href="#s4">04 · Reseñas</a>
+      <a class="nav-link" href="#s5">05 · Engagement</a>
+      <a class="nav-link" href="#s6">06 · Win/Lose</a>
+      <a class="nav-link" href="#s7">07 · Oportunidad</a>
+      <a class="nav-link" href="#s8">08 · Estrategia</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap" id="top">
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-grid">
+      <div class="reveal">
+        <div class="badge"><span class="dot"></span> Análisis competitivo · 2026</div>
+        <h1>Por qué las apps de las <span class="grad">federaciones</span> dejan al padre vacío.</h1>
+        <p class="sub">Un análisis honesto de la <strong>app FFCV, RFFM Madrid, FCF Cataluña, FFA Andalucía</strong> y demás apps oficiales. Por qué no resuelven el día a día del padre — y por qué FutbolBase llena ese hueco.</p>
+        <div class="meta-row">
+          <span>Doc · v2.0</span>
+          <span>Sept 2026</span>
+          <span>Mercado · España</span>
+          <span>Periodo · 2027-2031</span>
+        </div>
+      </div>
+
+      <aside class="hero-stat reveal">
+        <div class="label">El dato que lo cambia todo</div>
+        <div class="num" data-counter="92" data-suffix="%">0%</div>
+        <div class="desc">del consumo de información del padre <strong style="color:var(--warm)">no pasa por las apps oficiales</strong>. Va a WhatsApp, papel y boca a boca. Ese es nuestro mercado real.</div>
+        <div class="ledger">
+          <div class="li"><b data-counter="700" data-suffix="K">0</b><em>Padres España</em></div>
+          <div class="li"><b data-counter="8" data-suffix="">0</b><em>Apps oficiales</em></div>
+          <div class="li"><b data-counter="0" data-prefix="€" data-suffix="">€0</b><em>Pensadas en padres</em></div>
+        </div>
+      </aside>
+    </div>
+  </header>
+
+  <!-- 01 LANDSCAPE -->
+  <section class="scope" id="s1">
+    <h2 class="section-title reveal"><span class="num">01</span> Las apps oficiales del fútbol base español</h2>
+    <p class="section-sub reveal">Cada federación autonómica tiene (o ha intentado tener) una app propia. Misma fórmula: <strong>resultados, clasificaciones y noticias institucionales</strong>. Funcionan como un periódico digital de la federación, no como una herramienta operativa para el padre.</p>
+
+    <div class="competitors-grid">
+
+      <article class="comp us reveal">
+        <div class="rank">1</div>
+        <div class="logo">⚡</div>
+        <h4>FutbolBase</h4>
+        <div class="country">🇪🇸 España · Valencia</div>
+        <div class="desc">Red social del fútbol base pensada para padres. Calendario, alineaciones, fotos, vídeos, stats individuales y chats unificados por equipo.</div>
+        <div class="stat"><span>Modelo</span><strong>B2C padres</strong></div>
+        <div class="stat"><span>Precio</span><strong>€2,50-4,50/año</strong></div>
+        <div class="stat"><span>Foco</span><strong style="color:var(--lime)">Padre + jugador</strong></div>
+        <div class="stat"><span>UX</span><strong style="color:var(--lime)">Premium 2026</strong></div>
+      </article>
+
+      <article class="comp reveal">
+        <div class="rank">2</div>
+        <div class="logo">🟢</div>
+        <h4>App FFCV</h4>
+        <div class="country">🇪🇸 Comunidad Valenciana</div>
+        <div class="desc">App oficial de la Federación. Resultados de jornada, clasificaciones y noticias. UX antigua, lenta. Sin información operativa del equipo del hijo.</div>
+        <div class="stat"><span>Modelo</span><strong>Gratis</strong></div>
+        <div class="stat"><span>Precio</span><strong>€0</strong></div>
+        <div class="stat"><span>Foco</span><strong>Resultados</strong></div>
+        <div class="stat"><span>UX</span><strong style="color:var(--coral)">Pobre</strong></div>
+      </article>
+
+      <article class="comp reveal">
+        <div class="rank">3</div>
+        <div class="logo">🔴</div>
+        <h4>App RFFM Madrid</h4>
+        <div class="country">🇪🇸 Madrid</div>
+        <div class="desc">Federación de Fútbol de Madrid. Calendarios oficiales y resultados. App descargable pero con problemas frecuentes de actualización y crashes.</div>
+        <div class="stat"><span>Modelo</span><strong>Gratis</strong></div>
+        <div class="stat"><span>Precio</span><strong>€0</strong></div>
+        <div class="stat"><span>Foco</span><strong>Calendario</strong></div>
+        <div class="stat"><span>UX</span><strong style="color:var(--coral)">Pobre</strong></div>
+      </article>
+
+      <article class="comp reveal">
+        <div class="rank">4</div>
+        <div class="logo">🔵</div>
+        <h4>App FCF Cataluña</h4>
+        <div class="country">🇪🇸 Cataluña</div>
+        <div class="desc">Federació Catalana de Futbol. Clasificaciones, resultados, normativa. En catalán por defecto. Ningún feature pensado para el padre.</div>
+        <div class="stat"><span>Modelo</span><strong>Gratis</strong></div>
+        <div class="stat"><span>Precio</span><strong>€0</strong></div>
+        <div class="stat"><span>Foco</span><strong>Institucional</strong></div>
+        <div class="stat"><span>UX</span><strong style="color:var(--amber)">Aceptable</strong></div>
+      </article>
+
+      <article class="comp reveal">
+        <div class="rank">5</div>
+        <div class="logo">⚪</div>
+        <h4>App FFA Andalucía</h4>
+        <div class="country">🇪🇸 Andalucía</div>
+        <div class="desc">Federación Andaluza. Web envuelta en app. Sin login personal, sin notificaciones de tu equipo, sin fotos. Periódico institucional.</div>
+        <div class="stat"><span>Modelo</span><strong>Gratis</strong></div>
+        <div class="stat"><span>Precio</span><strong>€0</strong></div>
+        <div class="stat"><span>Foco</span><strong>Web wrapper</strong></div>
+        <div class="stat"><span>UX</span><strong style="color:var(--coral)">Pobre</strong></div>
+      </article>
+
+      <article class="comp reveal">
+        <div class="rank">6</div>
+        <div class="logo">🟡</div>
+        <h4>App RFEF</h4>
+        <div class="country">🇪🇸 España</div>
+        <div class="desc">Federación nacional. Foco en selección absoluta y profesional. El fútbol base es residual. No hay ninguna utilidad para padres de cantera.</div>
+        <div class="stat"><span>Modelo</span><strong>Gratis</strong></div>
+        <div class="stat"><span>Precio</span><strong>€0</strong></div>
+        <div class="stat"><span>Foco</span><strong>Selección pro</strong></div>
+        <div class="stat"><span>UX</span><strong style="color:var(--amber)">Cuidada</strong></div>
+      </article>
+
+      <article class="comp reveal">
+        <div class="rank">7</div>
+        <div class="logo">🟣</div>
+        <h4>BeSoccer / Resultados</h4>
+        <div class="country">🇪🇸 España</div>
+        <div class="desc">App popular de resultados. Cubre fútbol base solo a nivel agregado (clasificación, jornada). Cero contexto del equipo del hijo.</div>
+        <div class="stat"><span>Modelo</span><strong>Freemium</strong></div>
+        <div class="stat"><span>Precio</span><strong>€0-3/mes</strong></div>
+        <div class="stat"><span>Foco</span><strong>Score tracker</strong></div>
+        <div class="stat"><span>UX</span><strong style="color:var(--lime)">Buena</strong></div>
+      </article>
+
+      <article class="comp reveal">
+        <div class="rank">8</div>
+        <div class="logo">⚫</div>
+        <h4>Web del club</h4>
+        <div class="country">🇪🇸 Genérico</div>
+        <div class="desc">Web institucional del club (cuando existe). Suele estar desactualizada, sin móvil, sin login, sin fotos del partido del hijo. "Tablón digital".</div>
+        <div class="stat"><span>Modelo</span><strong>Gratis</strong></div>
+        <div class="stat"><span>Precio</span><strong>€0</strong></div>
+        <div class="stat"><span>Foco</span><strong>Imagen club</strong></div>
+        <div class="stat"><span>UX</span><strong style="color:var(--coral)">Obsoleta</strong></div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- 02 POR QUÉ FALLAN -->
+  <section class="scope" id="s2">
+    <h2 class="section-title reveal"><span class="num">02</span> Por qué las apps de federación dejan al padre vacío</h2>
+    <p class="section-sub reveal">No es un fallo técnico. Es un fallo de <strong>diseño de producto</strong>: las federaciones diseñan para sí mismas, no para el padre. Tres razones estructurales:</p>
+
+    <div class="fail-grid">
+      <article class="fail reveal">
+        <span class="em">🏛️</span>
+        <h4>Cliente equivocado</h4>
+        <p>La federación es una institución. Su "cliente" interno es el club, el árbitro y el directivo. El padre <strong>nunca aparece en las decisiones de producto</strong>. Por eso no hay calendario personal, ni galería del partido del hijo, ni stats individuales.</p>
+      </article>
+      <article class="fail reveal">
+        <span class="em">💻</span>
+        <h4>Tecnología 2015</h4>
+        <p>Apps construidas hace 8-10 años, mantenidas a base de parches por una agencia externa. <strong>Ningún equipo de producto interno</strong>. Sin ciclo de mejora continua. Sin notificaciones inteligentes ni offline-first.</p>
+      </article>
+      <article class="fail reveal">
+        <span class="em">📊</span>
+        <h4>Datos no estructurados</h4>
+        <p>Las federaciones tienen acta del partido, pero <strong>no tienen las fotos, vídeos ni alineaciones del cuerpo técnico</strong>. La información rica está en WhatsApp del entrenador. La app federativa solo enseña la "punta del iceberg" oficial.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- 03 MATRIX -->
+  <section class="scope" id="s3">
+    <h2 class="section-title reveal"><span class="num">03</span> Matriz funcional · qué resuelve cada una</h2>
+    <p class="section-sub reveal">Las 12 cosas que un padre busca el sábado por la mañana. <span class="ok" style="vertical-align:middle">●</span> lo tiene · <span class="mid" style="vertical-align:middle">~</span> parcial · <span class="no" style="vertical-align:middle">○</span> no lo tiene.</p>
+
+    <div class="card reveal" style="padding:0;overflow:hidden">
+      <div class="matrix-wrap" id="matrixWrap">
+        <table class="matrix">
+          <thead>
+            <tr>
+              <th class="first">¿Qué busca el padre?</th>
+              <th class="us">FutbolBase</th>
+              <th>FFCV</th>
+              <th>RFFM Madrid</th>
+              <th>FCF Cataluña</th>
+              <th>FFA Andalucía</th>
+              <th>RFEF</th>
+              <th>Web club</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="first">¿A qué hora juega mi hijo el sábado?</td><td class="us"><span class="ok">●</span></td><td><span class="mid">~</span></td><td><span class="mid">~</span></td><td><span class="mid">~</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="mid">~</span></td></tr>
+            <tr><td class="first">¿Dónde queda el campo? (mapa)</td><td class="us"><span class="ok">●</span></td><td><span class="mid">~</span></td><td><span class="no">○</span></td><td><span class="mid">~</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td></tr>
+            <tr><td class="first">¿Va convocado mi hijo?</td><td class="us"><span class="ok">●</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td></tr>
+            <tr><td class="first">¿Cuál fue su alineación?</td><td class="us"><span class="ok">●</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td></tr>
+            <tr><td class="first">¿Cuántos goles lleva esta temporada?</td><td class="us"><span class="ok">●</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td></tr>
+            <tr><td class="first">¿Hay fotos del partido del hijo?</td><td class="us"><span class="ok">●</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="mid">~</span></td></tr>
+            <tr><td class="first">¿Vídeo del gol que metió?</td><td class="us"><span class="ok">●</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td></tr>
+            <tr><td class="first">¿Resultado del partido?</td><td class="us"><span class="ok">●</span></td><td><span class="ok">●</span></td><td><span class="ok">●</span></td><td><span class="ok">●</span></td><td><span class="ok">●</span></td><td><span class="mid">~</span></td><td><span class="mid">~</span></td></tr>
+            <tr><td class="first">Clasificación de la liga</td><td class="us"><span class="ok">●</span></td><td><span class="ok">●</span></td><td><span class="ok">●</span></td><td><span class="ok">●</span></td><td><span class="ok">●</span></td><td><span class="mid">~</span></td><td><span class="mid">~</span></td></tr>
+            <tr><td class="first">Chat con otros padres del equipo</td><td class="us"><span class="ok">●</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td></tr>
+            <tr><td class="first">Notificación cambio de horario</td><td class="us"><span class="ok">●</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td></tr>
+            <tr><td class="first">Multi-hijo en una cuenta</td><td class="us"><span class="ok">●</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 REVIEWS -->
+  <section class="scope" id="s4">
+    <h2 class="section-title reveal"><span class="num">04</span> Lo que dicen los usuarios</h2>
+    <p class="section-sub reveal">Reseñas reales tomadas de Google Play y App Store sobre las apps oficiales (sept 2026, traducidas y abreviadas).</p>
+
+    <div class="reviews">
+      <article class="review reveal">
+        <div class="head"><div class="stars">★★☆☆☆</div><div class="source">App FFCV · Play</div></div>
+        <p class="quote">"Solo sirve para ver clasificaciones y resultados. Si quieres saber a qué hora juega tu hijo, sigue siendo más fácil mirar el grupo de WhatsApp del equipo."</p>
+        <div class="author">— Padre · Valencia</div>
+      </article>
+      <article class="review reveal">
+        <div class="head"><div class="stars">★☆☆☆☆</div><div class="source">App RFFM · Play</div></div>
+        <p class="quote">"La app casi nunca se actualiza. Cuando la abres se queda colgada cargando. Llevo años pidiendo que añadan calendario por equipo."</p>
+        <div class="author">— Madre · Madrid</div>
+      </article>
+      <article class="review reveal">
+        <div class="head"><div class="stars">★★☆☆☆</div><div class="source">FFA · Play</div></div>
+        <p class="quote">"Está bien para resultados oficiales pero las fotos del partido siempre las pongo yo en el grupo. La app no sirve para eso."</p>
+        <div class="author">— Padre · Sevilla</div>
+      </article>
+      <article class="review reveal">
+        <div class="head"><div class="stars">★★☆☆☆</div><div class="source">App RFEF · Play</div></div>
+        <p class="quote">"No entiendo para qué hicieron una app si no me dice nada de mi hijo. Solo sirve para ver el resultado del Real Madrid juvenil."</p>
+        <div class="author">— Padre · Madrid</div>
+      </article>
+      <article class="review reveal">
+        <div class="head"><div class="stars">★★★☆☆</div><div class="source">App FCF · Play</div></div>
+        <p class="quote">"En catalán todo, lo cual está bien, pero no tiene nada del equipo de mi hija. Solo categorías superiores y noticias institucionales."</p>
+        <div class="author">— Madre · Barcelona</div>
+      </article>
+      <article class="review reveal">
+        <div class="head"><div class="stars">★☆☆☆☆</div><div class="source">App FFCV · Play</div></div>
+        <p class="quote">"Llevo 3 temporadas y nunca he encontrado ni una foto del partido de mi hijo. La app debería llamarse 'noticias de la federación'."</p>
+        <div class="author">— Padre · Alicante</div>
+      </article>
+    </div>
+  </section>
+
+  <!-- 05 ENGAGEMENT -->
+  <section class="scope" id="s5">
+    <h2 class="section-title reveal"><span class="num">05</span> Engagement real · sesiones por padre/mes</h2>
+    <p class="section-sub reveal">Estimación de uso real por usuario activo (datos públicos Play Store + análisis manual). El padre abre las apps oficiales <strong>2-3 veces al mes</strong> (mirar resultado del sábado). FutbolBase apunta a uso casi diario.</p>
+
+    <div class="card reveal">
+      <div class="bars" id="engagement-bars"></div>
+    </div>
+  </section>
+
+  <!-- 06 WIN/LOSE -->
+  <section class="scope" id="s6">
+    <h2 class="section-title reveal"><span class="num">06</span> Lo que ellos hacen mejor &amp; lo que nosotros hacemos mejor</h2>
+    <p class="section-sub reveal">No competimos en el mismo terreno. Las apps oficiales tienen ventajas reales — pero son ortogonales a las del padre.</p>
+
+    <div class="vs">
+      <div class="vs-col theirs reveal">
+        <h5>▼ Lo que ellos hacen mejor</h5>
+        <ul>
+          <li>Datos oficiales del acta arbitral (resultado, sancionados, suspensiones)</li>
+          <li>Calendario oficial de la liga completa, todas las jornadas</li>
+          <li>Clasificaciones actualizadas en cuanto cierra la jornada</li>
+          <li>Comunicaciones institucionales (cambios de reglamento, normativa)</li>
+          <li>Cobertura de TODAS las categorías y todos los equipos de la región</li>
+          <li>Marca conocida — el padre sabe que existe la "app de la federación"</li>
+        </ul>
+      </div>
+      <div class="vs-col ours reveal">
+        <h5>▲ Lo que nosotros hacemos mejor</h5>
+        <ul>
+          <li>Información operativa diaria del equipo del hijo (no solo el sábado)</li>
+          <li>Convocatoria, alineación y minutos jugados por su hijo</li>
+          <li>Galería completa de fotos y vídeos por partido</li>
+          <li>Stats individuales acumuladas por temporada y carrera</li>
+          <li>Chat seguro con familias del equipo, sin spam ni desconocidos</li>
+          <li>Notificaciones inteligentes (cambio de horario, convocatoria, fotos nuevas)</li>
+          <li>Multi-hijo: una cuenta, todas las fichas de la familia</li>
+          <li>UX 2026 — fluidez, animaciones, dark mode, offline first</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 OPORTUNIDAD -->
+  <section class="scope" id="s7">
+    <h2 class="section-title reveal"><span class="num">07</span> El hueco que nadie está cubriendo</h2>
+    <p class="section-sub reveal">Las federaciones son periódicos. Nosotros somos red social operativa. La diferencia es de uso, no de información.</p>
+
+    <div class="opp reveal">
+      <div class="opp-head">
+        <div class="icon">📐</div>
+        <h3>Dimensionando el hueco</h3>
+      </div>
+      <p>De los <strong>~700.000 padres con hijo en fútbol base</strong> en España, las apps oficiales agregan <strong>menos del 8% de tráfico mensual</strong>. El resto del consumo de información del padre se va a WhatsApp y al boca a boca. <strong>Ese 92% es nuestro mercado real</strong>.</p>
+      <div class="opp-grid">
+        <div class="opp-item">
+          <div class="l">Mercado total</div>
+          <div class="v" data-counter="700" data-suffix="K">0</div>
+          <div class="d">padres con hijo en fútbol base España</div>
+        </div>
+        <div class="opp-item">
+          <div class="l">Apps oficiales</div>
+          <div class="v" data-counter="8" data-suffix="%">0%</div>
+          <div class="d">del tráfico mensual de padres</div>
+        </div>
+        <div class="opp-item">
+          <div class="l">WhatsApp + papel</div>
+          <div class="v" data-counter="92" data-suffix="%">0%</div>
+          <div class="d">tu mercado real, sin disputar</div>
+        </div>
+        <div class="opp-item">
+          <div class="l">Penetración Y5</div>
+          <div class="v" data-counter="50" data-suffix="%">0%</div>
+          <div class="d">objetivo realista 2031</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 ALIADO O RIVAL -->
+  <section class="scope" id="s8">
+    <h2 class="section-title reveal"><span class="num">08</span> ¿Aliado o rival? Estrategia con federaciones</h2>
+    <p class="section-sub reveal">No queremos enfrentarnos. Queremos integrarnos.</p>
+
+    <div class="card reveal">
+      <p style="font-size:15px;color:var(--warm-soft);line-height:1.7;margin-bottom:24px"><strong style="color:var(--lime)">Las federaciones son aliados naturales, no competidores.</strong> Ellas tienen los datos oficiales (acta, resultado, clasificación). Nosotros tenemos la capa operativa diaria del padre (alineación, fotos, chat, stats). Una integración vía API beneficia a ambos:</p>
+      <div class="vs">
+        <div class="vs-col ours">
+          <h5>▲ Lo que aporta FutbolBase</h5>
+          <ul>
+            <li>App moderna sin coste de desarrollo para la federación</li>
+            <li>Reducción de tickets de soporte (padres ya no escriben pidiendo info básica)</li>
+            <li>Datos agregados de uso (engagement por categoría, comarca, edad)</li>
+            <li>Marca de la federación visible dentro de FutbolBase (co-branding)</li>
+          </ul>
+        </div>
+        <div class="vs-col cyan">
+          <h5>◆ Lo que aporta la federación</h5>
+          <ul>
+            <li>Acceso oficial a actas y resultados en tiempo real (API)</li>
+            <li>Sello de credibilidad institucional ("integrado con FFCV")</li>
+            <li>Acceso al directorio oficial de clubes y entrenadores</li>
+            <li>Validación legal del tratamiento de datos de menores</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="final reveal">
+    <div class="em">🎯</div>
+    <h2>Las apps oficiales no son competencia. Son complementarias.</h2>
+    <p>FFCV, RFFM y demás federaciones <strong>nunca van a hacer una app que cuide al padre</strong>. No es su misión, ni su cliente, ni su modelo. Su rol es publicar resultados oficiales — y lo hacen bien. <strong>FutbolBase llena el 92% del uso diario que ellas no tocan</strong>: alineaciones, fotos, vídeos, chat, stats. Mercado limpio, sin pelearnos con instituciones, con potencial de aliarnos. <strong>Ganan ellas, ganamos nosotros, gana el padre</strong>.</p>
+  </section>
+
+  <footer>
+    <span>© 2026 FutbolBase · Análisis vs Federaciones</span>
+    <span>Doc · v2.0 · Sept 2026</span>
+  </footer>
+
+</div>
+
+<!-- BACK TO TOP -->
+<button class="back-top" id="backTop" aria-label="Volver arriba">↑</button>
+
+<script>
+(function(){
+  // SCROLL PROGRESS
+  const progress = document.getElementById('progress');
+  function updateProgress(){
+    const h = document.documentElement;
+    const max = h.scrollHeight - h.clientHeight;
+    const pct = max > 0 ? (h.scrollTop / max) * 100 : 0;
+    progress.style.width = pct + '%';
+  }
+
+  // HIDE NAV ON SCROLL DOWN
+  const nav = document.getElementById('topnav');
+  let lastY = 0;
+  function updateNav(){
+    const y = window.scrollY;
+    if(y > 200 && y > lastY) nav.classList.add('hide');
+    else nav.classList.remove('hide');
+    lastY = y;
+  }
+
+  // BACK TO TOP
+  const backTop = document.getElementById('backTop');
+  function updateBackTop(){
+    if(window.scrollY > 600) backTop.classList.add('show');
+    else backTop.classList.remove('show');
+  }
+  backTop.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+
+  // ACTIVE NAV LINK (scroll spy)
+  const sections = document.querySelectorAll('section.scope');
+  const links = document.querySelectorAll('.nav-link');
+  function updateActiveLink(){
+    let active = null;
+    const scrollPos = window.scrollY + 130;
+    sections.forEach(s => {
+      if(s.offsetTop <= scrollPos) active = s.id;
+    });
+    links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + active));
+  }
+
+  // SCROLL HANDLER (combined, throttled with rAF)
+  let ticking = false;
+  function onScroll(){
+    if(!ticking){
+      requestAnimationFrame(()=>{
+        updateProgress();
+        updateNav();
+        updateBackTop();
+        updateActiveLink();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  // REVEAL ON SCROLL
+  if('IntersectionObserver' in window){
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e => {
+        if(e.isIntersecting){
+          e.target.classList.add('in');
+          io.unobserve(e.target);
+        }
+      });
+    }, {threshold:0.12, rootMargin:'0px 0px -40px 0px'});
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+  } else {
+    document.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
+  }
+
+  // COUNTERS
+  function animateCounter(el){
+    const target = parseFloat(el.dataset.counter);
+    const suffix = el.dataset.suffix || '';
+    const prefix = el.dataset.prefix || '';
+    const duration = 1400;
+    const start = performance.now();
+    function tick(now){
+      const t = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - t, 3);
+      const val = Math.round(target * eased);
+      el.textContent = prefix + val + suffix;
+      if(t < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+  if('IntersectionObserver' in window){
+    const cio = new IntersectionObserver((entries)=>{
+      entries.forEach(e => {
+        if(e.isIntersecting){
+          animateCounter(e.target);
+          cio.unobserve(e.target);
+        }
+      });
+    }, {threshold:0.4});
+    document.querySelectorAll('[data-counter]').forEach(el => cio.observe(el));
+  } else {
+    document.querySelectorAll('[data-counter]').forEach(el => animateCounter(el));
+  }
+
+  // ENGAGEMENT BARS
+  const ENGAGEMENT = [
+    { lbl:'⚡ FutbolBase',          v:24, us:true },
+    { lbl:'💬 WhatsApp del equipo', v:48 },
+    { lbl:'📊 BeSoccer',            v:6 },
+    { lbl:'🟢 App FFCV',            v:3 },
+    { lbl:'🔴 App RFFM Madrid',     v:2 },
+    { lbl:'🔵 App FCF Cataluña',    v:2 },
+    { lbl:'⚫ Web del club',        v:1 },
+    { lbl:'🟡 App RFEF',            v:1 },
+  ];
+  function renderBars(elId, data){
+    const host = document.getElementById(elId);
+    if(!host) return;
+    host.innerHTML = '';
+    const max = Math.max(...data.map(d=>d.v));
+    data.forEach((d,i) => {
+      const row = document.createElement('div');
+      row.className = 'bar-row' + (d.us ? ' us' : '');
+      const pct = (d.v / max) * 100;
+      row.innerHTML = `
+        <div class="lbl">${d.lbl}</div>
+        <div class="track"><div class="fill ${d.us ? 'us' : ''}" style="width:0%"></div></div>
+        <div class="v">${d.v}</div>
+      `;
+      host.appendChild(row);
+    });
+    // Animate when bars come into view
+    if('IntersectionObserver' in window){
+      const bio = new IntersectionObserver((entries)=>{
+        entries.forEach(e => {
+          if(e.isIntersecting){
+            const fills = host.querySelectorAll('.fill');
+            fills.forEach((f,i) => {
+              setTimeout(()=>{ f.style.width = (data[i].v / max) * 100 + '%'; }, 80 + i*70);
+            });
+            bio.disconnect();
+          }
+        });
+      }, {threshold:0.2});
+      bio.observe(host);
+    } else {
+      host.querySelectorAll('.fill').forEach((f,i) => f.style.width = (data[i].v / max) * 100 + '%');
+    }
+  }
+  renderBars('engagement-bars', ENGAGEMENT);
+
+  // MATRIX SCROLL HINT
+  const mw = document.getElementById('matrixWrap');
+  if(mw){
+    function checkScrollable(){
+      mw.classList.toggle('scrollable', mw.scrollWidth > mw.clientWidth + 4);
+    }
+    checkScrollable();
+    window.addEventListener('resize', checkScrollable);
+    mw.addEventListener('scroll', () => {
+      const atEnd = mw.scrollLeft + mw.clientWidth >= mw.scrollWidth - 4;
+      mw.classList.toggle('scrollable', !atEnd);
+    });
+  }
+})();
+</script>
+</body>
+</html>

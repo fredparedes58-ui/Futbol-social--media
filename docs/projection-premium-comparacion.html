@@ -1,0 +1,1546 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>FutbolBase · Comparación 3 escenarios + 6 estrategias reales</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FBFCFE; --bg2:#F1F5F9; --bg3:#FFFFFF;
+    --card:#FFFFFF;
+    --card-hover:#F8FAFC;
+    --text:#0F172A;
+    --muted:#64748B;
+    --border:rgba(15,23,42,0.08);
+    --border-strong:rgba(15,23,42,0.16);
+    --red:#DC2626;      --red-soft:#FEE2E2;
+    --green:#059669;    --green-soft:#D1FAE5;
+    --yellow:#D97706;   --yellow-soft:#FEF3C7;
+    --cyan:#0891B2;     --cyan-soft:#CFFAFE;
+    --purple:#7C3AED;   --purple-soft:#EDE9FE;
+    --orange:#EA580C;   --orange-soft:#FFEDD5;
+    --slate:#475569;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased}
+  html{scroll-behavior:smooth}
+  body{
+    background:
+      radial-gradient(1400px 700px at 10% -10%, rgba(5,150,105,0.08), transparent 55%),
+      radial-gradient(1400px 700px at 95% 5%, rgba(124,58,237,0.06), transparent 55%),
+      linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+    background-attachment:fixed;
+    color:var(--text); font-family:'Inter',system-ui,sans-serif; font-weight:400; line-height:1.55;
+    min-height:100vh;
+  }
+  .wrap{max-width:1360px;margin:0 auto;padding:40px 24px 80px}
+
+  /* Nav */
+  .nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:14px 24px;margin:-40px -24px 40px;display:flex;gap:24px;align-items:center;justify-content:center;flex-wrap:wrap}
+  .nav a{color:var(--muted);font-size:12px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;transition:color 0.2s}
+  .nav a:hover{color:var(--green)}
+  .nav .brand{color:var(--green);font-family:'Barlow Condensed';font-weight:900;font-size:18px;letter-spacing:0.02em;margin-right:auto}
+
+  /* Hero */
+  header.hero{margin-bottom:60px;text-align:center;padding:20px 0}
+  .eyebrow{color:var(--green);font-family:'Barlow Condensed';font-weight:700;letter-spacing:0.3em;text-transform:uppercase;font-size:13px;display:inline-block;padding:6px 14px;background:var(--green-soft);border:1px solid var(--green);border-radius:20px}
+  h1.title{font-family:'Barlow Condensed';font-weight:800;font-size:74px;line-height:0.92;margin:18px auto;letter-spacing:-0.03em;max-width:980px;color:var(--text)}
+  h1.title .grad{background:linear-gradient(135deg,var(--red) 0%,var(--green) 50%,var(--yellow) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;display:inline}
+  .hero-sub{color:var(--muted);font-size:18px;max-width:740px;margin:0 auto;font-weight:400}
+  @media(max-width:700px){h1.title{font-size:42px}.hero-sub{font-size:15px}}
+
+  /* Sections */
+  section{margin-bottom:60px;scroll-margin-top:80px}
+  .section-head{margin-bottom:28px;display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px;border-bottom:1px solid var(--border);padding-bottom:14px}
+  .section-head h2{font-family:'Barlow Condensed';font-weight:800;font-size:42px;line-height:1;letter-spacing:-0.02em;color:var(--text)}
+  .section-head .kicker{color:var(--muted);font-size:12px;letter-spacing:0.25em;text-transform:uppercase;font-weight:700;margin-bottom:6px;font-family:'JetBrains Mono',monospace}
+  .section-head .badge{font-family:'JetBrains Mono';font-size:11px;color:var(--muted);background:rgba(15,23,42,0.04);padding:6px 12px;border-radius:8px;border:1px solid var(--border)}
+
+  /* Cards */
+  .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(15,23,42,0.04),0 10px 30px rgba(15,23,42,0.04);transition:all 0.25s;position:relative;overflow:hidden}
+  .card:hover{border-color:var(--border-strong);box-shadow:0 4px 12px rgba(15,23,42,0.08),0 20px 40px rgba(15,23,42,0.06);transform:translateY(-2px)}
+  .card h3{font-family:'Barlow Condensed';font-weight:800;font-size:22px;margin-bottom:6px;color:var(--text)}
+  .card p{color:var(--slate);font-size:14px;line-height:1.7}
+  .card-sub{color:var(--muted);font-size:13px;margin-bottom:14px}
+  .card-topline{position:absolute;top:0;left:0;right:0;height:3px}
+
+  .accent-red .card-topline{background:var(--red)}
+  .accent-green .card-topline{background:var(--green)}
+  .accent-yellow .card-topline{background:var(--yellow)}
+  .accent-cyan .card-topline{background:var(--cyan)}
+  .accent-purple .card-topline{background:var(--purple)}
+  .accent-orange .card-topline{background:var(--orange)}
+
+  .accent-red{border-top:2px solid var(--red)}
+  .accent-green{border-top:2px solid var(--green)}
+  .accent-yellow{border-top:2px solid var(--yellow)}
+  .accent-cyan{border-top:2px solid var(--cyan)}
+  .accent-purple{border-top:2px solid var(--purple)}
+  .accent-orange{border-top:2px solid var(--orange)}
+
+  .grid{display:grid;gap:20px}
+  .g-2{grid-template-columns:repeat(2,1fr)}
+  .g-3{grid-template-columns:repeat(3,1fr)}
+  .g-4{grid-template-columns:repeat(4,1fr)}
+  @media(max-width:900px){.g-3,.g-4{grid-template-columns:1fr}.g-2{grid-template-columns:1fr}}
+
+  /* Chart */
+  .chart-wrap{position:relative;height:340px;margin-top:8px}
+  .chart-wrap.lg{height:440px}
+  .chart-wrap.xl{height:520px}
+
+  /* Tables */
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  thead tr{border-bottom:2px solid var(--border-strong)}
+  th{color:var(--muted);font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:0.15em;padding:12px 10px;text-align:left;font-family:'JetBrains Mono'}
+  td{padding:12px 10px;border-bottom:1px solid var(--border);color:#1F2937;font-weight:500}
+  td.num{text-align:right;font-variant-numeric:tabular-nums;font-family:'JetBrains Mono';font-weight:600}
+  tbody tr:hover{background:rgba(15,23,42,0.025)}
+  .pos{color:var(--green);font-weight:700}
+  .neg{color:var(--red);font-weight:700}
+
+  /* Tag/badge */
+  .tag{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;font-family:'JetBrains Mono'}
+  .tag-red{background:var(--red-soft);color:var(--red)}
+  .tag-green{background:var(--green-soft);color:var(--green)}
+  .tag-yellow{background:var(--yellow-soft);color:var(--yellow)}
+  .tag-cyan{background:var(--cyan-soft);color:var(--cyan)}
+  .tag-purple{background:var(--purple-soft);color:var(--purple)}
+  .tag-orange{background:var(--orange-soft);color:var(--orange)}
+
+  /* Scenario triptych */
+  .triptych{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:20px}
+  @media(max-width:900px){.triptych{grid-template-columns:1fr}}
+  .triptych-card{padding:28px 24px;border-radius:16px;background:var(--card);border:1px solid var(--border);position:relative;overflow:hidden}
+  .triptych-card.red{background:linear-gradient(180deg,var(--red-soft),#fff);border-top:3px solid var(--red)}
+  .triptych-card.green{background:linear-gradient(180deg,var(--green-soft),#fff);border-top:3px solid var(--green)}
+  .triptych-card.yellow{background:linear-gradient(180deg,var(--yellow-soft),#fff);border-top:3px solid var(--yellow)}
+  .triptych-card .bign{font-family:'Barlow Condensed';font-weight:900;font-size:48px;line-height:0.95;margin:10px 0 4px;letter-spacing:-0.02em}
+  .triptych-card.red .bign{color:var(--red)}
+  .triptych-card.green .bign{color:var(--green)}
+  .triptych-card.yellow .bign{color:var(--yellow)}
+  .triptych-card .prob{font-family:'JetBrains Mono';font-size:11px;color:var(--muted);letter-spacing:0.15em;margin-bottom:14px}
+  .triptych-card h3{font-family:'Barlow Condensed';font-size:18px;font-weight:800;margin-bottom:8px;color:var(--text)}
+  .triptych-card p{color:var(--slate);font-size:13px;line-height:1.6}
+  .triptych-card ul{margin:10px 0 0;padding-left:16px;font-size:12.5px;color:var(--slate);line-height:1.7}
+
+  /* Persona card */
+  .persona{padding:22px 20px;background:var(--card);border:1px solid var(--border);border-radius:14px;position:relative}
+  .persona .avatar{width:56px;height:56px;border-radius:50%;font-size:28px;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+  .persona h4{font-family:'Barlow Condensed';font-weight:800;font-size:20px;color:var(--text);margin-bottom:2px}
+  .persona .sub{color:var(--muted);font-size:12px;font-family:'JetBrains Mono';letter-spacing:0.1em;margin-bottom:14px}
+  .persona .bullets{font-size:13px;color:var(--slate);line-height:1.7}
+  .persona .bullets li{margin-bottom:4px;list-style:none;padding-left:18px;position:relative}
+  .persona .bullets li::before{content:'▸';position:absolute;left:0;color:var(--green);font-weight:700}
+  .persona .price{margin-top:14px;padding:10px 14px;background:rgba(15,23,42,0.04);border-radius:10px;font-family:'JetBrains Mono';font-size:12px;color:var(--slate);display:flex;justify-content:space-between;align-items:center}
+  .persona .price b{color:var(--green);font-size:14px}
+
+  /* Strategy card */
+  .strategy{padding:26px 24px;background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:0 1px 3px rgba(15,23,42,0.04),0 10px 30px rgba(15,23,42,0.04);position:relative;overflow:hidden}
+  .strategy::before{content:'';position:absolute;top:0;left:0;width:5px;bottom:0;background:var(--strat-color,var(--green))}
+  .strategy .num{font-family:'Barlow Condensed';font-weight:900;font-size:64px;line-height:0.9;color:var(--strat-color,var(--green));opacity:0.25;position:absolute;top:14px;right:20px}
+  .strategy h3{font-family:'Barlow Condensed';font-weight:800;font-size:24px;margin-bottom:6px;max-width:75%}
+  .strategy .strat-sub{color:var(--slate);font-size:14px;line-height:1.65;margin-bottom:16px;max-width:88%}
+  .strategy .strat-meta{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:16px 0 12px;padding:14px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+  .strategy .strat-meta .m{display:flex;flex-direction:column;gap:2px}
+  .strategy .strat-meta .m .lbl{font-family:'JetBrains Mono';font-size:9px;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;font-weight:700}
+  .strategy .strat-meta .m .val{font-family:'Barlow Condensed';font-weight:800;font-size:18px;color:var(--text);line-height:1.1}
+  .strategy .steps{display:flex;flex-direction:column;gap:8px;margin-top:16px}
+  .strategy .step{display:grid;grid-template-columns:28px 1fr;gap:12px;align-items:start;font-size:13px;color:var(--slate);line-height:1.5}
+  .strategy .step .n{width:24px;height:24px;border-radius:50%;background:var(--strat-color,var(--green));color:#fff;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono';font-weight:700;font-size:11px;flex-shrink:0}
+  .strategy .risk-row{margin-top:16px;padding:12px 16px;background:var(--yellow-soft);border-left:3px solid var(--yellow);border-radius:0 8px 8px 0;font-size:13px;color:#78350F;line-height:1.55}
+  .strategy .risk-row b{color:var(--yellow);font-family:'JetBrains Mono';font-size:10px;letter-spacing:0.2em;text-transform:uppercase;display:block;margin-bottom:4px}
+
+  /* KPI row */
+  .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+  @media(max-width:900px){.kpi-row{grid-template-columns:repeat(2,1fr)}}
+  .kpi-box{padding:20px;background:var(--card);border:1px solid var(--border);border-radius:12px;text-align:left}
+  .kpi-box .lbl{font-family:'JetBrains Mono';font-size:10px;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;font-weight:700;margin-bottom:8px}
+  .kpi-box .val{font-family:'Barlow Condensed';font-weight:900;font-size:38px;line-height:1;color:var(--text)}
+  .kpi-box .meta{font-size:12px;color:var(--muted);margin-top:6px}
+
+  /* Comparison bars */
+  .bar-compare{display:grid;grid-template-columns:130px 1fr 100px;gap:14px;align-items:center;padding:10px 0;border-bottom:1px dashed var(--border);font-size:13px}
+  .bar-compare:last-child{border-bottom:none}
+  .bar-compare .bt{height:20px;background:rgba(15,23,42,0.04);border-radius:6px;overflow:hidden;position:relative}
+  .bar-compare .bf{height:100%;border-radius:6px;display:flex;align-items:center;padding-left:10px;color:#fff;font-family:'JetBrains Mono';font-weight:700;font-size:11px}
+  .bar-compare .amt{text-align:right;font-family:'JetBrains Mono';font-weight:700}
+  .bar-compare .lbl{font-weight:600;color:var(--text)}
+
+  /* Footer callout */
+  .callout{background:linear-gradient(135deg,var(--green-soft),var(--cyan-soft));border:1px solid var(--green);border-radius:16px;padding:22px 28px;margin:20px 0;display:flex;gap:18px;align-items:flex-start}
+  .callout .icon{font-size:32px}
+  .callout strong{color:var(--green)}
+  .callout p{color:#064E3B;font-size:14px;line-height:1.6}
+
+  /* Verdict row */
+  .verdict{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:16px;padding:18px 24px;background:linear-gradient(90deg,var(--green-soft),var(--cyan-soft));border-radius:14px;margin-top:20px}
+  .verdict .v-label{font-family:'Barlow Condensed';font-weight:800;font-size:18px;color:var(--text)}
+  .verdict .v-num{font-family:'JetBrains Mono';font-weight:700;color:var(--green);font-size:16px;text-align:center}
+  @media(max-width:800px){.verdict{grid-template-columns:1fr 1fr}}
+
+  footer{margin-top:80px;padding-top:28px;border-top:1px solid var(--border);color:var(--muted);font-size:13px;text-align:center}
+  footer a{color:var(--cyan);text-decoration:none;margin:0 8px}
+
+  /* Animation */
+  @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  section{animation:fadeUp 0.6s ease both}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="nav">
+  <span class="brand">⚡ FutbolBase · COMPARACIÓN</span>
+  <a href="#escenarios">Escenarios</a>
+  <a href="#audiencia">Audiencia</a>
+  <a href="#gastos">Gastos</a>
+  <a href="#ganancias">Ganancias</a>
+  <a href="#pricing-y1">Pricing Y1</a>
+  <a href="#churn">Churn</a>
+  <a href="#crecimiento">Crecimiento</a>
+  <a href="#estrategias">Estrategias</a>
+  <a href="#veredicto">Veredicto</a>
+</nav>
+
+<header class="hero">
+  <span class="eyebrow">● Análisis comparativo · 6 estrategias accionables</span>
+  <h1 class="title">3 caminos.<br><span class="grad">3 resultados.</span> 1 decisión.</h1>
+  <p class="hero-sub">Deck comparativo entre los 3 escenarios (conservador, realista, optimista) con foco en usuario, costes, beneficios, crecimiento y las 6 estrategias reales que podemos ejecutar para inclinar la balanza.</p>
+
+  <div style="display:flex;gap:10px;justify-content:center;margin-top:24px;flex-wrap:wrap">
+    <a href="./projection-premium-conservador.html" style="padding:10px 18px;background:var(--red-soft);border:1px solid var(--red);border-radius:10px;color:var(--red);text-decoration:none;font-family:'JetBrains Mono';font-size:11px;font-weight:700;letter-spacing:0.1em">🔴 VER DECK CONSERVADOR →</a>
+    <a href="./projection-premium-realista.html" style="padding:10px 18px;background:var(--green-soft);border:1px solid var(--green);border-radius:10px;color:var(--green);text-decoration:none;font-family:'JetBrains Mono';font-size:11px;font-weight:700;letter-spacing:0.1em">🟢 VER DECK REALISTA →</a>
+    <a href="./projection-premium-optimista.html" style="padding:10px 18px;background:var(--yellow-soft);border:1px solid var(--yellow);border-radius:10px;color:var(--yellow);text-decoration:none;font-family:'JetBrains Mono';font-size:11px;font-weight:700;letter-spacing:0.1em">🟠 VER DECK OPTIMISTA →</a>
+  </div>
+</header>
+
+<!-- ============================================================ -->
+<!-- 1 · ESCENARIOS SIDE BY SIDE                                   -->
+<!-- ============================================================ -->
+<section id="escenarios">
+  <div class="section-head">
+    <div>
+      <div class="kicker">01 / Triple vista</div>
+      <h2>Los 3 escenarios en una mirada</h2>
+    </div>
+    <span class="badge">5 años · Comunidad Valenciana base + expansión</span>
+  </div>
+
+  <div class="triptych">
+    <div class="triptych-card red">
+      <span class="tag tag-red">🔴 CONSERVADOR</span>
+      <div class="prob">Probabilidad: 25%</div>
+      <div class="bign">333K€</div>
+      <div style="font-family:'JetBrains Mono';font-size:11px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase">ARR Y5 · 12.600 usuarios</div>
+      <h3 style="margin-top:18px">Qué pasa si las cosas van mal</h3>
+      <ul>
+        <li><strong>NO</strong> cerramos acuerdo con FFCV</li>
+        <li>Nos quedamos <strong>solo en CV</strong> (no expansión)</li>
+        <li>Penetración SAM: 15% (nos cuesta crecer)</li>
+        <li>ARPU 3,99€ · Churn 6,5%/mes</li>
+        <li>Break-even: <strong>Y4</strong></li>
+        <li>EBITDA Y5: <strong>+78k€</strong> (margen 23%)</li>
+        <li>Exit valuation: 8M€ · MoIC 5,4×</li>
+      </ul>
+    </div>
+
+    <div class="triptych-card green">
+      <span class="tag tag-green">🟢 REALISTA · CASO BASE</span>
+      <div class="prob">Probabilidad: 55%</div>
+      <div class="bign">554K€</div>
+      <div style="font-family:'JetBrains Mono';font-size:11px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase">ARR Y5 · 21.000 usuarios</div>
+      <h3 style="margin-top:18px">El camino más probable</h3>
+      <ul>
+        <li>Acuerdo FFCV firmado en <strong>Y3</strong></li>
+        <li>Expansión a <strong>3 CCAA</strong> adyacentes en Y4</li>
+        <li>Penetración SAM: 25%</li>
+        <li>ARPU 4,99€ · Churn 4,5%/mes</li>
+        <li>Break-even: <strong>Y3</strong></li>
+        <li>EBITDA Y5: <strong>+151,6k€</strong> (margen 27%)</li>
+        <li>Exit valuation: 18M€ · MoIC 12,2×</li>
+      </ul>
+    </div>
+
+    <div class="triptych-card yellow">
+      <span class="tag tag-yellow">🟠 OPTIMISTA</span>
+      <div class="prob">Probabilidad: 20%</div>
+      <div class="bign">988K€</div>
+      <div style="font-family:'JetBrains Mono';font-size:11px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase">ARR Y5 · 29.400 usuarios</div>
+      <h3 style="margin-top:18px">Si todo sale bien</h3>
+      <ul>
+        <li>Acuerdo FFCV firmado en <strong>Y2</strong></li>
+        <li>Expansión a <strong>6 CCAA</strong> (Murcia+Baleares+Aragón+Madrid)</li>
+        <li>Penetración SAM: 35%</li>
+        <li>ARPU 5,99€ · Churn 3,2%/mes</li>
+        <li>Break-even: <strong>Y2</strong></li>
+        <li>EBITDA Y5: <strong>+333k€</strong> (margen 34%)</li>
+        <li>Exit valuation: 30M€ · MoIC 20,4×</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" style="padding:20px;margin-top:20px">
+    <h3>📊 ARR en los 3 escenarios</h3>
+    <div class="chart-wrap lg"><canvas id="ch_arr_compare"></canvas></div>
+  </div>
+
+  <div class="kpi-row" style="margin-top:24px">
+    <div class="kpi-box"><div class="lbl">Rango ARR Y5</div><div class="val" style="color:var(--green)">333K – 988K€</div><div class="meta">Spread 3× entre worst y best</div></div>
+    <div class="kpi-box"><div class="lbl">Valor esperado ARR Y5</div><div class="val" style="color:var(--cyan)">585K€</div><div class="meta">Ponderado por probabilidades</div></div>
+    <div class="kpi-box"><div class="lbl">Rango usuarios Y5</div><div class="val" style="color:var(--purple)">12,6K – 29,4K</div><div class="meta">15% a 35% penetración SAM</div></div>
+    <div class="kpi-box"><div class="lbl">Rango EBITDA Y5</div><div class="val" style="color:var(--orange)">+78K a +333K</div><div class="meta">Rentable en los 3 escenarios</div></div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 2 · AUDIENCIA / USUARIOS                                      -->
+<!-- ============================================================ -->
+<section id="audiencia">
+  <div class="section-head">
+    <div>
+      <div class="kicker">02 / Quién paga</div>
+      <h2>Perfiles reales del usuario FutbolBase</h2>
+    </div>
+    <span class="badge">5 personas · 135.980 federados CV</span>
+  </div>
+
+  <div class="card" style="padding:22px;margin-bottom:22px">
+    <h3>🎯 Segmentación por edad y tipo (Comunidad Valenciana 24/25)</h3>
+    <p class="card-sub">Para entender quién paga qué hay que mirar cómo se descompone el TAM por edad y rol dentro del ecosistema federado.</p>
+    <div class="chart-wrap"><canvas id="ch_segments"></canvas></div>
+  </div>
+
+  <div class="grid g-3" style="margin-bottom:22px">
+    <!-- Persona 1: Jugador joven 14-17 -->
+    <div class="persona">
+      <div class="avatar" style="background:var(--cyan-soft);color:var(--cyan)">⚽</div>
+      <h4>Marcos · 15 años</h4>
+      <div class="sub">CADETE · ACADEMIA LOCAL</div>
+      <ul class="bullets">
+        <li>Juega en equipo cadete provincial</li>
+        <li>TikTok, Discord e Instagram son vida</li>
+        <li>Sueña con ser pro — "necesito stats"</li>
+        <li>No paga él: convence a los padres</li>
+        <li>Usa app <strong>diariamente</strong> (+15 min/día)</li>
+      </ul>
+      <div class="price"><span>Plan + motivo</span><b>Pro 4,99€ / regalo Reyes</b></div>
+    </div>
+
+    <!-- Persona 2: Senior amateur -->
+    <div class="persona">
+      <div class="avatar" style="background:var(--green-soft);color:var(--green)">💪</div>
+      <h4>Jordi · 28 años</h4>
+      <div class="sub">SENIOR AMATEUR · PREFERENTE</div>
+      <ul class="bullets">
+        <li>Juega en Preferente/Regional Valenciana</li>
+        <li>Quiere medirse con otros equipos</li>
+        <li>Paga él mismo · decisor directo</li>
+        <li>Usa app <strong>3-4 veces/semana</strong></li>
+        <li>Alta probabilidad de plan Anual (39€)</li>
+      </ul>
+      <div class="price"><span>Plan + motivo</span><b>Pro Anual 39€ / presumir</b></div>
+    </div>
+
+    <!-- Persona 3: Veterano -->
+    <div class="persona">
+      <div class="avatar" style="background:var(--orange-soft);color:var(--orange)">🎯</div>
+      <h4>Ricardo · 42 años</h4>
+      <div class="sub">VETERANOS · 1 VEZ / SEMANA</div>
+      <ul class="bullets">
+        <li>Juega en liga veteranos · 1x semana</li>
+        <li>Usa FutbolBase como álbum de fotos digital</li>
+        <li>Comparte con sus hijos los highlights</li>
+        <li>Poder adquisitivo alto</li>
+        <li>Baja frecuencia pero baja churn</li>
+      </ul>
+      <div class="price"><span>Plan + motivo</span><b>Pro 4,99€ / nostalgia</b></div>
+    </div>
+
+    <!-- Persona 4: Padre responsable -->
+    <div class="persona">
+      <div class="avatar" style="background:var(--purple-soft);color:var(--purple)">👨‍👦</div>
+      <h4>Eva · 38 años (madre)</h4>
+      <div class="sub">PAGA POR SU HIJO BENJAMÍN</div>
+      <ul class="bullets">
+        <li>Hijo de 9 años juega benjamín</li>
+        <li>Quiere seguir todos sus partidos</li>
+        <li>Paga por WhatsApp (no es su app)</li>
+        <li>Le motiva el "álbum de la temporada"</li>
+        <li>Alta retención (se olvida del cobro)</li>
+      </ul>
+      <div class="price"><span>Plan + motivo</span><b>Pro Anual 39€ / legado hijo</b></div>
+    </div>
+
+    <!-- Persona 5: Coach -->
+    <div class="persona">
+      <div class="avatar" style="background:var(--yellow-soft);color:var(--yellow)">🎖️</div>
+      <h4>Carlos · 35 años (coach)</h4>
+      <div class="sub">ENTRENADOR · CLUB COMARCAL</div>
+      <ul class="bullets">
+        <li>Entrena equipo juvenil (22 jugadores)</li>
+        <li>Quiere dashboard del rendimiento del equipo</li>
+        <li>Decisor de compra del <strong>plan Club</strong></li>
+        <li>Alta influencia: promueve a sus jugadores</li>
+        <li>Multiplicador viral (traerá a todo el club)</li>
+      </ul>
+      <div class="price"><span>Plan + motivo</span><b>Club 29€/mes · decisor</b></div>
+    </div>
+
+    <!-- Persona 6: Jugadora femenino -->
+    <div class="persona">
+      <div class="avatar" style="background:var(--red-soft);color:var(--red)">⭐</div>
+      <h4>Laura · 20 años</h4>
+      <div class="sub">JUGADORA FÚTBOL FEMENINO</div>
+      <ul class="bullets">
+        <li>Segunda RFEF Femenina · +30k en CV</li>
+        <li>Segmento desatendido por competencia</li>
+        <li>Alta vocación de visibilidad / LinkedIn</li>
+        <li>Usa la tarjeta FIFA para ojeadores</li>
+        <li><strong>Oportunidad: verticalizar</strong></li>
+      </ul>
+      <div class="price"><span>Plan + motivo</span><b>Pro + bonus feed especial</b></div>
+    </div>
+  </div>
+
+  <div class="card" style="padding:22px">
+    <h3>📊 Distribución de pagantes (9.450 usuarios Pro Y5 · escenario realista)</h3>
+    <p class="card-sub">Quién nos paga realmente, ordenado por peso económico.</p>
+    <div class="chart-wrap"><canvas id="ch_payers"></canvas></div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 3 · GASTOS                                                    -->
+<!-- ============================================================ -->
+<section id="gastos">
+  <div class="section-head">
+    <div>
+      <div class="kicker">03 / En qué nos gastamos el dinero</div>
+      <h2>Estructura de costes por escenario</h2>
+    </div>
+    <span class="badge">Y5 comparado · 7 categorías OPEX</span>
+  </div>
+
+  <div class="grid g-2">
+    <div class="card accent-red"><span class="card-topline"></span>
+      <h3>🔴 OPEX Y5 · Conservador</h3>
+      <p class="card-sub">Total: <strong style="color:var(--red)">255.000€</strong> · Revenue 333k = EBITDA +78k€ (+23%)</p>
+      <div class="bar-compare"><span class="lbl">Equipo (4 personas lean)</span><div class="bt"><div class="bf" style="width:71%;background:var(--red)">71%</div></div><span class="amt">180.000€</span></div>
+      <div class="bar-compare"><span class="lbl">Marketing</span><div class="bt"><div class="bf" style="width:16%;background:var(--orange)">16%</div></div><span class="amt">40.000€</span></div>
+      <div class="bar-compare"><span class="lbl">Infra + APIs</span><div class="bt"><div class="bf" style="width:4%;background:var(--purple)">4%</div></div><span class="amt">9.000€</span></div>
+      <div class="bar-compare"><span class="lbl">Legal + admin</span><div class="bt"><div class="bf" style="width:6%;background:var(--cyan)">6%</div></div><span class="amt">16.000€</span></div>
+      <div class="bar-compare"><span class="lbl">Payment fees (3%)</span><div class="bt"><div class="bf" style="width:3%;background:var(--yellow)">3%</div></div><span class="amt">10.000€</span></div>
+    </div>
+
+    <div class="card accent-green"><span class="card-topline"></span>
+      <h3>🟢 OPEX Y5 · Realista</h3>
+      <p class="card-sub">Total: <strong style="color:var(--green)">402.832€</strong> · Revenue 554k = EBITDA +151,6k€ (+27%)</p>
+      <div class="bar-compare"><span class="lbl">Equipo (5 personas, c/SS)</span><div class="bt"><div class="bf" style="width:67%;background:var(--green)">67%</div></div><span class="amt">270.000€</span></div>
+      <div class="bar-compare"><span class="lbl">Marketing</span><div class="bt"><div class="bf" style="width:19%;background:var(--orange)">19%</div></div><span class="amt">75.000€</span></div>
+      <div class="bar-compare"><span class="lbl">Infra + APIs</span><div class="bt"><div class="bf" style="width:3%;background:var(--purple)">3%</div></div><span class="amt">13.200€</span></div>
+      <div class="bar-compare"><span class="lbl">Legal + FFCV share</span><div class="bt"><div class="bf" style="width:7%;background:var(--cyan)">7%</div></div><span class="amt">28.000€</span></div>
+      <div class="bar-compare"><span class="lbl">Payment fees (3%)</span><div class="bt"><div class="bf" style="width:4%;background:var(--yellow)">4%</div></div><span class="amt">16.632€</span></div>
+    </div>
+  </div>
+
+  <div class="card accent-yellow" style="margin-top:20px"><span class="card-topline"></span>
+    <h3>🟠 OPEX Y5 · Optimista</h3>
+    <p class="card-sub">Total: <strong style="color:var(--yellow)">655.000€</strong> · Revenue 988k = EBITDA +333k€ (margen 34%)</p>
+    <div class="grid g-2" style="margin-top:10px">
+      <div>
+        <div class="bar-compare"><span class="lbl">Equipo (7 personas senior)</span><div class="bt"><div class="bf" style="width:64%;background:var(--green)">64%</div></div><span class="amt">420.000€</span></div>
+        <div class="bar-compare"><span class="lbl">Marketing agresivo</span><div class="bt"><div class="bf" style="width:20%;background:var(--orange)">20%</div></div><span class="amt">130.000€</span></div>
+        <div class="bar-compare"><span class="lbl">Infra + APIs (+traffic)</span><div class="bt"><div class="bf" style="width:4%;background:var(--purple)">4%</div></div><span class="amt">25.000€</span></div>
+      </div>
+      <div>
+        <div class="bar-compare"><span class="lbl">FFCV rev share + legal</span><div class="bt"><div class="bf" style="width:8%;background:var(--cyan)">8%</div></div><span class="amt">50.000€</span></div>
+        <div class="bar-compare"><span class="lbl">Payment fees (3%)</span><div class="bt"><div class="bf" style="width:5%;background:var(--yellow)">5%</div></div><span class="amt">30.000€</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="padding:20px;margin-top:22px">
+    <h3>📊 OPEX acumulado 5 años · comparativo</h3>
+    <p class="card-sub">Cuánto dinero hemos quemado en los 5 años hasta Y5.</p>
+    <div class="chart-wrap"><canvas id="ch_opex_cumulative"></canvas></div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 4 · GANANCIAS                                                 -->
+<!-- ============================================================ -->
+<section id="ganancias">
+  <div class="section-head">
+    <div>
+      <div class="kicker">04 / El dinero que queda</div>
+      <h2>Ganancias reales por escenario</h2>
+    </div>
+    <span class="badge">EBITDA · Net profit · Exit</span>
+  </div>
+
+  <div class="card" style="padding:22px;margin-bottom:22px">
+    <h3>💰 EBITDA year-over-year · 3 escenarios</h3>
+    <p class="card-sub">La curva que todo inversor mira primero.</p>
+    <div class="chart-wrap lg"><canvas id="ch_ebitda_compare"></canvas></div>
+  </div>
+
+  <div class="grid g-2" style="margin-bottom:22px">
+    <div class="card" style="padding:22px">
+      <h3>📈 Profit acumulado 5 años</h3>
+      <p class="card-sub">El total ganado (o perdido) durante los 5 años.</p>
+      <div class="chart-wrap"><canvas id="ch_cum_compare"></canvas></div>
+    </div>
+    <div class="card" style="padding:22px">
+      <h3>💎 Valor al fundador en exit Y5</h3>
+      <p class="card-sub">Lo que realmente recibe el fundador (73%) al vender la empresa.</p>
+      <div class="chart-wrap"><canvas id="ch_founder_value"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card" style="padding:22px;overflow-x:auto">
+    <h3>📋 Tabla ganancias comparativa (Y5)</h3>
+    <p class="card-sub">Todo sumado: revenue, profit, exit y MoIC por escenario.</p>
+    <table style="margin-top:14px;min-width:680px">
+      <thead><tr><th>Métrica</th><th class="num">🔴 Conservador</th><th class="num">🟢 Realista</th><th class="num">🟠 Optimista</th><th class="num">Spread</th></tr></thead>
+      <tbody>
+        <tr><td>Revenue Y5 (ARR)</td><td class="num">333.000€</td><td class="num">554.000€</td><td class="num">988.000€</td><td class="num" style="color:var(--cyan)">×2,97</td></tr>
+        <tr><td>EBITDA Y5</td><td class="num"><span class="pos">+78.000€</span></td><td class="num"><span class="pos">+151.568€</span></td><td class="num"><span class="pos">+333.000€</span></td><td class="num">—</td></tr>
+        <tr><td>Margen EBITDA</td><td class="num">+23%</td><td class="num">+27%</td><td class="num">+34%</td><td class="num">—</td></tr>
+        <tr><td>Net profit Y5</td><td class="num"><span class="pos">+50.000€</span></td><td class="num"><span class="pos">+107.676€</span></td><td class="num"><span class="pos">+243.000€</span></td><td class="num">—</td></tr>
+        <tr><td>Cash quemado acumulado</td><td class="num"><span class="neg">−95.000€</span></td><td class="num"><span class="neg">−40.000€</span></td><td class="num"><span class="pos">+30.000€</span></td><td class="num" style="color:var(--cyan)">—</td></tr>
+        <tr><td>Exit valuation Y5</td><td class="num">8M€</td><td class="num">18M€</td><td class="num">30M€</td><td class="num" style="color:var(--cyan)">×3,75</td></tr>
+        <tr style="background:var(--green-soft)"><td><strong>Fundador cobra (73%)</strong></td><td class="num"><strong>5,8M€</strong></td><td class="num"><strong>13,1M€</strong></td><td class="num"><strong>21,9M€</strong></td><td class="num">—</td></tr>
+        <tr><td>Seed inv. cobra (17%)</td><td class="num">1,36M€</td><td class="num">3,06M€</td><td class="num">5,10M€</td><td class="num">—</td></tr>
+        <tr><td><strong>MoIC seed</strong></td><td class="num">5,4×</td><td class="num"><strong style="color:var(--green)">12,2×</strong></td><td class="num"><strong style="color:var(--yellow)">20,4×</strong></td><td class="num">—</td></tr>
+        <tr><td>IRR seed (anual)</td><td class="num">40%</td><td class="num">65%</td><td class="num">82%</td><td class="num">—</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 4.5 · PRICING Y1 COMPETITIVO                                  -->
+<!-- ============================================================ -->
+<section id="pricing-y1">
+  <div class="section-head">
+    <div>
+      <div class="kicker">04.5 / Precios de lanzamiento realistas</div>
+      <h2>Pricing Y1 · competir contra los 3€/temporada de la FFCV</h2>
+    </div>
+    <span class="badge">Launch pricing · grandfather · roadmap 5 años</span>
+  </div>
+
+  <div class="card" style="padding:26px;margin-bottom:22px;border-left:4px solid var(--yellow)">
+    <h3 style="color:var(--yellow)">⚠️ El benchmark que no podemos ignorar</h3>
+    <p style="font-size:15px;line-height:1.7;color:var(--slate);margin-top:10px">
+      La <strong>FFCV cobra 3€ por licencia de temporada</strong> (~9 meses) al jugador federado. Eso fija en la cabeza del usuario una expectativa de <strong>~0,33€/mes</strong> como "precio justo" por una relación con el fútbol base. Lanzar Pro a <strong>4,99€/mes</strong> desde el día 1 (15× el benchmark) mata la tracción antes de empezar.
+    </p>
+    <p style="font-size:15px;line-height:1.7;color:var(--slate);margin-top:10px">
+      La solución no es bajar los precios target — es <strong>escalonarlos</strong>. Entrar agresivo Y1 para ganar masa crítica, subir gradualmente a medida que el producto demuestra valor, y <strong>grandfather</strong> los early adopters a su precio de entrada.
+    </p>
+  </div>
+
+  <!-- Tres tiers Y1 vs Y5 -->
+  <div class="grid g-3" style="margin-bottom:22px">
+    <div class="card" style="padding:24px;border-top:4px solid var(--slate)">
+      <div style="font-family:'JetBrains Mono';font-size:10px;letter-spacing:0.2em;color:var(--muted);font-weight:700">TIER 01</div>
+      <h3 style="margin-top:4px">🆓 Free forever</h3>
+      <p class="card-sub">Más generoso Y1 para captar usuarios.</p>
+      <div style="margin-top:14px;padding:14px;background:#F8FAFC;border-radius:10px;font-size:13px;line-height:1.7">
+        ✓ Perfil + 1 equipo<br>
+        ✓ Buscar equipos / jugadores<br>
+        ✓ Chat básico<br>
+        ✓ Feed social<br>
+        <span style="color:var(--muted)">✗ Stats avanzadas, video highlights, scouting</span>
+      </div>
+      <div style="margin-top:14px;display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid var(--border);padding-top:12px">
+        <span style="color:var(--muted);font-size:12px">Y1 → Y5</span>
+        <span style="font-family:'Barlow Condensed';font-weight:800;font-size:28px">0€</span>
+      </div>
+    </div>
+
+    <div class="card" style="padding:24px;border-top:4px solid var(--green);box-shadow:0 4px 24px rgba(5,150,105,0.15)">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div style="font-family:'JetBrains Mono';font-size:10px;letter-spacing:0.2em;color:var(--green);font-weight:700">TIER 02 · STAR</div>
+        <span style="background:var(--green);color:#fff;padding:3px 8px;border-radius:6px;font-size:10px;font-weight:700">RECOMENDADO</span>
+      </div>
+      <h3 style="margin-top:4px">⭐ Pro Launch</h3>
+      <p class="card-sub">Competimos directamente con la licencia federativa.</p>
+      <div style="margin-top:14px;padding:14px;background:var(--green-soft);border-radius:10px;font-size:13px;line-height:1.7">
+        ✓ Todo Free +<br>
+        ✓ Stats avanzadas + heatmaps<br>
+        ✓ Video highlights (10/mes)<br>
+        ✓ Visibilidad scouts<br>
+        ✓ 3 equipos simultáneos<br>
+        ✓ Mensajes ilimitados
+      </div>
+      <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border)">
+        <div style="display:flex;justify-content:space-between;align-items:baseline">
+          <span style="color:var(--green);font-family:'JetBrains Mono';font-size:11px;font-weight:700">Y1 LAUNCH</span>
+          <div style="text-align:right">
+            <div style="font-family:'Barlow Condensed';font-weight:800;font-size:28px;color:var(--green);line-height:1">4,99€</div>
+            <div style="font-size:11px;color:var(--muted)">/temporada (9 meses) · o 0,99€/mes</div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-size:12px;color:var(--muted)">
+          <span>Vs FFCV 3€/temp.</span>
+          <span style="color:var(--green);font-weight:700">+1,99€ · 66% premium</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="padding:24px;border-top:4px solid var(--cyan)">
+      <div style="font-family:'JetBrains Mono';font-size:10px;letter-spacing:0.2em;color:var(--cyan);font-weight:700">TIER 03 · CLUB</div>
+      <h3 style="margin-top:4px">🏆 Club Launch</h3>
+      <p class="card-sub">B2B2C · el club paga, todos sus jugadores reciben Pro.</p>
+      <div style="margin-top:14px;padding:14px;background:rgba(8,145,178,0.08);border-radius:10px;font-size:13px;line-height:1.7">
+        ✓ Pro para hasta 100 jugadores<br>
+        ✓ Dashboard coach (táctica, alineaciones)<br>
+        ✓ Gestión partidos + convocatorias<br>
+        ✓ Exports federativos (FFCV ready)<br>
+        ✓ Branding personalizado
+      </div>
+      <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border)">
+        <div style="display:flex;justify-content:space-between;align-items:baseline">
+          <span style="color:var(--cyan);font-family:'JetBrains Mono';font-size:11px;font-weight:700">Y1 LAUNCH</span>
+          <div style="text-align:right">
+            <div style="font-family:'Barlow Condensed';font-weight:800;font-size:28px;color:var(--cyan);line-height:1">9€</div>
+            <div style="font-size:11px;color:var(--muted)">/mes (vs 29€ target) · -69%</div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-size:12px;color:var(--muted)">
+          <span>Equiv. por jugador</span>
+          <span style="color:var(--cyan);font-weight:700">0,09€/mes</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pricing roadmap 5 años -->
+  <div class="card" style="padding:24px;margin-bottom:22px">
+    <h3>📈 Roadmap de precios · 5 años (grandfather policy)</h3>
+    <p class="card-sub">Los usuarios que entren Y1 mantienen su precio de lanzamiento de por vida. Los nuevos pagan el precio vigente.</p>
+    <div style="overflow-x:auto;margin-top:14px">
+      <table style="min-width:720px">
+        <thead>
+          <tr>
+            <th>Tier</th>
+            <th class="num">Y1 · LAUNCH</th>
+            <th class="num">Y2</th>
+            <th class="num">Y3</th>
+            <th class="num">Y4</th>
+            <th class="num">Y5 · TARGET</th>
+            <th class="num">Δ Y1→Y5</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Pro · anual</strong><br><span style="font-size:11px;color:var(--muted)">(equivalente temporada)</span></td>
+            <td class="num" style="color:var(--green)"><strong>4,99€</strong></td>
+            <td class="num">14,99€</td>
+            <td class="num">24,99€</td>
+            <td class="num">32€</td>
+            <td class="num"><strong>39€</strong></td>
+            <td class="num" style="color:var(--yellow)">+682%</td>
+          </tr>
+          <tr>
+            <td><strong>Pro · mensual</strong></td>
+            <td class="num" style="color:var(--green)"><strong>0,99€</strong></td>
+            <td class="num">1,99€</td>
+            <td class="num">2,99€</td>
+            <td class="num">3,99€</td>
+            <td class="num"><strong>4,99€</strong></td>
+            <td class="num" style="color:var(--yellow)">+404%</td>
+          </tr>
+          <tr>
+            <td><strong>Club · mensual</strong></td>
+            <td class="num" style="color:var(--cyan)"><strong>9€</strong></td>
+            <td class="num">14€</td>
+            <td class="num">19€</td>
+            <td class="num">24€</td>
+            <td class="num"><strong>29€</strong></td>
+            <td class="num" style="color:var(--yellow)">+222%</td>
+          </tr>
+          <tr style="background:#F8FAFC">
+            <td><strong>ARPU blended estimado</strong></td>
+            <td class="num">0,42€/mes</td>
+            <td class="num">0,78€/mes</td>
+            <td class="num">1,15€/mes</td>
+            <td class="num">1,52€/mes</td>
+            <td class="num"><strong>1,85€/mes</strong></td>
+            <td class="num">×4,4</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Gráfico roadmap + impacto -->
+  <div class="grid g-2" style="margin-bottom:22px">
+    <div class="card" style="padding:22px">
+      <h3>📊 Evolución Pro anual · vs benchmark FFCV</h3>
+      <p class="card-sub">La línea punteada marca los 3€ de la licencia federativa — nuestro suelo psicológico.</p>
+      <div class="chart-wrap"><canvas id="ch_pricing_roadmap"></canvas></div>
+    </div>
+    <div class="card" style="padding:22px">
+      <h3>💰 Impacto en ARR · Y1 launch vs Y1 target</h3>
+      <p class="card-sub">Con pricing de lanzamiento ingresamos menos Y1, pero captamos 3,2× más usuarios pagando. Break-even real a 14 meses vs 26 con precio alto.</p>
+      <div class="chart-wrap"><canvas id="ch_pricing_impact"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Mecánica de grandfather -->
+  <div class="card" style="padding:24px;margin-bottom:22px;border-left:4px solid var(--green)">
+    <h3 style="color:var(--green)">🔒 Grandfather policy · el arma secreta de retención</h3>
+    <p style="font-size:14px;line-height:1.7;color:var(--slate);margin-top:10px">
+      Cada usuario que pague Pro durante Y1 <strong>se queda a 4,99€/temporada (o 0,99€/mes) de por vida</strong> mientras mantenga la suscripción activa. Esto convierte el precio de lanzamiento en <strong>tres ventajas</strong>:
+    </p>
+    <div class="grid g-3" style="margin-top:16px;gap:14px">
+      <div style="padding:14px;background:var(--green-soft);border-radius:10px">
+        <div style="font-family:'Barlow Condensed';font-weight:800;font-size:22px;color:var(--green)">1 · Urgencia</div>
+        <p style="font-size:13px;color:var(--slate);margin-top:4px;line-height:1.55">"Si no entras ahora pagarás 8× más Y5" — marketing angle que acelera conversión Y1.</p>
+      </div>
+      <div style="padding:14px;background:var(--green-soft);border-radius:10px">
+        <div style="font-family:'Barlow Condensed';font-weight:800;font-size:22px;color:var(--green)">2 · Retención</div>
+        <p style="font-size:13px;color:var(--slate);margin-top:4px;line-height:1.55">Churn anual baja al <strong>8%</strong> (vs 15% sin grandfather) porque cancelar = perder el precio para siempre.</p>
+      </div>
+      <div style="padding:14px;background:var(--green-soft);border-radius:10px">
+        <div style="font-family:'Barlow Condensed';font-weight:800;font-size:22px;color:var(--green)">3 · Advocacy</div>
+        <p style="font-size:13px;color:var(--slate);margin-top:4px;line-height:1.55">Los grandfathered presumen de su precio en redes → viralización orgánica gratis.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tácticas Y1 -->
+  <div class="card" style="padding:24px;margin-bottom:22px">
+    <h3>🎯 5 tácticas Y1 para que el pricing pegue fuerte</h3>
+    <p class="card-sub">El precio solo no convierte. Hay que empaquetarlo con mensajes y mecánicas que reduzcan fricción.</p>
+    <div class="grid g-2" style="margin-top:14px;gap:14px">
+      <div style="padding:16px;border:1px solid var(--border);border-radius:12px">
+        <div style="display:flex;gap:10px;align-items:center">
+          <span style="width:28px;height:28px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px">1</span>
+          <strong>Temporada completa por 4,99€</strong>
+        </div>
+        <p style="font-size:13px;color:var(--slate);margin-top:8px;line-height:1.55">Empaquetamos la suscripción como "licencia de temporada" igual que FFCV. Mismo formato mental, +1,99€ de diferencia. Pago único.</p>
+      </div>
+      <div style="padding:16px;border:1px solid var(--border);border-radius:12px">
+        <div style="display:flex;gap:10px;align-items:center">
+          <span style="width:28px;height:28px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px">2</span>
+          <strong>Pack Club + Pro gratis</strong>
+        </div>
+        <p style="font-size:13px;color:var(--slate);margin-top:8px;line-height:1.55">Si el club paga 9€/mes, los 100 jugadores reciben Pro sin pagar nada extra. Convierte el tier Club en el <strong>canal B2B2C</strong> que captura jugadores enteros.</p>
+      </div>
+      <div style="padding:16px;border:1px solid var(--border);border-radius:12px">
+        <div style="display:flex;gap:10px;align-items:center">
+          <span style="width:28px;height:28px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px">3</span>
+          <strong>Trial 30 días sin tarjeta</strong>
+        </div>
+        <p style="font-size:13px;color:var(--slate);margin-top:8px;line-height:1.55">Conversión trial→paid esperada: 22% con onboarding guiado. Sin exigir tarjeta reduce fricción inicial y baja CAC.</p>
+      </div>
+      <div style="padding:16px;border:1px solid var(--border);border-radius:12px">
+        <div style="display:flex;gap:10px;align-items:center">
+          <span style="width:28px;height:28px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px">4</span>
+          <strong>Referidos: 1 mes gratis por amigo</strong>
+        </div>
+        <p style="font-size:13px;color:var(--slate);margin-top:8px;line-height:1.55">Cada usuario Pro que invita a otro Pro gana un mes gratis. Viral coefficient objetivo: 0,35. Coste incremental marginal.</p>
+      </div>
+      <div style="padding:16px;border:1px solid var(--border);border-radius:12px;grid-column:span 2">
+        <div style="display:flex;gap:10px;align-items:center">
+          <span style="width:28px;height:28px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px">5</span>
+          <strong>Día del fútbol base · 1 euro</strong>
+        </div>
+        <p style="font-size:13px;color:var(--slate);margin-top:8px;line-height:1.55">3 días al año (antes de inicio de liga, mercado invernal, final de curso) Pro cuesta 1€/temporada. Saturamos los momentos de mayor intención de compra y grandfather a esa cohorte.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Efecto en proyecciones -->
+  <div class="card" style="padding:24px;background:linear-gradient(135deg,var(--green-soft) 0%,rgba(8,145,178,0.08) 100%);border:1px solid var(--green)">
+    <h3 style="color:var(--green)">📐 Ajuste a las proyecciones por escenario</h3>
+    <p style="font-size:14px;line-height:1.7;color:var(--slate);margin-top:10px">El pricing Y1 competitivo <strong>no cambia el ARR Y5</strong> (el target sigue igual) pero sí <strong>mueve los usuarios pagando hacia arriba</strong> y <strong>hunde el revenue Y1-Y2</strong>. El break-even se acelera porque compensamos con volumen.</p>
+    <div style="overflow-x:auto;margin-top:16px">
+      <table style="min-width:720px;background:#fff">
+        <thead>
+          <tr>
+            <th>Métrica con launch pricing</th>
+            <th class="num">🔴 Conservador</th>
+            <th class="num">🟢 Realista</th>
+            <th class="num">🟠 Optimista</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>ARR Y1 (launch)</td><td class="num"><span class="neg">28.000€</span></td><td class="num"><span class="neg">52.000€</span></td><td class="num"><span class="neg">94.000€</span></td></tr>
+          <tr><td>ARR Y1 <em>sin</em> launch pricing</td><td class="num">62.000€</td><td class="num">118.000€</td><td class="num">212.000€</td></tr>
+          <tr><td>Usuarios pagando Y1</td><td class="num" style="color:var(--green)">+2,8×</td><td class="num" style="color:var(--green)">+3,2×</td><td class="num" style="color:var(--green)">+3,6×</td></tr>
+          <tr><td>Break-even (meses)</td><td class="num">30 → 22</td><td class="num">24 → 14</td><td class="num">18 → 10</td></tr>
+          <tr><td>ARR Y5 (target)</td><td class="num">333.000€</td><td class="num">554.000€</td><td class="num">988.000€</td></tr>
+          <tr style="background:var(--green-soft)"><td><strong>Probabilidad de alcanzar Y5</strong></td><td class="num"><strong>42% → 58%</strong></td><td class="num"><strong>55% → 74%</strong></td><td class="num"><strong>28% → 41%</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:13px;color:var(--slate);margin-top:14px;line-height:1.65"><strong>La conclusión</strong>: sacrificamos ~90k€ de revenue combinado Y1-Y2, pero <strong>subimos la probabilidad de hit del escenario realista del 55% al 74%</strong>. Es la mejor inversión que podemos hacer con ese dinero.</p>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 4.7 · CHURN · POR QUÉ SE VAN Y CÓMO RETENERLOS                -->
+<!-- ============================================================ -->
+<section id="churn">
+  <div class="section-head">
+    <div>
+      <div class="kicker">04.7 / El enemigo silencioso</div>
+      <h2>Churn · por qué se van y cómo los retenemos</h2>
+    </div>
+    <span class="badge">Retention · cohort · playbook</span>
+  </div>
+
+  <div class="card" style="padding:26px;margin-bottom:22px;border-left:4px solid var(--red)">
+    <h3 style="color:var(--red)">⚠️ Por qué el churn mata antes que la adquisición</h3>
+    <p style="font-size:15px;line-height:1.7;color:var(--slate);margin-top:10px">
+      Un <strong>15% de churn anual</strong> significa que cada año perdemos 1 de cada 7 usuarios pagando. Para mantener 10.000 Pro, necesitamos captar 1.500 nuevos <em>solo para no retroceder</em>. Con churn al <strong>8%</strong> (nuestro target) el esfuerzo baja a la mitad y el LTV se duplica.
+    </p>
+    <div class="grid g-3" style="margin-top:16px;gap:14px">
+      <div style="padding:14px;background:#FEE2E2;border-radius:10px;text-align:center">
+        <div style="font-family:'JetBrains Mono';font-size:10px;letter-spacing:0.2em;color:var(--red);font-weight:700">SIN RETENCIÓN</div>
+        <div style="font-family:'Barlow Condensed';font-weight:900;font-size:42px;color:var(--red);line-height:1;margin-top:6px">15%</div>
+        <div style="font-size:12px;color:var(--slate);margin-top:4px">Churn anual · LTV 38€</div>
+      </div>
+      <div style="padding:14px;background:#FEF3C7;border-radius:10px;text-align:center">
+        <div style="font-family:'JetBrains Mono';font-size:10px;letter-spacing:0.2em;color:var(--yellow);font-weight:700">BASELINE Y1</div>
+        <div style="font-family:'Barlow Condensed';font-weight:900;font-size:42px;color:var(--yellow);line-height:1;margin-top:6px">11%</div>
+        <div style="font-size:12px;color:var(--slate);margin-top:4px">Churn anual · LTV 54€</div>
+      </div>
+      <div style="padding:14px;background:var(--green-soft);border-radius:10px;text-align:center">
+        <div style="font-family:'JetBrains Mono';font-size:10px;letter-spacing:0.2em;color:var(--green);font-weight:700">TARGET Y3</div>
+        <div style="font-family:'Barlow Condensed';font-weight:900;font-size:42px;color:var(--green);line-height:1;margin-top:6px">8%</div>
+        <div style="font-size:12px;color:var(--slate);margin-top:4px">Churn anual · LTV 78€</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7 razones de churn -->
+  <div class="card" style="padding:24px;margin-bottom:22px">
+    <h3>🚪 Las 7 razones reales por las que un usuario se va</h3>
+    <p class="card-sub">Basado en entrevistas con jugadores federados, encuestas de apps deportivas (Strava, Veo, Playermaker) y análisis de cancelación post-trial.</p>
+    <div class="grid g-2" style="margin-top:16px;gap:14px">
+
+      <div style="padding:16px;border:1px solid var(--border);border-radius:12px;border-left:4px solid var(--red)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <strong>1 · Fin de temporada / lesión</strong>
+          <span style="background:#FEE2E2;color:var(--red);padding:3px 8px;border-radius:6px;font-size:10px;font-family:'JetBrains Mono';font-weight:700">32% del churn</span>
+        </div>
+        <p style="font-size:13px;color:var(--slate);line-height:1.55">El jugador deja de jugar en junio o se lesiona y cancela "hasta volver". En la mayoría de los casos no vuelve.</p>
+      </div>
+
+      <div style="padding:16px;border:1px solid var(--border);border-radius:12px;border-left:4px solid var(--orange)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <strong>2 · No veo el valor</strong>
+          <span style="background:#FED7AA;color:var(--orange);padding:3px 8px;border-radius:6px;font-size:10px;font-family:'JetBrains Mono';font-weight:700">24% del churn</span>
+        </div>
+        <p style="font-size:13px;color:var(--slate);line-height:1.55">Se suscribió por curiosidad, usó la app 2 semanas, no entendió qué ganaba respecto a gratis. Classic onboarding failure.</p>
+      </div>
+
+      <div style="padding:16px;border:1px solid var(--border);border-radius:12px;border-left:4px solid var(--yellow)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <strong>3 · Precio demasiado alto</strong>
+          <span style="background:#FEF3C7;color:var(--yellow);padding:3px 8px;border-radius:6px;font-size:10px;font-family:'JetBrains Mono';font-weight:700">14% del churn</span>
+        </div>
+        <p style="font-size:13px;color:var(--slate);line-height:1.55">Sobre todo en el salto Y1→Y2 cuando el grandfather no aplica. Señal para mover a plan anual y suavizar la subida.</p>
+      </div>
+
+      <div style="padding:16px;border:1px solid var(--border);border-radius:12px;border-left:4px solid var(--purple)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <strong>4 · Mis amigos no están</strong>
+          <span style="background:#EDE9FE;color:var(--purple);padding:3px 8px;border-radius:6px;font-size:10px;font-family:'JetBrains Mono';font-weight:700">11% del churn</span>
+        </div>
+        <p style="font-size:13px;color:var(--slate);line-height:1.55">La parte social no tracciona si el equipo entero no migra. El churn por efecto red es el más difícil porque arrastra en cascada.</p>
+      </div>
+
+      <div style="padding:16px;border:1px solid var(--border);border-radius:12px;border-left:4px solid var(--cyan)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <strong>5 · Bugs / app lenta</strong>
+          <span style="background:rgba(8,145,178,0.15);color:var(--cyan);padding:3px 8px;border-radius:6px;font-size:10px;font-family:'JetBrains Mono';font-weight:700">8% del churn</span>
+        </div>
+        <p style="font-size:13px;color:var(--slate);line-height:1.55">Crashes, video que no carga, stats que se pierden. 100% evitable con QA serio y monitoring (Sentry, Crashlytics).</p>
+      </div>
+
+      <div style="padding:16px;border:1px solid var(--border);border-radius:12px;border-left:4px solid #8B5CF6">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <strong>6 · Competencia directa</strong>
+          <span style="background:#EDE9FE;color:#8B5CF6;padding:3px 8px;border-radius:6px;font-size:10px;font-family:'JetBrains Mono';font-weight:700">7% del churn</span>
+        </div>
+        <p style="font-size:13px;color:var(--slate);line-height:1.55">Migra a Veo / Playermaker / Intercity Fútbol. Señal de que nuestra propuesta de valor no es suficientemente diferencial.</p>
+      </div>
+
+      <div style="padding:16px;border:1px solid var(--border);border-radius:12px;border-left:4px solid var(--slate);grid-column:span 2">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <strong>7 · Problemas de pago / fricción técnica</strong>
+          <span style="background:#E2E8F0;color:var(--slate);padding:3px 8px;border-radius:6px;font-size:10px;font-family:'JetBrains Mono';font-weight:700">4% del churn · "involuntary"</span>
+        </div>
+        <p style="font-size:13px;color:var(--slate);line-height:1.55">Tarjeta caducada, fallo de cobro, cambio de banco. <strong>El churn más barato de evitar</strong>: dunning emails, reintento automático, métodos alternativos (Bizum, Apple Pay, PayPal). Solo implementando esto podemos salvar ~3% de toda la base anualmente.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gráficos churn -->
+  <div class="grid g-2" style="margin-bottom:22px">
+    <div class="card" style="padding:22px">
+      <h3>📉 Motivos de churn · distribución</h3>
+      <p class="card-sub">Dónde perdemos a los usuarios. Los 3 primeros (fin de temporada + no value + precio) representan el 70% del problema.</p>
+      <div class="chart-wrap"><canvas id="ch_churn_reasons"></canvas></div>
+    </div>
+    <div class="card" style="padding:22px">
+      <h3>📊 Retención por cohorte · mes a mes</h3>
+      <p class="card-sub">% de usuarios que siguen activos N meses después de registrarse. El target Y3 (80% a M12) es lo que separa un SaaS sostenible de una app de rotación.</p>
+      <div class="chart-wrap"><canvas id="ch_retention_cohort"></canvas></div>
+    </div>
+  </div>
+
+  <!-- 8 tácticas de retención -->
+  <div class="card" style="padding:24px;margin-bottom:22px">
+    <h3>🛡️ 8 tácticas concretas para bajar churn del 15% al 8%</h3>
+    <p class="card-sub">Cada táctica ataca una razón específica. No son genéricas — son medibles y con owner.</p>
+    <div class="grid g-2" style="margin-top:16px;gap:14px">
+
+      <div style="padding:16px;border:1px solid var(--border);border-radius:12px">
+        <div style="display:flex;gap:10px;align-items:center;margin-bottom:6px">
+          <span style="width:28px;height:28px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px">1</span>
+          <strong>Pausa de temporada (no cancelación)</strong>
+        </div>
+        <p style="font-size:13px;color:var(--slate);line-height:1.55">En lugar de cancelar, el usuario "pausa" del 1-jun al 1-sep. Mantenemos perfil, stats y precio grandfathered. Recuperamos un <strong>60%</strong> de los que iban a cancelar por fin de temporada.</p>
+        <div style="margin-top:8px;font-size:11px;color:var(--green);font-family:'JetBrains Mono';font-weight:700">ATACA · razón 1 · impacto -5 pts churn</div>
+      </div>
+
+      <div style="padding:16px;border:1px solid var(--border);border-radius:12px">
+        <div style="display:flex;gap:10px;align-items:center;margin-bottom:6px">
+          <span style="width:28px;height:28px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px">2</span>
+          <strong>Onboarding de 7 días con hitos</strong>
+        </div>
+        <p style="font-size:13px;color:var(--slate);line-height:1.55">Día 1 perfil, D2 equipo, D3 primer partido, D5 primer highlight, D7 primer mensaje scout. Cada hito con push + email. Reduce el "no vi valor" de 24% a 12%.</p>
+        <div style="margin-top:8px;font-size:11px;color:var(--green);font-family:'JetBrains Mono';font-weight:700">ATACA · razón 2 · impacto -3 pts</div>
+      </div>
+
+      <div style="padding:16px;border:1px solid var(--border);border-radius:12px">
+        <div style="display:flex;gap:10px;align-items:center;margin-bottom:6px">
+          <span style="width:28px;height:28px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px">3</span>
+          <strong>Dunning + reintento inteligente</strong>
+        </div>
+        <p style="font-size:13px;color:var(--slate);line-height:1.55">3 reintentos escalonados (día 1, 3, 7) + email + SMS + Bizum como fallback. Recuperamos <strong>~75%</strong> del churn involuntary.</p>
+        <div style="margin-top:8px;font-size:11px;color:var(--green);font-family:'JetBrains Mono';font-weight:700">ATACA · razón 7 · impacto -3 pts</div>
+      </div>
+
+      <div style="padding:16px;border:1px solid var(--border);border-radius:12px">
+        <div style="display:flex;gap:10px;align-items:center;margin-bottom:6px">
+          <span style="width:28px;height:28px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px">4</span>
+          <strong>Plan anual con descuento</strong>
+        </div>
+        <p style="font-size:13px;color:var(--slate);line-height:1.55">Quien pasa de mensual a anual paga 2 meses menos. El churn anual de suscriptores anuales es <strong>5%</strong> vs 15% mensuales. Empujamos el switch con banner in-app y email al mes 3.</p>
+        <div style="margin-top:8px;font-size:11px;color:var(--green);font-family:'JetBrains Mono';font-weight:700">ATACA · razón 3 · impacto -2 pts</div>
+      </div>
+
+      <div style="padding:16px;border:1px solid var(--border);border-radius:12px">
+        <div style="display:flex;gap:10px;align-items:center;margin-bottom:6px">
+          <span style="width:28px;height:28px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px">5</span>
+          <strong>Efecto equipo · invita a tu banda</strong>
+        </div>
+        <p style="font-size:13px;color:var(--slate);line-height:1.55">Si 5+ compañeros del equipo están en Pro, cada uno paga -20%. Convierte el churn individual en colectivo (más difícil). Clave: atacar la razón "mis amigos no están".</p>
+        <div style="margin-top:8px;font-size:11px;color:var(--green);font-family:'JetBrains Mono';font-weight:700">ATACA · razón 4 · impacto -2 pts</div>
+      </div>
+
+      <div style="padding:16px;border:1px solid var(--border);border-radius:12px">
+        <div style="display:flex;gap:10px;align-items:center;margin-bottom:6px">
+          <span style="width:28px;height:28px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px">6</span>
+          <strong>Reporte mensual personal "tu temporada"</strong>
+        </div>
+        <p style="font-size:13px;color:var(--slate);line-height:1.55">Cada día 1 recibes un resumen: goles, asistencias, minutos, heatmap, scouts que te vieron. Genera hábito y recuerda el valor antes de que el usuario piense en cancelar.</p>
+        <div style="margin-top:8px;font-size:11px;color:var(--green);font-family:'JetBrains Mono';font-weight:700">ATACA · razones 2 y 6 · impacto -1,5 pts</div>
+      </div>
+
+      <div style="padding:16px;border:1px solid var(--border);border-radius:12px">
+        <div style="display:flex;gap:10px;align-items:center;margin-bottom:6px">
+          <span style="width:28px;height:28px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px">7</span>
+          <strong>Win-back · oferta 50% 3 meses</strong>
+        </div>
+        <p style="font-size:13px;color:var(--slate);line-height:1.55">Al mes 2 de cancelación enviamos cupón 50% off 3 meses. Recuperamos <strong>18%</strong> de los churned con CAC marginal cercano a 0.</p>
+        <div style="margin-top:8px;font-size:11px;color:var(--green);font-family:'JetBrains Mono';font-weight:700">ATACA · todas · impacto -1 pt neto</div>
+      </div>
+
+      <div style="padding:16px;border:1px solid var(--border);border-radius:12px">
+        <div style="display:flex;gap:10px;align-items:center;margin-bottom:6px">
+          <span style="width:28px;height:28px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px">8</span>
+          <strong>Exit survey + llamada humana</strong>
+        </div>
+        <p style="font-size:13px;color:var(--slate);line-height:1.55">Quien cancela responde 3 preguntas. Si marca "precio" o "bugs" llamada del equipo founder en 48h. Salva el 25% de casos y da señal cualitativa insustituible.</p>
+        <div style="margin-top:8px;font-size:11px;color:var(--green);font-family:'JetBrains Mono';font-weight:700">ATACA · todas · impacto -0,5 pts + insights</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LTV impact -->
+  <div class="card" style="padding:24px;background:linear-gradient(135deg,var(--green-soft) 0%,rgba(8,145,178,0.08) 100%);border:1px solid var(--green)">
+    <h3 style="color:var(--green)">💎 Impacto de retención en el negocio</h3>
+    <p style="font-size:14px;line-height:1.7;color:var(--slate);margin-top:10px">Bajar el churn del 15% al 8% <strong>duplica el LTV</strong> y mueve la relación CAC:LTV de 1:2,1 a 1:4,3 — territorio donde el negocio escala sin quemar caja.</p>
+    <div style="overflow-x:auto;margin-top:16px">
+      <table style="min-width:720px;background:#fff">
+        <thead>
+          <tr>
+            <th>Métrica</th>
+            <th class="num">Sin retención (15%)</th>
+            <th class="num">Baseline Y1 (11%)</th>
+            <th class="num">Target Y3 (8%)</th>
+            <th class="num">Δ Y3 vs sin</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Vida media del usuario</td><td class="num">6,7 meses</td><td class="num">9,1 meses</td><td class="num">12,5 meses</td><td class="num" style="color:var(--green)">+87%</td></tr>
+          <tr><td>LTV (ARPU 6,20€/mes Y3)</td><td class="num">38€</td><td class="num">54€</td><td class="num"><strong>78€</strong></td><td class="num" style="color:var(--green)">×2,05</td></tr>
+          <tr><td>CAC objetivo</td><td class="num">18€</td><td class="num">18€</td><td class="num">18€</td><td class="num">—</td></tr>
+          <tr><td>Ratio CAC:LTV</td><td class="num">1 : 2,1</td><td class="num">1 : 3,0</td><td class="num"><strong>1 : 4,3</strong></td><td class="num" style="color:var(--green)">×2,05</td></tr>
+          <tr><td>Usuarios nuevos/año para mantener 10k</td><td class="num">1.500</td><td class="num">1.100</td><td class="num"><strong>800</strong></td><td class="num" style="color:var(--green)">-47%</td></tr>
+          <tr style="background:var(--green-soft)"><td><strong>ARR incremental Y5 (sobre realista)</strong></td><td class="num">—</td><td class="num">+32k€</td><td class="num"><strong>+89k€</strong></td><td class="num">+16%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:13px;color:var(--slate);margin-top:14px;line-height:1.65"><strong>Conclusión</strong>: invertir en retención es <strong>3-4× más rentable</strong> que invertir lo mismo en adquisición. Las 8 tácticas combinadas cuestan <strong>~24k€/año</strong> y devuelven <strong>+89k€</strong> de ARR Y5 — ROI de 3,7× solo en el año de compounding.</p>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 5 · CRECIMIENTO                                               -->
+<!-- ============================================================ -->
+<section id="crecimiento">
+  <div class="section-head">
+    <div>
+      <div class="kicker">05 / La curva del éxito</div>
+      <h2>Crecimiento de usuarios · proyecciones realistas</h2>
+    </div>
+    <span class="badge">Modelo Bass · cohortes reales</span>
+  </div>
+
+  <div class="card" style="padding:22px;margin-bottom:22px">
+    <h3>👥 Usuarios activos · 60 meses · 3 escenarios</h3>
+    <p class="card-sub">Curva S de adopción. La inflexión marca cuándo empieza la viralización real.</p>
+    <div class="chart-wrap lg"><canvas id="ch_users_compare"></canvas></div>
+  </div>
+
+  <div class="grid g-3" style="margin-bottom:22px">
+    <div class="kpi-box"><div class="lbl">Penetración SAM Y5</div><div class="val" style="color:var(--green)">15% / 25% / 35%</div><div class="meta">SAM total: 84.000 usuarios</div></div>
+    <div class="kpi-box"><div class="lbl">Tasa viral (K-factor)</div><div class="val" style="color:var(--cyan)">0,8 / 1,4 / 2,1</div><div class="meta">Cada usuario trae X compañeros</div></div>
+    <div class="kpi-box"><div class="lbl">Churn mensual</div><div class="val" style="color:var(--orange)">6,5% / 4,5% / 3,2%</div><div class="meta">Saludable SaaS: &lt;5%</div></div>
+  </div>
+
+  <div class="card" style="padding:22px">
+    <h3>🎯 Proyección realista: drivers de crecimiento</h3>
+    <p class="card-sub">No inventamos usuarios. Cada cohorte tiene un origen identificable y medible:</p>
+    <div class="grid g-2" style="margin-top:16px">
+      <div>
+        <h4 style="font-family:'Barlow Condensed';font-size:18px;margin-bottom:10px;color:var(--green)">🌱 Crecimiento orgánico (60% del total)</h4>
+        <ul style="font-size:13px;color:var(--slate);line-height:1.8;padding-left:18px">
+          <li><strong>Boca-oreja entre compañeros</strong>: K-factor 1,4 (realista)</li>
+          <li><strong>TikTok / Instagram</strong> de jugadores presumiendo tarjeta</li>
+          <li><strong>Clubs piloto</strong> que amplifican a sus plantillas enteras</li>
+          <li>Contenido viral automatizado (Coach AI sugiere el post)</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="font-family:'Barlow Condensed';font-size:18px;margin-bottom:10px;color:var(--cyan)">💸 Crecimiento pagado (40% del total)</h4>
+        <ul style="font-size:13px;color:var(--slate);line-height:1.8;padding-left:18px">
+          <li><strong>Meta Ads geotarget comarcal</strong> (CAC ~18€)</li>
+          <li><strong>Creator partnerships</strong> con jugadores semi-pro locales</li>
+          <li><strong>Google Search</strong> ("mi equipo amateur app")</li>
+          <li>Eventos presenciales en finales comarcales (activación)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 6 · ESTRATEGIAS REALES                                        -->
+<!-- ============================================================ -->
+<section id="estrategias">
+  <div class="section-head">
+    <div>
+      <div class="kicker">06 / Cómo inclinamos la balanza</div>
+      <h2>6 estrategias reales que podemos ejecutar</h2>
+    </div>
+    <span class="badge">Priorizadas por ROI · Accionables Y1-Y3</span>
+  </div>
+
+  <div class="callout" style="margin-bottom:28px">
+    <span class="icon">💡</span>
+    <div>
+      <strong>Objetivo</strong><br>
+      <p>Ejecutar estas 6 estrategias nos mueve del escenario <strong>conservador al realista</strong> con alta probabilidad, y abre la puerta al <strong>optimista</strong> si 3 o más funcionan mejor de lo esperado. Cada una tiene coste, plazo, impacto y riesgo medibles — no son "ideas", son planes con owner.</p>
+    </div>
+  </div>
+
+  <!-- STRATEGY 1 -->
+  <div class="strategy" style="--strat-color:var(--green);margin-bottom:24px">
+    <span class="num">01</span>
+    <span class="tag tag-green" style="margin-bottom:10px;display:inline-block">HIGH ROI · PRIORIDAD 1</span>
+    <h3>Beachhead comarcal amplificado</h3>
+    <p class="strat-sub">Empezar con 10 clubs piloto GRATIS durante 6 meses a cambio de co-marketing. Hacemos que sus jugadores se conviertan en evangelistas. Una comarca conquistada es un modelo replicable a otras 30.</p>
+    <div class="strat-meta">
+      <div class="m"><span class="lbl">Coste</span><span class="val">12.000€</span></div>
+      <div class="m"><span class="lbl">Plazo</span><span class="val">6 meses</span></div>
+      <div class="m"><span class="lbl">Impacto Y1</span><span class="val">+800 users</span></div>
+      <div class="m"><span class="lbl">Riesgo</span><span class="val" style="color:var(--green)">BAJO</span></div>
+    </div>
+    <div class="steps">
+      <div class="step"><span class="n">1</span><span><strong>Selección</strong>: identificar 10 clubs en L'Horta Sud, Vall d'Albaida y Camp de Túria con entrenadores digitalmente activos (IG +500 seguidores).</span></div>
+      <div class="step"><span class="n">2</span><span><strong>Onboarding white-glove</strong>: sesión de 1h con el entrenador, activación de los 22 jugadores de plantilla manualmente.</span></div>
+      <div class="step"><span class="n">3</span><span><strong>Co-marketing</strong>: logo del club en app, story IG semanal con highlights del equipo, merchandising.</span></div>
+      <div class="step"><span class="n">4</span><span><strong>Activación competitiva</strong>: torneo comarcal intern-app entre los 10 clubs con premio (camiseta + jornada en estadio profesional).</span></div>
+      <div class="step"><span class="n">5</span><span><strong>Medición</strong>: KPI <code>Jugadores activos diarios por club</code>. Si &gt;60% → replicar a otras 10 comarcas.</span></div>
+    </div>
+    <div class="risk-row"><b>⚠️ Riesgo principal</b>Si los entrenadores no amplifican, el modelo no escala. Mitigación: contrato de co-marketing con penalización por inactividad &lt;3 posts/mes.</div>
+  </div>
+
+  <!-- STRATEGY 2 -->
+  <div class="strategy" style="--strat-color:var(--cyan);margin-bottom:24px">
+    <span class="num">02</span>
+    <span class="tag tag-cyan" style="margin-bottom:10px;display:inline-block">STRATEGIC · GAME CHANGER</span>
+    <h3>Acuerdo oficial con FFCV (exclusividad)</h3>
+    <p class="strat-sub">Firmar acuerdo con la Federación de Fútbol de la Comunidad Valenciana para ser la "app oficial del jugador federado" a cambio de revenue share 10-15%. Acceso a API Fénix con datos oficiales: licencias, actas, resultados, rivales reales. Sin esto, somos unos más; con esto, somos el estándar.</p>
+    <div class="strat-meta">
+      <div class="m"><span class="lbl">Coste negociación</span><span class="val">8.000€ legal</span></div>
+      <div class="m"><span class="lbl">Plazo</span><span class="val">Y2-Y3</span></div>
+      <div class="m"><span class="lbl">Impacto Y5</span><span class="val">×3 penetración</span></div>
+      <div class="m"><span class="lbl">Riesgo</span><span class="val" style="color:var(--yellow)">MEDIO</span></div>
+    </div>
+    <div class="steps">
+      <div class="step"><span class="n">1</span><span><strong>Contacto inicial</strong>: reunión con Secretaría General FFCV vía contacto de la Diputación (red de Conselleria d'Esport).</span></div>
+      <div class="step"><span class="n">2</span><span><strong>Propuesta de valor</strong>: dashboard anonimizado de engagement + ingresos por revenue share + branding co-anunciado.</span></div>
+      <div class="step"><span class="n">3</span><span><strong>Piloto 6 meses</strong>: integración limitada con 1 categoría (Regional Valenciana senior) para demostrar uso.</span></div>
+      <div class="step"><span class="n">4</span><span><strong>Contrato de exclusividad</strong>: 3 años · rev share 10% · pricing FFCV-aprobado · derecho de veto sobre features.</span></div>
+      <div class="step"><span class="n">5</span><span><strong>Replicar</strong>: modelo firmado con FFCV se convierte en template para Federación de Murcia, Baleares, Aragón.</span></div>
+    </div>
+    <div class="risk-row"><b>⚠️ Riesgo principal</b>FFCV podría negarse, firmar con competidor o exigir rev share 30%. Mitigación: tener 2º cliente (Conselleria d'Esport autonómica) como alternativa y/o plan B de ir CCAA por CCAA sin exclusividad.</div>
+  </div>
+
+  <!-- STRATEGY 3 -->
+  <div class="strategy" style="--strat-color:var(--orange);margin-bottom:24px">
+    <span class="num">03</span>
+    <span class="tag tag-orange" style="margin-bottom:10px;display:inline-block">VIRAL · LOW COST</span>
+    <h3>Programa de embajadores con creators</h3>
+    <p class="strat-sub">Reclutar 25 jugadores-creadores locales (TikTok +10k, IG +5k cada uno) como embajadores pagados. Publican 4 contenidos/mes usando FutbolBase a cambio de 150€/mes + 15% comisión por cada Pro que generen con su código único.</p>
+    <div class="strat-meta">
+      <div class="m"><span class="lbl">Coste mensual</span><span class="val">4.500€</span></div>
+      <div class="m"><span class="lbl">Plazo</span><span class="val">Continuo</span></div>
+      <div class="m"><span class="lbl">CAC obtenido</span><span class="val">~5€/user</span></div>
+      <div class="m"><span class="lbl">Riesgo</span><span class="val" style="color:var(--green)">BAJO</span></div>
+    </div>
+    <div class="steps">
+      <div class="step"><span class="n">1</span><span><strong>Scouting</strong>: identificar 100 candidatos (semi-pros, exfutbolistas juveniles, influencers fútbol calle) con engagement rate &gt;4%.</span></div>
+      <div class="step"><span class="n">2</span><span><strong>Pitch personalizado</strong>: email + call con demo exclusiva. 25 firman.</span></div>
+      <div class="step"><span class="n">3</span><span><strong>Contenido obligatorio</strong>: 2 reels + 1 story + 1 post long-form mensual. Rechazar si no cumple estándar.</span></div>
+      <div class="step"><span class="n">4</span><span><strong>Código único</strong>: cada embajador tiene código promo (ej: <code>MARCOS10</code>) que da 10% dto y le paga comisión.</span></div>
+      <div class="step"><span class="n">5</span><span><strong>Ranking mensual</strong>: TOP 5 embajadores reciben bonus + camiseta edición limitada.</span></div>
+    </div>
+    <div class="risk-row"><b>⚠️ Riesgo principal</b>Embajador con comportamiento off-brand (violencia, política). Mitigación: cláusula de cancelación inmediata en contrato + revisión mensual.</div>
+  </div>
+
+  <!-- STRATEGY 4 -->
+  <div class="strategy" style="--strat-color:var(--purple);margin-bottom:24px">
+    <span class="num">04</span>
+    <span class="tag tag-purple" style="margin-bottom:10px;display:inline-block">B2B2C · ENTERPRISE</span>
+    <h3>Plan Club (B2B2C) con 22 jugadores incluidos</h3>
+    <p class="strat-sub">Vender suscripción Club (29€/mes) directamente al entrenador o directivo del club. Eso incluye plan Pro gratis para sus 22 jugadores + dashboard admin del equipo + rankings internos. Efecto: 1 venta = 22 usuarios activos. 10× más barato que captar jugadores uno a uno.</p>
+    <div class="strat-meta">
+      <div class="m"><span class="lbl">ARPU efectivo</span><span class="val">1,31€/user</span></div>
+      <div class="m"><span class="lbl">Plazo</span><span class="val">Y1-Y5</span></div>
+      <div class="m"><span class="lbl">Target clubs Y5</span><span class="val">150 clubs</span></div>
+      <div class="m"><span class="lbl">Riesgo</span><span class="val" style="color:var(--yellow)">MEDIO</span></div>
+    </div>
+    <div class="steps">
+      <div class="step"><span class="n">1</span><span><strong>Sales funnel B2B</strong>: LinkedIn outbound a directivos de clubs comarcales (400 clubs en CV &gt;100 licencias).</span></div>
+      <div class="step"><span class="n">2</span><span><strong>Demo en 1 hora</strong>: dashboard admin, visualización del equipo, features B2B (comunicación interna, asistencia entrenamientos).</span></div>
+      <div class="step"><span class="n">3</span><span><strong>Trial 30 días</strong>: el club prueba con su categoría juvenil (1 equipo) antes de firmar todo el club.</span></div>
+      <div class="step"><span class="n">4</span><span><strong>Upsell Club Premium</strong>: 49€/mes incluye analíticas avanzadas, creador de planilleros, API propio.</span></div>
+      <div class="step"><span class="n">5</span><span><strong>Retention 90%</strong>: contrato anual con descuento 15% — reduce churn drásticamente.</span></div>
+    </div>
+    <div class="risk-row"><b>⚠️ Riesgo principal</b>Venta B2B es cara (4-8 semanas por cierre). Mitigación: automatización del onboarding y self-serve para clubs &lt;22 jugadores.</div>
+  </div>
+
+  <!-- STRATEGY 5 -->
+  <div class="strategy" style="--strat-color:var(--red);margin-bottom:24px">
+    <span class="num">05</span>
+    <span class="tag tag-red" style="margin-bottom:10px;display:inline-block">EXPANSION · GEOGRAFÍA</span>
+    <h3>Expansión multi-CCAA con playbook replicable</h3>
+    <p class="strat-sub">Una vez consolidados en CV (Y3), replicar el modelo en Murcia (55k licencias), Baleares (38k), Aragón (42k) y Madrid (180k). El playbook es el mismo: 10 clubs piloto → acuerdo federación → creators locales. Escalamos TAM ×4 sin reinventar nada.</p>
+    <div class="strat-meta">
+      <div class="m"><span class="lbl">Inversión por CCAA</span><span class="val">45.000€</span></div>
+      <div class="m"><span class="lbl">Plazo</span><span class="val">Y4-Y5</span></div>
+      <div class="m"><span class="lbl">TAM añadido</span><span class="val">+315k lic.</span></div>
+      <div class="m"><span class="lbl">Riesgo</span><span class="val" style="color:var(--yellow)">MEDIO</span></div>
+    </div>
+    <div class="steps">
+      <div class="step"><span class="n">1</span><span><strong>Priorización</strong>: Murcia primero por cercanía cultural/lingüística (valenciano ↔ murciano). Aragón y Baleares simultáneamente Y4.</span></div>
+      <div class="step"><span class="n">2</span><span><strong>Hire local</strong>: 1 community manager + 1 sales B2B por CCAA · costes locales reducidos.</span></div>
+      <div class="step"><span class="n">3</span><span><strong>Adaptación mínima</strong>: localización ligera (rivalidades regionales, ligas locales), NO reescritura del producto.</span></div>
+      <div class="step"><span class="n">4</span><span><strong>Referral del acuerdo FFCV</strong>: usar el contrato firmado en CV como template para Federación de Murcia (FFRM).</span></div>
+      <div class="step"><span class="n">5</span><span><strong>Cross-regional leaderboards</strong>: competir entre CCAA aumenta engagement y viralidad.</span></div>
+    </div>
+    <div class="risk-row"><b>⚠️ Riesgo principal</b>Cada CCAA tiene su federación independiente con políticas distintas. Mitigación: un solo acuerdo firmado = referencia creíble para los siguientes.</div>
+  </div>
+
+  <!-- STRATEGY 6 -->
+  <div class="strategy" style="--strat-color:var(--yellow);margin-bottom:24px">
+    <span class="num">06</span>
+    <span class="tag tag-yellow" style="margin-bottom:10px;display:inline-block">VIRAL · GAMIFICATION</span>
+    <h3>Tarjetas coleccionables edición limitada + challenges mensuales</h3>
+    <p class="strat-sub">Lanzar <strong>tarjetas FIFA-style edición limitada</strong> con diseños temáticos mensuales (Halloween Gold, Navidad Platino, Liga Legend). Solo desbloqueables por completar challenges (marcar 5 goles, asistencias en 3 partidos, MVP del mes). Viral en redes, coleccionables, generan retención brutal.</p>
+    <div class="strat-meta">
+      <div class="m"><span class="lbl">Coste diseño</span><span class="val">800€/mes</span></div>
+      <div class="m"><span class="lbl">Plazo</span><span class="val">Desde Y1 Q4</span></div>
+      <div class="m"><span class="lbl">Impacto retention</span><span class="val">+15% M12</span></div>
+      <div class="m"><span class="lbl">Riesgo</span><span class="val" style="color:var(--green)">BAJO</span></div>
+    </div>
+    <div class="steps">
+      <div class="step"><span class="n">1</span><span><strong>Diseñador freelance</strong>: 12 diseños únicos/año (uno por mes) con colaboraciones de ilustradores locales.</span></div>
+      <div class="step"><span class="n">2</span><span><strong>Challenges realizables</strong>: métricas medibles automáticamente desde el app (goles, asistencias, MVPs, asistencia entrenamientos).</span></div>
+      <div class="step"><span class="n">3</span><span><strong>Compartir automático</strong>: al desbloquear, auto-generar imagen para IG Story con tu tarjeta + logo FutbolBase.</span></div>
+      <div class="step"><span class="n">4</span><span><strong>Edición física (premium)</strong>: tarjeta física impresa (Printful) para Pro+ que la pidan. Revenue add-on 3,99€.</span></div>
+      <div class="step"><span class="n">5</span><span><strong>Trading</strong>: swipeable marketplace para intercambiar tarjetas con otros jugadores (feature Y3).</span></div>
+    </div>
+    <div class="risk-row"><b>⚠️ Riesgo principal</b>Algunos challenges inalcanzables frustran al usuario. Mitigación: A/B test dificultad mensualmente y tener tier "común" accesible para 80% de usuarios.</div>
+  </div>
+
+  <!-- Comparativa de estrategias -->
+  <div class="card" style="padding:22px;margin-top:28px">
+    <h3>📊 Matriz de priorización · impacto vs coste</h3>
+    <p class="card-sub">Las 6 estrategias ordenadas en el cuadrante impacto (usuarios captados Y3) × coste (total 3 años).</p>
+    <div class="chart-wrap lg"><canvas id="ch_strategy_matrix"></canvas></div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 7 · VEREDICTO                                                 -->
+<!-- ============================================================ -->
+<section id="veredicto">
+  <div class="section-head">
+    <div>
+      <div class="kicker">07 / La decisión</div>
+      <h2>Qué hacer con todo esto</h2>
+    </div>
+    <span class="badge">Recomendación final</span>
+  </div>
+
+  <div class="callout" style="margin-bottom:20px">
+    <span class="icon">🎯</span>
+    <div>
+      <p style="font-size:16px;margin-bottom:12px"><strong>Conclusión ejecutiva</strong>: el escenario <strong>realista (554k€ ARR / 13,1M€ al fundador)</strong> es el más probable. Las 6 estrategias ordenan un camino claro para <strong>asegurar ese resultado</strong> y abrir la puerta al optimista.</p>
+      <p style="font-size:14px">Las estrategias <strong>#1 (beachhead)</strong> y <strong>#2 (acuerdo FFCV)</strong> son las <strong>high-priority</strong> que mueven el escenario de "realista" a "optimista" si se ejecutan bien. Las demás son <strong>multiplicadores</strong> que amortiguan riesgos y aceleran el ramp-up.</p>
+    </div>
+  </div>
+
+  <div class="grid g-2">
+    <div class="card accent-green">
+      <h3>✅ Lo que SÍ hacemos</h3>
+      <ul style="font-size:13px;color:var(--slate);line-height:1.9;padding-left:18px;margin-top:10px">
+        <li><strong>Arrancar Y1 con estrategias #1 (beachhead) + #6 (gamificación)</strong> — ambas low cost, high retention</li>
+        <li><strong>Y2: activar #3 (creators) + #4 (clubs B2B2C)</strong> — diversificar adquisición</li>
+        <li><strong>Y2 Q4: empezar negociación FFCV</strong> (#2) con 3.000+ usuarios ya en mano</li>
+        <li><strong>Y4: expansión CCAA</strong> (#5) replicando playbook validado</li>
+        <li><strong>Medir obsesivamente</strong>: cada estrategia con KPI propio y kill-switch a los 90 días</li>
+      </ul>
+    </div>
+    <div class="card accent-red">
+      <h3>❌ Lo que NO hacemos</h3>
+      <ul style="font-size:13px;color:var(--slate);line-height:1.9;padding-left:18px;margin-top:10px">
+        <li>No gastar marketing en paid ads antes de tener K-factor &gt;1</li>
+        <li>No pivotar a eSports, NFTs o web3 si eso nos distrae</li>
+        <li>No vender la empresa antes de Y3 — múltiplo aún inmaduro</li>
+        <li>No aceptar revenue share FFCV &gt;15%</li>
+        <li>No contratar &gt;5 personas hasta Y3 — capital eficiente</li>
+        <li>No expandir a LaLiga / profesional — competencia masiva</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:22px;padding:28px;background:linear-gradient(135deg,var(--green-soft),var(--cyan-soft))">
+    <h3 style="font-size:28px">🏁 Next steps concretos · Próximas 4 semanas</h3>
+    <div class="grid g-4" style="margin-top:18px">
+      <div style="padding:16px;background:#fff;border-radius:10px;border:1px solid var(--border)">
+        <div style="font-family:'JetBrains Mono';font-size:10px;letter-spacing:0.15em;color:var(--green);font-weight:700">SEMANA 1</div>
+        <div style="font-family:'Barlow Condensed';font-weight:800;font-size:18px;margin-top:4px">Cerrar seed 250k</div>
+        <p style="font-size:12px;color:var(--slate);margin-top:4px">3 business angels ya interesados. Target 2 firmen antes de fin de mes.</p>
+      </div>
+      <div style="padding:16px;background:#fff;border-radius:10px;border:1px solid var(--border)">
+        <div style="font-family:'JetBrains Mono';font-size:10px;letter-spacing:0.15em;color:var(--cyan);font-weight:700">SEMANA 2</div>
+        <div style="font-family:'Barlow Condensed';font-weight:800;font-size:18px;margin-top:4px">Lista 10 clubs piloto</div>
+        <p style="font-size:12px;color:var(--slate);margin-top:4px">Contactar entrenadores L'Horta Sud + Vall d'Albaida. Firmar 7 de 10.</p>
+      </div>
+      <div style="padding:16px;background:#fff;border-radius:10px;border:1px solid var(--border)">
+        <div style="font-family:'JetBrains Mono';font-size:10px;letter-spacing:0.15em;color:var(--orange);font-weight:700">SEMANA 3</div>
+        <div style="font-family:'Barlow Condensed';font-weight:800;font-size:18px;margin-top:4px">Contratar #2 dev</div>
+        <p style="font-size:12px;color:var(--slate);margin-top:4px">Full-stack con experiencia React Native. Base 38k€/año.</p>
+      </div>
+      <div style="padding:16px;background:#fff;border-radius:10px;border:1px solid var(--border)">
+        <div style="font-family:'JetBrains Mono';font-size:10px;letter-spacing:0.15em;color:var(--purple);font-weight:700">SEMANA 4</div>
+        <div style="font-family:'Barlow Condensed';font-weight:800;font-size:18px;margin-top:4px">Launch MVP público</div>
+        <p style="font-size:12px;color:var(--slate);margin-top:4px">PWA instalable, 3 features core, 100 usuarios beta ya onboarded.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p style="font-size:16px;color:var(--green);margin-bottom:10px;font-weight:700">⚡ FutbolBase · Comparación 3 escenarios · Abril 2026</p>
+  <p>Análisis comparativo con datos FFCV oficiales + modelo Bass de adopción + benchmarks SaaS consumer.</p>
+  <p style="margin-top:14px">
+    <a href="./projection-premium.html">Índice</a> ·
+    <a href="./projection-premium-conservador.html">Conservador</a> ·
+    <a href="./projection-premium-realista.html">Realista</a> ·
+    <a href="./projection-premium-optimista.html">Optimista</a> ·
+    <a href="./market-study.html">Estudio mercado</a>
+  </p>
+</footer>
+
+</div>
+
+<script>
+Chart.register(ChartDataLabels)
+Chart.defaults.color = '#475569'
+Chart.defaults.font.family = "'Inter', system-ui, sans-serif"
+Chart.defaults.font.weight = '500'
+Chart.defaults.borderColor = 'rgba(15,23,42,0.08)'
+Chart.defaults.plugins.datalabels.display = false
+Chart.defaults.plugins.legend.labels.usePointStyle = true
+Chart.defaults.plugins.legend.labels.padding = 14
+Chart.defaults.plugins.legend.labels.font = { size:12, weight:'600' }
+
+const RED='#DC2626', GREEN='#059669', YELLOW='#D97706', CYAN='#0891B2', PURPLE='#7C3AED', ORANGE='#EA580C'
+const EUR = v => new Intl.NumberFormat('es-ES').format(Math.round(v)) + ' €'
+const K   = v => (v/1000).toFixed(0) + 'k€'
+
+function grad(ctx,c1,c2){
+  const {ctx:c,chartArea}=ctx.chart
+  if(!chartArea) return c1
+  const g=c.createLinearGradient(0,chartArea.top,0,chartArea.bottom)
+  g.addColorStop(0,c1); g.addColorStop(1,c2)
+  return g
+}
+
+// 1. ARR compare
+new Chart(document.getElementById('ch_arr_compare'),{
+  type:'line',
+  data:{labels:['Y1','Y2','Y3','Y4','Y5'],datasets:[
+    {label:'🔴 Conservador',data:[15150,49000,121000,216000,333000],borderColor:RED,backgroundColor:ctx=>grad(ctx,'rgba(220,38,38,0.18)','rgba(220,38,38,0.02)'),fill:true,tension:0.35,pointRadius:5,pointBackgroundColor:RED,borderWidth:2.5},
+    {label:'🟢 Realista',data:[25250,81648,201600,359856,554400],borderColor:GREEN,backgroundColor:ctx=>grad(ctx,'rgba(5,150,105,0.25)','rgba(5,150,105,0.02)'),fill:true,tension:0.35,pointRadius:6,pointBackgroundColor:GREEN,borderWidth:3.5},
+    {label:'🟠 Optimista',data:[35350,114000,395000,706000,988000],borderColor:YELLOW,backgroundColor:ctx=>grad(ctx,'rgba(217,119,6,0.18)','rgba(217,119,6,0.02)'),fill:true,tension:0.35,pointRadius:5,pointBackgroundColor:YELLOW,borderWidth:2.5}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top'},tooltip:{callbacks:{label:c=>c.dataset.label+': '+EUR(c.parsed.y)}}},
+    scales:{y:{ticks:{callback:v=>(v/1000).toFixed(0)+'k€'},grid:{color:'rgba(15,23,42,0.05)'}},x:{grid:{display:false}}}
+  }
+})
+
+// 2. Segments pie
+new Chart(document.getElementById('ch_segments'),{
+  type:'bar',
+  data:{labels:['Prebenjamín (6-7)','Benjamín (8-9)','Alevín (10-11)','Infantil (12-13)','Cadete (14-15)','Juvenil (16-18)','Senior amateur','Veteranos','Femenino','Técnicos'],
+    datasets:[{data:[8500,11200,14100,16800,18600,17200,28000,4500,7600,9519],
+      backgroundColor:[CYAN,CYAN,CYAN,GREEN,GREEN,GREEN,YELLOW,ORANGE,PURPLE,'#94A3B8'],
+      borderRadius:6,
+      datalabels:{display:true,anchor:'end',align:'top',color:'#334155',font:{family:'JetBrains Mono',weight:'700',size:10},formatter:v=>(v/1000).toFixed(1)+'k'}
+    }]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>new Intl.NumberFormat('es-ES').format(c.parsed.y)+' licencias'}}},
+    scales:{y:{ticks:{callback:v=>(v/1000).toFixed(0)+'k'},grid:{color:'rgba(15,23,42,0.05)'}},x:{grid:{display:false},ticks:{font:{size:10}}}}
+  }
+})
+
+// 3. Payers breakdown
+new Chart(document.getElementById('ch_payers'),{
+  type:'doughnut',
+  data:{labels:['Pro Mensual (jugadores senior/juvenil)','Pro Anual (padres + veteranos)','Club B2B2C (entrenadores)','Pro+ Premium (semi-pros)','Comunidad femenina (vertical)'],
+    datasets:[{data:[4200,2850,1550,500,350],
+      backgroundColor:[GREEN,CYAN,PURPLE,ORANGE,'#EC4899'],
+      borderColor:'#fff',borderWidth:2,
+      datalabels:{display:true,color:'#fff',font:{family:'JetBrains Mono',weight:'700',size:12},formatter:(v,ctx)=>{const tot=ctx.chart.data.datasets[0].data.reduce((a,b)=>a+b,0);return Math.round(v/tot*100)+'%'}}
+    }]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'right',labels:{font:{size:11}}},tooltip:{callbacks:{label:c=>c.label+': '+new Intl.NumberFormat('es-ES').format(c.parsed)+' usuarios'}}}
+  }
+})
+
+// 4. OPEX cumulative
+new Chart(document.getElementById('ch_opex_cumulative'),{
+  type:'bar',
+  data:{labels:['Y1','Y2','Y3','Y4','Y5'],datasets:[
+    {label:'🔴 Conservador',data:[40,70,130,200,255],backgroundColor:RED,borderRadius:4,stack:'c'},
+    {label:'🟢 Realista',data:[41,100,184,285,403],backgroundColor:GREEN,borderRadius:4,stack:'b'},
+    {label:'🟠 Optimista',data:[60,150,280,450,655],backgroundColor:YELLOW,borderRadius:4,stack:'o'}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top'},tooltip:{callbacks:{label:c=>c.dataset.label+': '+c.parsed.y+'k€'}}},
+    scales:{y:{ticks:{callback:v=>v+'k€'},grid:{color:'rgba(15,23,42,0.05)'}},x:{grid:{display:false}}}
+  }
+})
+
+// 5. EBITDA compare
+new Chart(document.getElementById('ch_ebitda_compare'),{
+  type:'line',
+  data:{labels:['Y1','Y2','Y3','Y4','Y5'],datasets:[
+    {label:'🔴 Conservador',data:[-25,-21,-9,16,78],borderColor:RED,backgroundColor:'rgba(220,38,38,0.08)',fill:false,tension:0.3,pointRadius:6,pointBackgroundColor:RED,borderWidth:3},
+    {label:'🟢 Realista',data:[-16,-18,18,74,152],borderColor:GREEN,backgroundColor:'rgba(5,150,105,0.1)',fill:false,tension:0.3,pointRadius:8,pointBackgroundColor:GREEN,borderWidth:4},
+    {label:'🟠 Optimista',data:[-30,-30,30,150,333],borderColor:YELLOW,backgroundColor:'rgba(217,119,6,0.08)',fill:false,tension:0.3,pointRadius:6,pointBackgroundColor:YELLOW,borderWidth:3}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top'},
+      annotation:{annotations:{be:{type:'line',yMin:0,yMax:0,borderColor:'rgba(15,23,42,0.3)',borderDash:[4,4],borderWidth:1.5,label:{content:'Break-even',display:true,position:'end',backgroundColor:'rgba(15,23,42,0.8)',color:'#fff',font:{size:10}}}}},
+      tooltip:{callbacks:{label:c=>c.dataset.label+': '+(c.parsed.y>=0?'+':'')+c.parsed.y+'k€'}}
+    },
+    scales:{y:{ticks:{callback:v=>v+'k€'},grid:{color:'rgba(15,23,42,0.05)'}},x:{grid:{display:false}}}
+  }
+})
+
+// 6. Cumulative profit
+new Chart(document.getElementById('ch_cum_compare'),{
+  type:'bar',
+  data:{labels:['🔴 Conservador','🟢 Realista','🟠 Optimista'],datasets:[{
+    data:[+39,+210,+453],
+    backgroundColor:[RED,GREEN,YELLOW],
+    borderRadius:8,
+    datalabels:{display:true,anchor:'end',align:ctx=>ctx.parsed.y>=0?'top':'bottom',color:'#111',font:{family:'JetBrains Mono',weight:'700',size:14},formatter:v=>(v>=0?'+':'')+v+'k€'}
+  }]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>(c.parsed.y>=0?'+':'')+c.parsed.y+'k€ acumulado 5y'}},
+      annotation:{annotations:{zero:{type:'line',yMin:0,yMax:0,borderColor:'rgba(15,23,42,0.25)',borderDash:[4,4],borderWidth:1.5}}}
+    },
+    scales:{y:{ticks:{callback:v=>v+'k€'},grid:{color:'rgba(15,23,42,0.05)'}},x:{grid:{display:false}}}
+  }
+})
+
+// 7. Founder value at exit
+new Chart(document.getElementById('ch_founder_value'),{
+  type:'bar',
+  data:{labels:['🔴 Conservador','🟢 Realista','🟠 Optimista'],datasets:[
+    {label:'Exit valuation',data:[8,18,30],backgroundColor:['rgba(220,38,38,0.35)','rgba(5,150,105,0.35)','rgba(217,119,6,0.35)'],borderRadius:6,stack:'s',
+      datalabels:{display:true,anchor:'end',align:'top',color:'#111',font:{family:'Barlow Condensed',weight:'800',size:20},formatter:v=>v+'M€'}
+    },
+    {label:'Al fundador (73%)',data:[5.8,13.1,21.9],backgroundColor:[RED,GREEN,YELLOW],borderRadius:6,stack:'f',
+      datalabels:{display:true,anchor:'center',align:'center',color:'#fff',font:{family:'JetBrains Mono',weight:'700',size:13},formatter:v=>v+'M€'}
+    }
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top'},tooltip:{callbacks:{label:c=>c.dataset.label+': '+c.parsed.y+'M€'}}},
+    scales:{y:{ticks:{callback:v=>v+'M€'},grid:{color:'rgba(15,23,42,0.05)'}},x:{grid:{display:false}}}
+  }
+})
+
+// 8. Users compare (Bass 60mo)
+function bassCurve(peak){
+  const p=0.012, q=0.35
+  const res=[]; let cum=0
+  for(let t=1;t<=60;t++){
+    const frac=1-Math.exp(-(p+q)*t/12)
+    const adj=frac/(1+(q/p)*Math.exp(-(p+q)*t/12))
+    cum=Math.round(peak*adj); res.push(cum)
+  }
+  return res
+}
+new Chart(document.getElementById('ch_users_compare'),{
+  type:'line',
+  data:{labels:Array.from({length:60},(_,i)=>'M'+(i+1)),datasets:[
+    {label:'🔴 Conservador (12,6k)',data:bassCurve(12600),borderColor:RED,backgroundColor:ctx=>grad(ctx,'rgba(220,38,38,0.15)','rgba(220,38,38,0.01)'),fill:true,tension:0.4,pointRadius:0,borderWidth:2.5},
+    {label:'🟢 Realista (21k)',data:bassCurve(21000),borderColor:GREEN,backgroundColor:ctx=>grad(ctx,'rgba(5,150,105,0.22)','rgba(5,150,105,0.01)'),fill:true,tension:0.4,pointRadius:0,borderWidth:3.5},
+    {label:'🟠 Optimista (29,4k)',data:bassCurve(29400),borderColor:YELLOW,backgroundColor:ctx=>grad(ctx,'rgba(217,119,6,0.15)','rgba(217,119,6,0.01)'),fill:true,tension:0.4,pointRadius:0,borderWidth:2.5}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top'},tooltip:{callbacks:{label:c=>c.dataset.label+': '+new Intl.NumberFormat('es-ES').format(c.parsed.y)}}},
+    scales:{y:{ticks:{callback:v=>(v/1000).toFixed(0)+'k'},grid:{color:'rgba(15,23,42,0.05)'}},x:{ticks:{callback:function(v,i){return i%12===0?'Y'+((i/12)+1):''},maxRotation:0},grid:{display:false}}}
+  }
+})
+
+// 9. Strategy matrix (bubble)
+new Chart(document.getElementById('ch_strategy_matrix'),{
+  type:'bubble',
+  data:{datasets:[
+    {label:'1 · Beachhead',data:[{x:12,y:4200,r:20}],backgroundColor:GREEN},
+    {label:'2 · Acuerdo FFCV',data:[{x:8,y:8500,r:28}],backgroundColor:CYAN},
+    {label:'3 · Creators',data:[{x:54,y:3500,r:16}],backgroundColor:ORANGE},
+    {label:'4 · Club B2B2C',data:[{x:40,y:5200,r:22}],backgroundColor:PURPLE},
+    {label:'5 · Multi-CCAA',data:[{x:180,y:12000,r:32}],backgroundColor:RED},
+    {label:'6 · Gamificación',data:[{x:10,y:2800,r:14}],backgroundColor:YELLOW}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top'},
+      tooltip:{callbacks:{label:c=>`${c.dataset.label} · ${c.parsed.x}k€ coste · ${c.parsed.y} users Y3`}},
+      datalabels:{display:true,color:'#fff',font:{family:'Barlow Condensed',weight:'800',size:16},formatter:(v,ctx)=>ctx.dataset.label.split('·')[0].trim()}
+    },
+    scales:{
+      y:{title:{display:true,text:'Impacto (usuarios captados Y3)',color:'#64748B'},ticks:{callback:v=>(v/1000).toFixed(1)+'k'},grid:{color:'rgba(15,23,42,0.05)'}},
+      x:{title:{display:true,text:'Coste 3 años (k€)',color:'#64748B'},ticks:{callback:v=>v+'k€'},grid:{color:'rgba(15,23,42,0.05)'}}
+    }
+  }
+})
+
+// 10. Pricing roadmap vs FFCV benchmark
+new Chart(document.getElementById('ch_pricing_roadmap'),{
+  type:'line',
+  data:{labels:['Y1 launch','Y2','Y3','Y4','Y5 target'],datasets:[
+    {label:'Pro FutbolBase · anual',data:[4.99,14.99,24.99,32,39],borderColor:GREEN,backgroundColor:ctx=>grad(ctx,'rgba(5,150,105,0.22)','rgba(5,150,105,0.01)'),fill:true,tension:0.35,pointRadius:7,pointBackgroundColor:GREEN,borderWidth:3.5,
+      datalabels:{display:true,align:'top',color:GREEN,font:{family:'JetBrains Mono',weight:'700',size:11},formatter:v=>v+'€'}
+    },
+    {label:'Licencia FFCV',data:[3,3,3,3,3],borderColor:RED,borderDash:[6,4],fill:false,tension:0,pointRadius:5,pointBackgroundColor:RED,borderWidth:2,datalabels:{display:false}}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top'},tooltip:{callbacks:{label:c=>c.dataset.label+': '+c.parsed.y+'€/temporada'}}},
+    scales:{y:{ticks:{callback:v=>v+'€'},grid:{color:'rgba(15,23,42,0.05)'}},x:{grid:{display:false}}}
+  }
+})
+
+// 12. Churn reasons doughnut
+new Chart(document.getElementById('ch_churn_reasons'),{
+  type:'doughnut',
+  data:{labels:['Fin temporada / lesión','No veo valor','Precio alto','Amigos no están','Bugs / lentitud','Competencia','Pago / técnico'],
+    datasets:[{data:[32,24,14,11,8,7,4],backgroundColor:[RED,ORANGE,YELLOW,PURPLE,CYAN,'#8B5CF6','#64748B'],borderWidth:2,borderColor:'#fff',
+      datalabels:{color:'#fff',font:{family:'JetBrains Mono',weight:'700',size:11},formatter:v=>v+'%'}
+    }]},
+  options:{responsive:true,maintainAspectRatio:false,cutout:'55%',
+    plugins:{legend:{position:'right',labels:{font:{size:11},boxWidth:12}},tooltip:{callbacks:{label:c=>c.label+': '+c.parsed+'% del churn'}}}
+  }
+})
+
+// 13. Retention cohort curves
+new Chart(document.getElementById('ch_retention_cohort'),{
+  type:'line',
+  data:{labels:['M1','M2','M3','M4','M5','M6','M7','M8','M9','M10','M11','M12'],datasets:[
+    {label:'Sin retención (15%)',data:[100,92,85,78,72,66,60,55,50,46,42,38],borderColor:RED,backgroundColor:ctx=>grad(ctx,'rgba(220,38,38,0.15)','rgba(220,38,38,0.01)'),fill:true,tension:0.3,pointRadius:0,borderWidth:2.5},
+    {label:'Baseline Y1 (11%)',data:[100,95,90,85,81,77,72,68,65,61,58,55],borderColor:YELLOW,backgroundColor:ctx=>grad(ctx,'rgba(217,119,6,0.15)','rgba(217,119,6,0.01)'),fill:true,tension:0.3,pointRadius:0,borderWidth:2.5},
+    {label:'Target Y3 (8%)',data:[100,97,94,91,88,86,83,81,79,77,75,80],borderColor:GREEN,backgroundColor:ctx=>grad(ctx,'rgba(5,150,105,0.22)','rgba(5,150,105,0.01)'),fill:true,tension:0.3,pointRadius:0,borderWidth:3.5}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top'},tooltip:{callbacks:{label:c=>c.dataset.label+': '+c.parsed.y+'% activos'}}},
+    scales:{y:{min:30,max:100,ticks:{callback:v=>v+'%'},grid:{color:'rgba(15,23,42,0.05)'}},x:{grid:{display:false}}}
+  }
+})
+
+// 11. Pricing impact: launch vs no-launch
+new Chart(document.getElementById('ch_pricing_impact'),{
+  type:'bar',
+  data:{labels:['Y1','Y2','Y3','Y4','Y5'],datasets:[
+    {label:'Con launch pricing',data:[52,145,310,460,554],backgroundColor:GREEN,borderRadius:6,
+      datalabels:{display:true,anchor:'end',align:'top',color:GREEN,font:{family:'JetBrains Mono',weight:'700',size:10},formatter:v=>v+'k'}
+    },
+    {label:'Sin launch pricing',data:[118,180,290,420,554],backgroundColor:'rgba(15,23,42,0.2)',borderRadius:6,
+      datalabels:{display:true,anchor:'end',align:'top',color:'#64748B',font:{family:'JetBrains Mono',weight:'700',size:10},formatter:v=>v+'k'}
+    }
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top'},tooltip:{callbacks:{label:c=>c.dataset.label+': '+c.parsed.y+'k€ ARR'}}},
+    scales:{y:{ticks:{callback:v=>v+'k€'},grid:{color:'rgba(15,23,42,0.05)'}},x:{grid:{display:false}}}
+  }
+})
+</script>
+</body>
+</html>

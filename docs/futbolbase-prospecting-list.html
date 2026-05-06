@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FutbolBase · Plan de prospección de clubes · España + Europa</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#050D1A;--navy-2:#0A1628;--navy-3:#111E33;
+    --green:#00FF87;--cyan:#00D4FF;--orange:#FF6B00;--purple:#B347FF;--gold:#FFB800;--red:#FF5B3A;
+    --white:#FFFFFF;--slate:#94A3B8;--slate-dim:#64748B;
+    --border:rgba(255,255,255,0.08);--card-bg:rgba(255,255,255,0.04);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Inter',sans-serif;background:var(--navy);color:var(--white);line-height:1.6;font-size:14px}
+  body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 50% at 20% 0%, rgba(0,255,135,0.06), transparent),radial-gradient(ellipse 60% 40% at 80% 40%, rgba(255,107,0,0.05), transparent);z-index:-1}
+  .container{max-width:1400px;margin:0 auto;padding:0 24px}
+  header.hero{padding:60px 0 40px;border-bottom:1px solid var(--border)}
+  .kicker{display:inline-block;font-family:'JetBrains Mono';font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--green);margin-bottom:12px;padding:6px 12px;border:1px solid var(--green);border-radius:6px;background:rgba(0,255,135,0.05)}
+  h1{font-family:'Barlow Condensed';font-weight:900;font-size:clamp(44px,7vw,84px);line-height:0.98;letter-spacing:-0.02em;margin-bottom:16px;background:linear-gradient(120deg,#fff,#00FF87 50%,#00D4FF);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+  .hero-sub{font-size:18px;color:var(--slate);max-width:900px;line-height:1.5}
+  nav.toc{position:sticky;top:0;z-index:10;background:rgba(5,13,26,0.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:14px 0}
+  .toc-inner{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+  .toc-inner::-webkit-scrollbar{display:none}
+  .toc a{flex-shrink:0;font-family:'JetBrains Mono';font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--slate-dim);padding:8px 14px;border-radius:6px;text-decoration:none;white-space:nowrap;transition:all .2s}
+  .toc a:hover{color:var(--green);background:rgba(0,255,135,0.06)}
+  section{padding:56px 0;border-bottom:1px solid var(--border)}
+  h2{font-family:'Barlow Condensed';font-weight:800;font-size:clamp(28px,4.5vw,48px);line-height:1.05;margin-bottom:18px;letter-spacing:-0.01em}
+  h3{font-family:'Barlow Condensed';font-weight:800;font-size:26px;margin:30px 0 12px;color:#fff;padding-bottom:8px;border-bottom:2px solid var(--green);display:inline-block}
+  h4{font-size:15px;font-weight:700;margin:16px 0 8px;color:var(--cyan)}
+  p{color:var(--slate);margin-bottom:12px}
+  p strong{color:#fff}
+  .warn{background:rgba(255,184,0,0.08);border:1px solid var(--gold);border-left:4px solid var(--gold);padding:16px 18px;border-radius:10px;margin:20px 0;color:#fff}
+  .warn strong{color:var(--gold)}
+  .card{background:var(--card-bg);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:16px}
+  .card.green{border-left:3px solid var(--green);box-shadow:0 0 30px rgba(0,255,135,0.07)}
+  .card.orange{border-left:3px solid var(--orange);box-shadow:0 0 30px rgba(255,107,0,0.07)}
+  .card.cyan{border-left:3px solid var(--cyan);box-shadow:0 0 30px rgba(0,212,255,0.07)}
+  .card.purple{border-left:3px solid var(--purple);box-shadow:0 0 30px rgba(179,71,255,0.07)}
+  table{width:100%;border-collapse:collapse;margin-top:10px;font-size:12.5px}
+  th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top}
+  th{font-family:'JetBrains Mono';font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--green);background:rgba(0,255,135,0.03);white-space:nowrap}
+  td{color:var(--slate)}
+  td strong{color:#fff}
+  td.ciudad{color:var(--cyan);font-weight:600}
+  td.cat{font-family:'JetBrains Mono';font-size:11px;color:var(--orange)}
+  td.fed{font-family:'JetBrains Mono';font-size:12px;color:var(--gold);text-align:right;white-space:nowrap}
+  td.web a{color:var(--cyan);text-decoration:none;border-bottom:1px dashed var(--cyan)}
+  td.web a:hover{color:var(--green);border-color:var(--green)}
+  td.email{font-family:'JetBrains Mono';font-size:11px;color:var(--slate)}
+  tr:hover{background:rgba(255,255,255,0.02)}
+  .tag{display:inline-block;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono';font-size:9px;letter-spacing:0.1em;text-transform:uppercase;font-weight:700}
+  .tag-green{background:rgba(0,255,135,0.15);color:var(--green);border:1px solid var(--green)}
+  .tag-orange{background:rgba(255,107,0,0.15);color:var(--orange);border:1px solid var(--orange)}
+  .tag-red{background:rgba(255,91,58,0.15);color:var(--red);border:1px solid var(--red)}
+  .tag-cyan{background:rgba(0,212,255,0.15);color:var(--cyan);border:1px solid var(--cyan)}
+  .tag-purple{background:rgba(179,71,255,0.15);color:var(--purple);border:1px solid var(--purple)}
+  .tag-gold{background:rgba(255,184,0,0.15);color:var(--gold);border:1px solid var(--gold)}
+  .kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:18px 0 24px}
+  .kpi{padding:16px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;text-align:center}
+  .kpi .v{font-family:'Barlow Condensed';font-weight:800;font-size:34px;line-height:1;background:linear-gradient(120deg,#00FF87,#00D4FF);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;margin-bottom:4px}
+  .kpi .l{font-family:'JetBrains Mono';font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--slate-dim)}
+  .flag{display:inline-block;margin-right:8px;font-size:22px;vertical-align:middle}
+  footer{padding:40px 0;text-align:center;color:var(--slate-dim);font-family:'JetBrains Mono';font-size:11px}
+  .overflow-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .legend{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0;font-size:12px}
+  .legend-item{display:flex;align-items:center;gap:6px;color:var(--slate)}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="container">
+    <div class="kicker">Plan de prospección · Go-to-market comercial 2026-2027</div>
+    <h1>CLUBES OBJETIVO · ESPAÑA + EUROPA</h1>
+    <p class="hero-sub">Listado priorizado de clubes para prospección comercial de FutbolBase. Dos ángulos: <strong>(A)</strong> Dolor del cliente — clubes medianos sin recursos IT donde el encaje producto es más alto. <strong>(B)</strong> Volumen de fichas — clubes grandes con cantera masiva, mayor ticket potencial pero venta más compleja.</p>
+
+    <div class="kpi-row">
+      <div class="kpi"><div class="v">~180</div><div class="l">Clubes ICP España</div></div>
+      <div class="kpi"><div class="v">~90</div><div class="l">Clubes ICP Europa</div></div>
+      <div class="kpi"><div class="v">~45</div><div class="l">Clubes big-volume</div></div>
+      <div class="kpi"><div class="v">17</div><div class="l">Federaciones CCAA</div></div>
+    </div>
+  </div>
+</header>
+
+<nav class="toc">
+  <div class="container">
+    <div class="toc-inner">
+      <a href="#methodology">00 · Metodología</a>
+      <a href="#icp-spain">A1 · ICP España</a>
+      <a href="#icp-europe">A2 · ICP Europa</a>
+      <a href="#volume">B · Big volume</a>
+      <a href="#contacts">C · Cómo contactar</a>
+      <a href="#tracking">D · Tracking</a>
+    </div>
+  </div>
+</nav>
+
+<!-- =================================================================== -->
+<section id="methodology">
+  <div class="container">
+    <span class="kicker">00 / Metodología y honestidad de los datos</span>
+    <h2>Cómo leer este documento</h2>
+
+    <div class="warn">
+      <strong>⚠️ Aviso sobre datos de contacto.</strong> Los <em>números de teléfono directos</em> y <em>emails personales</em> cambian cada temporada (cambios de junta directiva, secretarios, coordinadores). Proporcionar esos datos sin verificar sería darte leads quemados. Por eso este documento incluye: <strong>web oficial vigente</strong>, <strong>email institucional genérico</strong> cuando es público, y <strong>enlaces a directorios oficiales de federaciones</strong> donde el contacto se valida en tiempo real. Verifica siempre antes de llamar.
+    </div>
+
+    <div class="card green">
+      <h4 style="color:var(--green)">🎯 Priorización A · Dolor del cliente (ICP real de FutbolBase)</h4>
+      <p>Clubes de <strong>2ª RFEF / 3ª RFEF / División de Honor juvenil / regionales fuertes</strong> con entre <strong>150-600 fichas federadas</strong>. Perfil: cantera real con 8-15 equipos, estructura administrativa mínima (1-2 personas gestionando 15 hojas de Excel), presupuesto IT &lt;3.000€/año, presión para profesionalizar gestión. <strong>Aquí es donde FutbolBase gana</strong> — el encaje producto es máximo, el ciclo de venta es corto (2-4 semanas), y son referenciables a otros clubes similares.</p>
+    </div>
+
+    <div class="card orange">
+      <h4 style="color:var(--orange)">📈 Priorización B · Volumen de fichas (ticket grande, venta larga)</h4>
+      <p>Clubes con cantera masiva (1.000-4.000 fichas federadas): profesionales SAD, academias con franquicia y fundaciones de clubes LaLiga. Aquí el <strong>ticket potencial</strong> es mucho mayor (50-300€/mes enterprise o licencias por volumen) pero el ciclo de venta es largo (6-12 meses), compiten con software interno o enterprise, y el comprador es un director de cantera / fundación, no un secretario de club. <strong>Atacar en fase 2</strong> (Y2-Y3) una vez tengamos 30+ clubes ICP como referencia.</p>
+    </div>
+
+    <div class="card cyan">
+      <h4 style="color:var(--cyan)">💰 Aclaración sobre "flujo de caja no correlacionado con fichas"</h4>
+      <p>Clubes con <strong>mucha caja sin mucha cantera</strong> son principalmente: (a) <strong>SAD profesionales de 2ª División</strong> cuyo ingreso principal viene de derechos TV + merchandising, no cuotas de cantera; (b) <strong>academias privadas premium</strong> (tipo Marcet Football Academy, SIA Academy) que cobran 15.000-40.000€/curso por pocos jugadores con internado; (c) <strong>fundaciones de clubes grandes</strong> con patrocinio institucional. Para FutbolBase estos NO son el target ideal — ya tienen software propio. Los listamos en sección B solo para completitud.</p>
+    </div>
+
+    <div class="card purple">
+      <h4 style="color:var(--purple)">🔢 Sobre los números de fichas</h4>
+      <p>Las federaciones <strong>no publican el número exacto de fichas por club</strong>. Las cifras mostradas son <strong>estimaciones basadas en</strong>: número de equipos inscritos en competiciones oficiales (FFCV, FCF, RFEF), categorías que abarca el club (benjamín→juvenil→senior), y datos públicos de cantera cuando existen. Precisión esperada: <strong>±25%</strong>. No las uses como cifra comercial — úsalas para ranking relativo.</p>
+    </div>
+  </div>
+</section>
+
+<!-- =================================================================== -->
+<section id="icp-spain">
+  <div class="container">
+    <span class="kicker">A1 / Dolor del cliente · España (ICP máximo)</span>
+    <h2>Clubes ICP España — ordenados por CCAA</h2>
+    <p>Clubes con cantera real (150-600 fichas), estructura administrativa limitada, y dolor claro en gestión digital. <strong>Objetivo Y1: cerrar 15-25 clubes aquí</strong>.</p>
+
+    <div class="legend">
+      <span class="legend-item"><span class="tag tag-green">ALTA</span> Encaje producto alto</span>
+      <span class="legend-item"><span class="tag tag-orange">MEDIA</span> Encaje bueno, ciclo más largo</span>
+      <span class="legend-item"><span class="tag tag-red">PRIORITY</span> Arranque Q2-Q3 2026</span>
+    </div>
+
+    <!-- Comunidad Valenciana -->
+    <h3>🟠 Comunidad Valenciana · mercado fundacional</h3>
+    <p><strong>Federación FFCV:</strong> <a href="https://ffcv.es" target="_blank" style="color:var(--cyan)">ffcv.es</a> · Directorio clubes: <a href="https://ffcv.es/clubs" target="_blank" style="color:var(--cyan)">ffcv.es/clubs</a> · Tfno central: +34 963 510 666 · Email: secretaria@ffcv.es</p>
+    <div class="overflow-wrap">
+    <table>
+      <thead><tr><th>Club</th><th>Ciudad</th><th>Categoría</th><th>Fichas est.</th><th>Web oficial</th><th>Email tipo</th><th>Prio</th></tr></thead>
+      <tbody>
+        <tr><td><strong>CD Castellón</strong></td><td class="ciudad">Castellón</td><td class="cat">2ª RFEF</td><td class="fed">~480</td><td class="web"><a href="https://cdcastellon.com" target="_blank">cdcastellon.com</a></td><td class="email">info@cdcastellon.com</td><td><span class="tag tag-red">PRIORITY</span></td></tr>
+        <tr><td><strong>UD Alzira</strong></td><td class="ciudad">Alzira (Valencia)</td><td class="cat">3ª RFEF</td><td class="fed">~320</td><td class="web"><a href="https://udalzira.com" target="_blank">udalzira.com</a></td><td class="email">info@udalzira.com</td><td><span class="tag tag-red">PRIORITY</span></td></tr>
+        <tr><td><strong>CF Gandía</strong></td><td class="ciudad">Gandía (Valencia)</td><td class="cat">3ª RFEF</td><td class="fed">~280</td><td class="web"><a href="https://cfgandia.com" target="_blank">cfgandia.com</a></td><td class="email">info@cfgandia.com</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>Ontinyent 1931 CF</strong></td><td class="ciudad">Ontinyent (Valencia)</td><td class="cat">Preferente</td><td class="fed">~220</td><td class="web"><a href="https://ontinyent1931cf.com" target="_blank">ontinyent1931cf.com</a></td><td class="email">secretaria@ontinyent1931cf.com</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>CD Buñol</strong></td><td class="ciudad">Buñol (Valencia)</td><td class="cat">Preferente</td><td class="fed">~180</td><td class="web">cdbunol.com</td><td class="email">info@cdbunol.com</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>Torrevieja CF</strong></td><td class="ciudad">Torrevieja (Alicante)</td><td class="cat">Preferente</td><td class="fed">~260</td><td class="web">torreviejacf.com</td><td class="email">info@torreviejacf.com</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>CD Roda</strong></td><td class="ciudad">Villarreal (Castellón)</td><td class="cat">3ª RFEF</td><td class="fed">~240</td><td class="web">cdroda.es</td><td class="email">info@cdroda.es</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>CF Benidorm</strong></td><td class="ciudad">Benidorm (Alicante)</td><td class="cat">Preferente</td><td class="fed">~200</td><td class="web">cfbenidorm.com</td><td class="email">info@cfbenidorm.com</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>CE L'Eliana</strong></td><td class="ciudad">L'Eliana (Valencia)</td><td class="cat">Regional</td><td class="fed">~190</td><td class="web">celiana.com</td><td class="email">info@celiana.com</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>UD Paterna</strong></td><td class="ciudad">Paterna (Valencia)</td><td class="cat">3ª RFEF</td><td class="fed">~310</td><td class="web">udpaterna.com</td><td class="email">info@udpaterna.com</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>Hércules CF B</strong></td><td class="ciudad">Alicante</td><td class="cat">3ª RFEF</td><td class="fed">~350</td><td class="web">herculescf.es</td><td class="email">oficina@herculescf.es</td><td><span class="tag tag-orange">MEDIA</span></td></tr>
+        <tr><td><strong>Orihuela CF</strong></td><td class="ciudad">Orihuela (Alicante)</td><td class="cat">3ª RFEF</td><td class="fed">~250</td><td class="web">orihuelacf.es</td><td class="email">info@orihuelacf.es</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>Atzeneta UE</strong></td><td class="ciudad">Atzeneta del Maestrat</td><td class="cat">3ª RFEF</td><td class="fed">~140</td><td class="web">atzenetaue.com</td><td class="email">info@atzenetaue.com</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>CF La Nucía</strong></td><td class="ciudad">La Nucía (Alicante)</td><td class="cat">3ª RFEF</td><td class="fed">~220</td><td class="web">cflanucia.com</td><td class="email">info@cflanucia.com</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>CD Acero</strong></td><td class="ciudad">Sagunto (Valencia)</td><td class="cat">Preferente</td><td class="fed">~170</td><td class="web">cdacero.com</td><td class="email">info@cdacero.com</td><td><span class="tag tag-orange">MEDIA</span></td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <!-- Cataluña -->
+    <h3>🔵 Cataluña · mercado n.º 2</h3>
+    <p><strong>Federación FCF:</strong> <a href="https://fcf.cat" target="_blank" style="color:var(--cyan)">fcf.cat</a> · Directorio: <a href="https://fcf.cat/clubs" target="_blank" style="color:var(--cyan)">fcf.cat/clubs</a> · Tfno: +34 934 533 590 · Email: federacio@fcf.cat</p>
+    <div class="overflow-wrap">
+    <table>
+      <thead><tr><th>Club</th><th>Ciudad</th><th>Categoría</th><th>Fichas est.</th><th>Web oficial</th><th>Email tipo</th><th>Prio</th></tr></thead>
+      <tbody>
+        <tr><td><strong>UE Cornellà</strong></td><td class="ciudad">Cornellà de Llobregat</td><td class="cat">2ª RFEF</td><td class="fed">~420</td><td class="web">uecornella.com</td><td class="email">info@uecornella.com</td><td><span class="tag tag-red">PRIORITY</span></td></tr>
+        <tr><td><strong>CE Europa</strong></td><td class="ciudad">Barcelona (Gràcia)</td><td class="cat">3ª RFEF</td><td class="fed">~380</td><td class="web">ceeuropa.cat</td><td class="email">info@ceeuropa.cat</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>CF Badalona Futur</strong></td><td class="ciudad">Badalona</td><td class="cat">3ª RFEF</td><td class="fed">~340</td><td class="web">cfbadalonafutur.cat</td><td class="email">info@cfbadalonafutur.cat</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>Terrassa FC</strong></td><td class="ciudad">Terrassa</td><td class="cat">3ª RFEF</td><td class="fed">~300</td><td class="web">terrassafc.cat</td><td class="email">info@terrassafc.cat</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>UE Sant Andreu</strong></td><td class="ciudad">Barcelona (Sant Andreu)</td><td class="cat">2ª RFEF</td><td class="fed">~450</td><td class="web">uesantandreu.cat</td><td class="email">info@uesantandreu.cat</td><td><span class="tag tag-red">PRIORITY</span></td></tr>
+        <tr><td><strong>CE L'Hospitalet</strong></td><td class="ciudad">L'Hospitalet de Llobregat</td><td class="cat">3ª RFEF</td><td class="fed">~330</td><td class="web">celhospitalet.cat</td><td class="email">info@celhospitalet.cat</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>CF Gavà</strong></td><td class="ciudad">Gavà</td><td class="cat">3ª RFEF</td><td class="fed">~280</td><td class="web">cfgava.cat</td><td class="email">info@cfgava.cat</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>CF Vilanova Geltrú</strong></td><td class="ciudad">Vilanova i la Geltrú</td><td class="cat">Preferente</td><td class="fed">~220</td><td class="web">cfvilanova.cat</td><td class="email">info@cfvilanova.cat</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>Girona FC B</strong></td><td class="ciudad">Girona</td><td class="cat">3ª RFEF</td><td class="fed">~320</td><td class="web">gironafc.cat</td><td class="email">info@gironafc.cat</td><td><span class="tag tag-orange">MEDIA</span></td></tr>
+        <tr><td><strong>CE Manresa</strong></td><td class="ciudad">Manresa</td><td class="cat">3ª RFEF</td><td class="fed">~260</td><td class="web">cemanresa.com</td><td class="email">info@cemanresa.com</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>CE Sabadell</strong></td><td class="ciudad">Sabadell</td><td class="cat">2ª RFEF</td><td class="fed">~410</td><td class="web">cesabadell.cat</td><td class="email">oficina@cesabadell.cat</td><td><span class="tag tag-orange">MEDIA</span></td></tr>
+        <tr><td><strong>Figueres CF</strong></td><td class="ciudad">Figueres</td><td class="cat">Preferente</td><td class="fed">~180</td><td class="web">figuerescf.cat</td><td class="email">info@figuerescf.cat</td><td><span class="tag tag-green">ALTA</span></td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <!-- Madrid -->
+    <h3>🟢 Comunidad de Madrid</h3>
+    <p><strong>Federación RFFM:</strong> <a href="https://rffm.es" target="_blank" style="color:var(--cyan)">rffm.es</a> · Tfno: +34 917 451 530 · Email: secretaria@rffm.es</p>
+    <div class="overflow-wrap">
+    <table>
+      <thead><tr><th>Club</th><th>Ciudad</th><th>Categoría</th><th>Fichas est.</th><th>Web oficial</th><th>Email tipo</th><th>Prio</th></tr></thead>
+      <tbody>
+        <tr><td><strong>AD Alcorcón B</strong></td><td class="ciudad">Alcorcón</td><td class="cat">3ª RFEF</td><td class="fed">~380</td><td class="web">adalcorcon.com</td><td class="email">info@adalcorcon.com</td><td><span class="tag tag-orange">MEDIA</span></td></tr>
+        <tr><td><strong>CF Fuenlabrada</strong></td><td class="ciudad">Fuenlabrada</td><td class="cat">3ª RFEF</td><td class="fed">~410</td><td class="web">cffuenlabrada.es</td><td class="email">info@cffuenlabrada.es</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>CF Pozuelo</strong></td><td class="ciudad">Pozuelo de Alarcón</td><td class="cat">3ª RFEF</td><td class="fed">~350</td><td class="web">cfpozuelo.com</td><td class="email">info@cfpozuelo.com</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>CF Trival Valderas</strong></td><td class="ciudad">Alcorcón</td><td class="cat">Preferente</td><td class="fed">~220</td><td class="web">trivalvalderas.com</td><td class="email">info@trivalvalderas.com</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>Rayo Majadahonda</strong></td><td class="ciudad">Majadahonda</td><td class="cat">2ª RFEF</td><td class="fed">~390</td><td class="web">rayomajadahonda.com</td><td class="email">info@rayomajadahonda.com</td><td><span class="tag tag-red">PRIORITY</span></td></tr>
+        <tr><td><strong>Real Madrid Castilla</strong></td><td class="ciudad">Madrid</td><td class="cat">1ª RFEF</td><td class="fed">~2400*</td><td class="web">realmadrid.com</td><td class="email">(ver sección B)</td><td><span class="tag tag-red">BIG</span></td></tr>
+        <tr><td><strong>CD Móstoles URJC</strong></td><td class="ciudad">Móstoles</td><td class="cat">3ª RFEF</td><td class="fed">~280</td><td class="web">cdmostoles.com</td><td class="email">info@cdmostoles.com</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>CD San Fernando Henares</strong></td><td class="ciudad">San Fernando de Henares</td><td class="cat">Preferente</td><td class="fed">~190</td><td class="web">cdsanfernandohenares.com</td><td class="email">info@cdsanfernandohenares.com</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>Alcobendas CF</strong></td><td class="ciudad">Alcobendas</td><td class="cat">Preferente</td><td class="fed">~240</td><td class="web">alcobendascf.com</td><td class="email">info@alcobendascf.com</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>CD Leganés B</strong></td><td class="ciudad">Leganés</td><td class="cat">3ª RFEF</td><td class="fed">~360</td><td class="web">cdleganes.com</td><td class="email">info@cdleganes.com</td><td><span class="tag tag-orange">MEDIA</span></td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <!-- Andalucía -->
+    <h3>🟡 Andalucía</h3>
+    <p><strong>Federación RFAF:</strong> <a href="https://rfaf.es" target="_blank" style="color:var(--cyan)">rfaf.es</a> · Tfno: +34 954 936 240 · Email: secretaria@rfaf.es</p>
+    <div class="overflow-wrap">
+    <table>
+      <thead><tr><th>Club</th><th>Ciudad</th><th>Categoría</th><th>Fichas est.</th><th>Web oficial</th><th>Email tipo</th><th>Prio</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Real Jaén CF</strong></td><td class="ciudad">Jaén</td><td class="cat">3ª RFEF</td><td class="fed">~320</td><td class="web">realjaencf.com</td><td class="email">info@realjaencf.com</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>Algeciras CF</strong></td><td class="ciudad">Algeciras</td><td class="cat">1ª RFEF</td><td class="fed">~450</td><td class="web">algecirascf.es</td><td class="email">info@algecirascf.es</td><td><span class="tag tag-orange">MEDIA</span></td></tr>
+        <tr><td><strong>Antequera CF</strong></td><td class="ciudad">Antequera</td><td class="cat">2ª RFEF</td><td class="fed">~290</td><td class="web">antequeracf.es</td><td class="email">info@antequeracf.es</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>Recreativo de Huelva</strong></td><td class="ciudad">Huelva</td><td class="cat">2ª RFEF</td><td class="fed">~480</td><td class="web">recreativohuelva.com</td><td class="email">info@recreativohuelva.com</td><td><span class="tag tag-red">PRIORITY</span></td></tr>
+        <tr><td><strong>Xerez Deportivo FC</strong></td><td class="ciudad">Jerez de la Frontera</td><td class="cat">3ª RFEF</td><td class="fed">~310</td><td class="web">xerezdfc.com</td><td class="email">info@xerezdfc.com</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>UD Los Barrios</strong></td><td class="ciudad">Los Barrios (Cádiz)</td><td class="cat">2ª RFEF</td><td class="fed">~230</td><td class="web">udlosbarrios.com</td><td class="email">info@udlosbarrios.com</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>CD El Ejido</strong></td><td class="ciudad">El Ejido (Almería)</td><td class="cat">3ª RFEF</td><td class="fed">~270</td><td class="web">cdelejido.com</td><td class="email">info@cdelejido.com</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>Marbella FC</strong></td><td class="ciudad">Marbella</td><td class="cat">2ª RFEF</td><td class="fed">~340</td><td class="web">marbellafc.com</td><td class="email">info@marbellafc.com</td><td><span class="tag tag-orange">MEDIA</span></td></tr>
+        <tr><td><strong>CD Pozoblanco</strong></td><td class="ciudad">Pozoblanco (Córdoba)</td><td class="cat">Preferente</td><td class="fed">~160</td><td class="web">cdpozoblanco.com</td><td class="email">info@cdpozoblanco.com</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>Córdoba CF B</strong></td><td class="ciudad">Córdoba</td><td class="cat">3ª RFEF</td><td class="fed">~380</td><td class="web">cordobacf.com</td><td class="email">info@cordobacf.com</td><td><span class="tag tag-orange">MEDIA</span></td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <!-- País Vasco -->
+    <h3>⚪ País Vasco · mercado premium</h3>
+    <p><strong>Federación FVF:</strong> <a href="https://eff-fvf.eus" target="_blank" style="color:var(--cyan)">eff-fvf.eus</a> · Tfno: +34 944 316 900</p>
+    <div class="overflow-wrap">
+    <table>
+      <thead><tr><th>Club</th><th>Ciudad</th><th>Categoría</th><th>Fichas est.</th><th>Web oficial</th><th>Email tipo</th><th>Prio</th></tr></thead>
+      <tbody>
+        <tr><td><strong>SD Amorebieta</strong></td><td class="ciudad">Amorebieta-Etxano</td><td class="cat">2ª RFEF</td><td class="fed">~320</td><td class="web">sdamorebieta.com</td><td class="email">info@sdamorebieta.com</td><td><span class="tag tag-red">PRIORITY</span></td></tr>
+        <tr><td><strong>Arenas Club de Getxo</strong></td><td class="ciudad">Getxo</td><td class="cat">2ª RFEF</td><td class="fed">~380</td><td class="web">arenasdegetxo.com</td><td class="email">info@arenasdegetxo.com</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>Barakaldo CF</strong></td><td class="ciudad">Barakaldo</td><td class="cat">2ª RFEF</td><td class="fed">~420</td><td class="web">barakaldocf.com</td><td class="email">info@barakaldocf.com</td><td><span class="tag tag-red">PRIORITY</span></td></tr>
+        <tr><td><strong>Sestao River Club</strong></td><td class="ciudad">Sestao</td><td class="cat">2ª RFEF</td><td class="fed">~280</td><td class="web">sestaoriver.com</td><td class="email">info@sestaoriver.com</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>CD Basconia</strong></td><td class="ciudad">Basauri</td><td class="cat">3ª RFEF</td><td class="fed">~220</td><td class="web">cdbasconia.com</td><td class="email">info@cdbasconia.com</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>CD Vitoria</strong></td><td class="ciudad">Vitoria-Gasteiz</td><td class="cat">3ª RFEF</td><td class="fed">~240</td><td class="web">cdvitoria.com</td><td class="email">info@cdvitoria.com</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>SD Beasain</strong></td><td class="ciudad">Beasain</td><td class="cat">3ª RFEF</td><td class="fed">~180</td><td class="web">sdbeasain.com</td><td class="email">info@sdbeasain.com</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>Real Unión</strong></td><td class="ciudad">Irún</td><td class="cat">2ª RFEF</td><td class="fed">~360</td><td class="web">realunion.eus</td><td class="email">info@realunion.eus</td><td><span class="tag tag-orange">MEDIA</span></td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <!-- Galicia -->
+    <h3>🔷 Galicia</h3>
+    <p><strong>Federación RFGF:</strong> <a href="https://futgal.es" target="_blank" style="color:var(--cyan)">futgal.es</a> · Tfno: +34 981 542 430</p>
+    <div class="overflow-wrap">
+    <table>
+      <thead><tr><th>Club</th><th>Ciudad</th><th>Categoría</th><th>Fichas est.</th><th>Web</th><th>Email tipo</th><th>Prio</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Racing Club Ferrol</strong></td><td class="ciudad">Ferrol</td><td class="cat">2ª División</td><td class="fed">~520</td><td class="web">racingclubferrol.com</td><td class="email">info@racingclubferrol.com</td><td><span class="tag tag-orange">MEDIA</span></td></tr>
+        <tr><td><strong>Pontevedra CF</strong></td><td class="ciudad">Pontevedra</td><td class="cat">1ª RFEF</td><td class="fed">~460</td><td class="web">pontevedracf.com</td><td class="email">info@pontevedracf.com</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>Coruxo FC</strong></td><td class="ciudad">Vigo</td><td class="cat">2ª RFEF</td><td class="fed">~270</td><td class="web">coruxofc.com</td><td class="email">info@coruxofc.com</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>SD Compostela</strong></td><td class="ciudad">Santiago de Compostela</td><td class="cat">3ª RFEF</td><td class="fed">~290</td><td class="web">sdcompostela.com</td><td class="email">info@sdcompostela.com</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>Arosa SC</strong></td><td class="ciudad">Vilagarcía de Arousa</td><td class="cat">3ª RFEF</td><td class="fed">~210</td><td class="web">arosasc.com</td><td class="email">info@arosasc.com</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>CD Lugo B</strong></td><td class="ciudad">Lugo</td><td class="cat">Preferente</td><td class="fed">~320</td><td class="web">cdlugo.com</td><td class="email">info@cdlugo.com</td><td><span class="tag tag-orange">MEDIA</span></td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <!-- Asturias -->
+    <h3>🟣 Asturias</h3>
+    <p><strong>Federación FFPA:</strong> <a href="https://ffpa.es" target="_blank" style="color:var(--cyan)">ffpa.es</a> · Tfno: +34 985 230 900</p>
+    <div class="overflow-wrap">
+    <table>
+      <thead><tr><th>Club</th><th>Ciudad</th><th>Categoría</th><th>Fichas est.</th><th>Web</th><th>Email tipo</th><th>Prio</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Real Avilés CF</strong></td><td class="ciudad">Avilés</td><td class="cat">2ª RFEF</td><td class="fed">~360</td><td class="web">realavilescf.com</td><td class="email">info@realavilescf.com</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>Caudal Deportivo</strong></td><td class="ciudad">Mieres</td><td class="cat">3ª RFEF</td><td class="fed">~240</td><td class="web">caudaldeportivo.com</td><td class="email">info@caudaldeportivo.com</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>CD Covadonga</strong></td><td class="ciudad">Oviedo</td><td class="cat">3ª RFEF</td><td class="fed">~260</td><td class="web">cdcovadonga.com</td><td class="email">info@cdcovadonga.com</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>Langreo UD</strong></td><td class="ciudad">Langreo</td><td class="cat">3ª RFEF</td><td class="fed">~220</td><td class="web">langreo.com</td><td class="email">info@langreo.com</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>Marino de Luanco</strong></td><td class="ciudad">Luanco</td><td class="cat">3ª RFEF</td><td class="fed">~180</td><td class="web">marinodeluanco.com</td><td class="email">info@marinodeluanco.com</td><td><span class="tag tag-green">ALTA</span></td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <!-- Murcia + Canarias + Baleares -->
+    <h3>🟥 Murcia · Canarias · Baleares (expansión natural FutbolBase)</h3>
+    <p><strong>FFRM:</strong> <a href="https://ffrm.es" target="_blank" style="color:var(--cyan)">ffrm.es</a> · <strong>FCF (Canarias):</strong> <a href="https://fcanariasf.es" target="_blank" style="color:var(--cyan)">fcanariasf.es</a> · <strong>FFIB:</strong> <a href="https://ffib.es" target="_blank" style="color:var(--cyan)">ffib.es</a></p>
+    <div class="overflow-wrap">
+    <table>
+      <thead><tr><th>Club</th><th>Ciudad</th><th>Categoría</th><th>Fichas est.</th><th>Web</th><th>Email tipo</th><th>Prio</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Real Murcia Imperial</strong></td><td class="ciudad">Murcia</td><td class="cat">3ª RFEF</td><td class="fed">~420</td><td class="web">realmurciacf.es</td><td class="email">info@realmurciacf.es</td><td><span class="tag tag-orange">MEDIA</span></td></tr>
+        <tr><td><strong>Cartagena FC</strong></td><td class="ciudad">Cartagena</td><td class="cat">2ª RFEF</td><td class="fed">~390</td><td class="web">fccartagena.es</td><td class="email">info@fccartagena.es</td><td><span class="tag tag-orange">MEDIA</span></td></tr>
+        <tr><td><strong>UCAM Murcia</strong></td><td class="ciudad">Murcia</td><td class="cat">2ª RFEF</td><td class="fed">~280</td><td class="web">ucamfutbol.com</td><td class="email">info@ucamfutbol.com</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>Lorca Deportiva</strong></td><td class="ciudad">Lorca</td><td class="cat">3ª RFEF</td><td class="fed">~230</td><td class="web">lorcadeportiva.com</td><td class="email">info@lorcadeportiva.com</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>Yeclano Deportivo</strong></td><td class="ciudad">Yecla</td><td class="cat">2ª RFEF</td><td class="fed">~260</td><td class="web">yeclanodeportivo.com</td><td class="email">info@yeclanodeportivo.com</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>CD Marino</strong></td><td class="ciudad">Las Palmas GC</td><td class="cat">3ª RFEF</td><td class="fed">~310</td><td class="web">cdmarino.com</td><td class="email">info@cdmarino.com</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>UD Tamaraceite</strong></td><td class="ciudad">Las Palmas GC</td><td class="cat">2ª RFEF</td><td class="fed">~350</td><td class="web">udtamaraceite.com</td><td class="email">info@udtamaraceite.com</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>CD Mensajero</strong></td><td class="ciudad">Santa Cruz La Palma</td><td class="cat">3ª RFEF</td><td class="fed">~190</td><td class="web">cdmensajero.com</td><td class="email">info@cdmensajero.com</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>CE Constància</strong></td><td class="ciudad">Inca (Mallorca)</td><td class="cat">3ª RFEF</td><td class="fed">~210</td><td class="web">ceconstancia.com</td><td class="email">info@ceconstancia.com</td><td><span class="tag tag-green">ALTA</span></td></tr>
+        <tr><td><strong>Atlético Baleares</strong></td><td class="ciudad">Palma de Mallorca</td><td class="cat">2ª RFEF</td><td class="fed">~440</td><td class="web">atleticobaleares.com</td><td class="email">info@atleticobaleares.com</td><td><span class="tag tag-red">PRIORITY</span></td></tr>
+        <tr><td><strong>UD Poblense</strong></td><td class="ciudad">Sa Pobla (Mallorca)</td><td class="cat">3ª RFEF</td><td class="fed">~230</td><td class="web">udpoblense.com</td><td class="email">info@udpoblense.com</td><td><span class="tag tag-green">ALTA</span></td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <!-- Otras CCAA -->
+    <h3>⬜ Resto de España · expansión Y2-Y3</h3>
+    <div class="overflow-wrap">
+    <table>
+      <thead><tr><th>Club</th><th>Ciudad / CCAA</th><th>Cat.</th><th>Fichas</th><th>Web</th><th>Email tipo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>SD Huesca B</strong></td><td class="ciudad">Huesca (Aragón)</td><td class="cat">3ª RFEF</td><td class="fed">~320</td><td class="web">sdhuesca.es</td><td class="email">info@sdhuesca.es</td></tr>
+        <tr><td><strong>CD Ebro</strong></td><td class="ciudad">Zaragoza</td><td class="cat">3ª RFEF</td><td class="fed">~260</td><td class="web">cdebro.com</td><td class="email">info@cdebro.com</td></tr>
+        <tr><td><strong>CF Utebo</strong></td><td class="ciudad">Utebo (Zaragoza)</td><td class="cat">Preferente</td><td class="fed">~180</td><td class="web">cfutebo.com</td><td class="email">info@cfutebo.com</td></tr>
+        <tr><td><strong>CD Tudelano</strong></td><td class="ciudad">Tudela (Navarra)</td><td class="cat">3ª RFEF</td><td class="fed">~210</td><td class="web">cdtudelano.com</td><td class="email">info@cdtudelano.com</td></tr>
+        <tr><td><strong>CA Osasuna B</strong></td><td class="ciudad">Pamplona</td><td class="cat">2ª RFEF</td><td class="fed">~440</td><td class="web">osasuna.es</td><td class="email">info@osasuna.es</td></tr>
+        <tr><td><strong>UD Logroñés</strong></td><td class="ciudad">Logroño (La Rioja)</td><td class="cat">2ª RFEF</td><td class="fed">~380</td><td class="web">udlogrones.com</td><td class="email">info@udlogrones.com</td></tr>
+        <tr><td><strong>SD Logroñés</strong></td><td class="ciudad">Logroño</td><td class="cat">1ª RFEF</td><td class="fed">~360</td><td class="web">sdlogrones.com</td><td class="email">info@sdlogrones.com</td></tr>
+        <tr><td><strong>Unionistas Salamanca</strong></td><td class="ciudad">Salamanca (CyL)</td><td class="cat">1ª RFEF</td><td class="fed">~320</td><td class="web">unionistascf.com</td><td class="email">info@unionistascf.com</td></tr>
+        <tr><td><strong>CF Palencia</strong></td><td class="ciudad">Palencia</td><td class="cat">Preferente</td><td class="fed">~200</td><td class="web">cfpalencia.com</td><td class="email">info@cfpalencia.com</td></tr>
+        <tr><td><strong>Gimnástica Segoviana</strong></td><td class="ciudad">Segovia</td><td class="cat">2ª RFEF</td><td class="fed">~290</td><td class="web">gimnasticasegoviana.com</td><td class="email">info@gimnasticasegoviana.com</td></tr>
+        <tr><td><strong>Burgos Promesas</strong></td><td class="ciudad">Burgos</td><td class="cat">3ª RFEF</td><td class="fed">~270</td><td class="web">burgospromesas.com</td><td class="email">info@burgospromesas.com</td></tr>
+        <tr><td><strong>Real Ávila CF</strong></td><td class="ciudad">Ávila</td><td class="cat">3ª RFEF</td><td class="fed">~210</td><td class="web">realavilacf.es</td><td class="email">info@realavilacf.es</td></tr>
+        <tr><td><strong>CD Numancia</strong></td><td class="ciudad">Soria</td><td class="cat">2ª RFEF</td><td class="fed">~350</td><td class="web">cdnumancia.com</td><td class="email">info@cdnumancia.com</td></tr>
+        <tr><td><strong>CF Talavera</strong></td><td class="ciudad">Talavera de la Reina</td><td class="cat">2ª RFEF</td><td class="fed">~290</td><td class="web">cftalaveradelareina.com</td><td class="email">info@cftalaveradelareina.com</td></tr>
+        <tr><td><strong>Atlético Astorga</strong></td><td class="ciudad">Astorga (León)</td><td class="cat">3ª RFEF</td><td class="fed">~180</td><td class="web">atleticoastorga.com</td><td class="email">info@atleticoastorga.com</td></tr>
+        <tr><td><strong>Cacereño CF</strong></td><td class="ciudad">Cáceres (Extremadura)</td><td class="cat">2ª RFEF</td><td class="fed">~340</td><td class="web">cpcaceres.com</td><td class="email">info@cpcaceres.com</td></tr>
+        <tr><td><strong>Mérida AD</strong></td><td class="ciudad">Mérida</td><td class="cat">2ª RFEF</td><td class="fed">~310</td><td class="web">meridaad.com</td><td class="email">info@meridaad.com</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</section>
+
+<!-- =================================================================== -->
+<section id="icp-europe">
+  <div class="container">
+    <span class="kicker">A2 / Dolor del cliente · Europa (expansión Y3-Y4)</span>
+    <h2>Clubes ICP Europa — top países</h2>
+    <p>La expansión europea no debería ser antes de Y3. Aquí los top países priorizados por: idioma afín, tamaño de mercado base, barrera regulatoria (RGPD unificado UE), y existencia de federaciones regionales similares a las españolas.</p>
+
+    <!-- Portugal -->
+    <h3><span class="flag">🇵🇹</span>Portugal · mercado n.º 1 Europa</h3>
+    <p><strong>Federação Portuguesa de Futebol:</strong> <a href="https://fpf.pt" target="_blank" style="color:var(--cyan)">fpf.pt</a> · Directorio asociaciones distritales: <a href="https://fpf.pt/Institucional/Associacoes-Distritais" target="_blank" style="color:var(--cyan)">fpf.pt/Institucional/Associacoes-Distritais</a></p>
+    <div class="overflow-wrap">
+    <table>
+      <thead><tr><th>Club</th><th>Ciudad</th><th>Categoría</th><th>Fichas est.</th><th>Web</th><th>Email tipo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>GD Chaves</strong></td><td class="ciudad">Chaves</td><td class="cat">Liga Portugal 2</td><td class="fed">~340</td><td class="web">gdchaves.pt</td><td class="email">geral@gdchaves.pt</td></tr>
+        <tr><td><strong>FC Penafiel</strong></td><td class="ciudad">Penafiel</td><td class="cat">Liga 2</td><td class="fed">~280</td><td class="web">fcpenafiel.pt</td><td class="email">geral@fcpenafiel.pt</td></tr>
+        <tr><td><strong>Leixões SC</strong></td><td class="ciudad">Matosinhos</td><td class="cat">Liga 2</td><td class="fed">~360</td><td class="web">leixoessc.pt</td><td class="email">geral@leixoessc.pt</td></tr>
+        <tr><td><strong>União de Leiria</strong></td><td class="ciudad">Leiria</td><td class="cat">Liga 2</td><td class="fed">~310</td><td class="web">uniaoleiria.pt</td><td class="email">geral@uniaoleiria.pt</td></tr>
+        <tr><td><strong>CD Trofense</strong></td><td class="ciudad">Trofa</td><td class="cat">Liga 3</td><td class="fed">~220</td><td class="web">cdtrofense.pt</td><td class="email">geral@cdtrofense.pt</td></tr>
+        <tr><td><strong>Sporting da Covilhã</strong></td><td class="ciudad">Covilhã</td><td class="cat">Liga 3</td><td class="fed">~260</td><td class="web">scc.pt</td><td class="email">geral@scc.pt</td></tr>
+        <tr><td><strong>AD Oliveirense</strong></td><td class="ciudad">Oliveira de Azeméis</td><td class="cat">Liga 3</td><td class="fed">~240</td><td class="web">adoliveirense.com</td><td class="email">geral@adoliveirense.com</td></tr>
+        <tr><td><strong>FC Vizela</strong></td><td class="ciudad">Vizela</td><td class="cat">Liga 2</td><td class="fed">~290</td><td class="web">fcvizela.pt</td><td class="email">geral@fcvizela.pt</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <!-- Italia -->
+    <h3><span class="flag">🇮🇹</span>Italia · Serie C + dilettanti</h3>
+    <p><strong>FIGC:</strong> <a href="https://figc.it" target="_blank" style="color:var(--cyan)">figc.it</a> · <strong>LND (amateur):</strong> <a href="https://lnd.it" target="_blank" style="color:var(--cyan)">lnd.it</a></p>
+    <div class="overflow-wrap">
+    <table>
+      <thead><tr><th>Club</th><th>Ciudad</th><th>Categoría</th><th>Fichas est.</th><th>Web</th><th>Email tipo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Triestina</strong></td><td class="ciudad">Trieste</td><td class="cat">Serie C</td><td class="fed">~380</td><td class="web">us-triestina.it</td><td class="email">info@us-triestina.it</td></tr>
+        <tr><td><strong>AC Pro Vercelli</strong></td><td class="ciudad">Vercelli</td><td class="cat">Serie C</td><td class="fed">~340</td><td class="web">fcprovercelli.it</td><td class="email">info@fcprovercelli.it</td></tr>
+        <tr><td><strong>Pro Patria</strong></td><td class="ciudad">Busto Arsizio</td><td class="cat">Serie C</td><td class="fed">~310</td><td class="web">propatria.it</td><td class="email">info@propatria.it</td></tr>
+        <tr><td><strong>Lucchese 1905</strong></td><td class="ciudad">Lucca</td><td class="cat">Serie C</td><td class="fed">~280</td><td class="web">lucchese1905.it</td><td class="email">info@lucchese1905.it</td></tr>
+        <tr><td><strong>AC Rimini</strong></td><td class="ciudad">Rimini</td><td class="cat">Serie C</td><td class="fed">~330</td><td class="web">riminifc.it</td><td class="email">info@riminifc.it</td></tr>
+        <tr><td><strong>Pisa SC Youth</strong></td><td class="ciudad">Pisa</td><td class="cat">Serie B</td><td class="fed">~410</td><td class="web">pisasportingclub.com</td><td class="email">info@pisasportingclub.com</td></tr>
+        <tr><td><strong>AlbinoLeffe</strong></td><td class="ciudad">Albino / Leffe</td><td class="cat">Serie C</td><td class="fed">~290</td><td class="web">albinoleffe.com</td><td class="email">info@albinoleffe.com</td></tr>
+        <tr><td><strong>FC Legnago Salus</strong></td><td class="ciudad">Legnago</td><td class="cat">Serie C</td><td class="fed">~220</td><td class="web">legnagosalus.it</td><td class="email">info@legnagosalus.it</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <!-- Francia -->
+    <h3><span class="flag">🇫🇷</span>Francia · National 2 + N3</h3>
+    <p><strong>FFF:</strong> <a href="https://fff.fr" target="_blank" style="color:var(--cyan)">fff.fr</a> · Ligas regionales: <a href="https://fff.fr/ligues" target="_blank" style="color:var(--cyan)">fff.fr/ligues</a></p>
+    <div class="overflow-wrap">
+    <table>
+      <thead><tr><th>Club</th><th>Ciudad</th><th>Categoría</th><th>Fichas est.</th><th>Web</th><th>Email tipo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Red Star FC</strong></td><td class="ciudad">Saint-Ouen (París)</td><td class="cat">Ligue 2</td><td class="fed">~440</td><td class="web">redstar.fr</td><td class="email">contact@redstar.fr</td></tr>
+        <tr><td><strong>Pau FC</strong></td><td class="ciudad">Pau</td><td class="cat">National</td><td class="fed">~320</td><td class="web">paufc.com</td><td class="email">contact@paufc.com</td></tr>
+        <tr><td><strong>AS Beauvais</strong></td><td class="ciudad">Beauvais</td><td class="cat">National 2</td><td class="fed">~280</td><td class="web">asbo.fr</td><td class="email">contact@asbo.fr</td></tr>
+        <tr><td><strong>US Quevilly-Rouen</strong></td><td class="ciudad">Rouen</td><td class="cat">National</td><td class="fed">~360</td><td class="web">quevillyrouenmetropole.fr</td><td class="email">contact@qrm.fr</td></tr>
+        <tr><td><strong>FC Chambly</strong></td><td class="ciudad">Chambly</td><td class="cat">National 2</td><td class="fed">~240</td><td class="web">fcchambly-oise.com</td><td class="email">contact@fcchambly-oise.com</td></tr>
+        <tr><td><strong>Stade Briochin</strong></td><td class="ciudad">Saint-Brieuc</td><td class="cat">National 2</td><td class="fed">~260</td><td class="web">stade-briochin.fr</td><td class="email">contact@stade-briochin.fr</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <!-- Alemania -->
+    <h3><span class="flag">🇩🇪</span>Alemania · Regionalliga</h3>
+    <p><strong>DFB:</strong> <a href="https://dfb.de" target="_blank" style="color:var(--cyan)">dfb.de</a> · Directorio regional: <a href="https://dfb.de/landesverbaende" target="_blank" style="color:var(--cyan)">dfb.de/landesverbaende</a></p>
+    <div class="overflow-wrap">
+    <table>
+      <thead><tr><th>Club</th><th>Ciudad</th><th>Categoría</th><th>Fichas est.</th><th>Web</th><th>Email tipo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Rot-Weiss Essen</strong></td><td class="ciudad">Essen</td><td class="cat">3. Liga</td><td class="fed">~460</td><td class="web">rot-weiss-essen.de</td><td class="email">info@rot-weiss-essen.de</td></tr>
+        <tr><td><strong>Preußen Münster</strong></td><td class="ciudad">Münster</td><td class="cat">2. Bundesliga</td><td class="fed">~520</td><td class="web">preussen-muenster.de</td><td class="email">info@preussen-muenster.de</td></tr>
+        <tr><td><strong>Alemannia Aachen</strong></td><td class="ciudad">Aachen</td><td class="cat">3. Liga</td><td class="fed">~440</td><td class="web">alemannia-aachen.de</td><td class="email">info@alemannia-aachen.de</td></tr>
+        <tr><td><strong>Rot-Weiß Oberhausen</strong></td><td class="ciudad">Oberhausen</td><td class="cat">Regionalliga</td><td class="fed">~320</td><td class="web">rwo-online.de</td><td class="email">info@rwo-online.de</td></tr>
+        <tr><td><strong>Kickers Offenbach</strong></td><td class="ciudad">Offenbach</td><td class="cat">Regionalliga</td><td class="fed">~380</td><td class="web">kickers-offenbach.de</td><td class="email">info@kickers-offenbach.de</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <!-- Nordics -->
+    <h3><span class="flag">🇸🇪🇩🇰🇳🇴🇫🇮</span>Nórdicos · mercado premium</h3>
+    <p>Alto poder adquisitivo · inglés nativo en management · digitalización ya avanzada (menos dolor, más ticket). Atacar en Y4+.</p>
+    <div class="overflow-wrap">
+    <table>
+      <thead><tr><th>Club</th><th>País / Ciudad</th><th>Cat.</th><th>Fichas est.</th><th>Web</th><th>Email tipo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>BK Häcken</strong></td><td class="ciudad">🇸🇪 Gotemburgo</td><td class="cat">Allsvenskan</td><td class="fed">~380</td><td class="web">bkhacken.se</td><td class="email">info@bkhacken.se</td></tr>
+        <tr><td><strong>Örebro SK</strong></td><td class="ciudad">🇸🇪 Örebro</td><td class="cat">Superettan</td><td class="fed">~320</td><td class="web">osk.se</td><td class="email">info@osk.se</td></tr>
+        <tr><td><strong>Silkeborg IF</strong></td><td class="ciudad">🇩🇰 Silkeborg</td><td class="cat">Superliga</td><td class="fed">~290</td><td class="web">silkeborgif.com</td><td class="email">info@silkeborgif.com</td></tr>
+        <tr><td><strong>Randers FC</strong></td><td class="ciudad">🇩🇰 Randers</td><td class="cat">Superliga</td><td class="fed">~340</td><td class="web">randersfc.dk</td><td class="email">info@randersfc.dk</td></tr>
+        <tr><td><strong>Sarpsborg 08</strong></td><td class="ciudad">🇳🇴 Sarpsborg</td><td class="cat">Eliteserien</td><td class="fed">~260</td><td class="web">sarpsborg08.no</td><td class="email">info@sarpsborg08.no</td></tr>
+        <tr><td><strong>FC Lahti</strong></td><td class="ciudad">🇫🇮 Lahti</td><td class="cat">Veikkausliiga</td><td class="fed">~210</td><td class="web">fclahti.fi</td><td class="email">info@fclahti.fi</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <!-- Benelux -->
+    <h3><span class="flag">🇧🇪🇳🇱</span>Bélgica + Países Bajos</h3>
+    <div class="overflow-wrap">
+    <table>
+      <thead><tr><th>Club</th><th>País / Ciudad</th><th>Cat.</th><th>Fichas est.</th><th>Web</th><th>Email tipo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>KV Mechelen</strong></td><td class="ciudad">🇧🇪 Mechelen</td><td class="cat">Pro League</td><td class="fed">~420</td><td class="web">kvmechelen.be</td><td class="email">info@kvmechelen.be</td></tr>
+        <tr><td><strong>SK Beveren</strong></td><td class="ciudad">🇧🇪 Beveren</td><td class="cat">Challenger Pro</td><td class="fed">~310</td><td class="web">skbeveren.be</td><td class="email">info@skbeveren.be</td></tr>
+        <tr><td><strong>Lommel SK</strong></td><td class="ciudad">🇧🇪 Lommel</td><td class="cat">Challenger Pro</td><td class="fed">~280</td><td class="web">lommelsk.com</td><td class="email">info@lommelsk.com</td></tr>
+        <tr><td><strong>Telstar Velsen</strong></td><td class="ciudad">🇳🇱 Velsen</td><td class="cat">Eerste Divisie</td><td class="fed">~290</td><td class="web">sctelstar.nl</td><td class="email">info@sctelstar.nl</td></tr>
+        <tr><td><strong>FC Dordrecht</strong></td><td class="ciudad">🇳🇱 Dordrecht</td><td class="cat">Eerste Divisie</td><td class="fed">~270</td><td class="web">fcdordrecht.nl</td><td class="email">info@fcdordrecht.nl</td></tr>
+        <tr><td><strong>Go Ahead Eagles</strong></td><td class="ciudad">🇳🇱 Deventer</td><td class="cat">Eredivisie</td><td class="fed">~360</td><td class="web">ga-eagles.nl</td><td class="email">info@ga-eagles.nl</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</section>
+
+<!-- =================================================================== -->
+<section id="volume">
+  <div class="container">
+    <span class="kicker">B / Big volume · cantera masiva (fase 2)</span>
+    <h2>Clubes con gran volumen de fichas + academias élite</h2>
+    <p>Clubes profesionales con cantera de &gt;1.000 jugadores federados y/o alto flujo de caja (TV, merchandising, patrocinio) <strong>no correlacionado con cantera</strong>. Ciclo de venta 6-12 meses. <strong>Target fase 2 (Y3+)</strong>. Aquí el interlocutor es Dirección de Cantera / Fundación / Área Digital, no secretaría.</p>
+
+    <div class="warn">
+      <strong>⚠️ Realidad comercial.</strong> Estos clubes ya tienen software interno o contratos enterprise. El pitch NO es "usa FutbolBase para gestionar tu cantera" — es "licencia FutbolBase para tus familias y jugadores amateur afiliados a tu academia / escuela / franquicia". Ticket potencial 5.000-50.000€/año.
+    </div>
+
+    <!-- España top canteras -->
+    <h3><span class="flag">🇪🇸</span>Top canteras España · 1ª División</h3>
+    <div class="overflow-wrap">
+    <table>
+      <thead><tr><th>Club</th><th>Ciudad</th><th>Cantera</th><th>Fichas totales est.</th><th>Caja no-cantera</th><th>Web</th></tr></thead>
+      <tbody>
+        <tr><td><strong>FC Barcelona</strong> (La Masia)</td><td class="ciudad">Barcelona</td><td class="cat">+ fundación</td><td class="fed">~3.800</td><td>🟢 muy alta</td><td class="web">fcbarcelona.com</td></tr>
+        <tr><td><strong>Real Madrid CF</strong> (La Fábrica)</td><td class="ciudad">Madrid</td><td class="cat">+ fundación</td><td class="fed">~3.200</td><td>🟢 muy alta</td><td class="web">realmadrid.com</td></tr>
+        <tr><td><strong>Atlético de Madrid</strong> (Cerro Espino)</td><td class="ciudad">Madrid</td><td class="cat">+ fundación</td><td class="fed">~2.600</td><td>🟢 alta</td><td class="web">atleticodemadrid.com</td></tr>
+        <tr><td><strong>Athletic Club</strong> (Lezama)</td><td class="ciudad">Bilbao</td><td class="cat">propia</td><td class="fed">~1.800</td><td>🟡 media</td><td class="web">athletic-club.eus</td></tr>
+        <tr><td><strong>Villarreal CF</strong></td><td class="ciudad">Villarreal</td><td class="cat">muy grande</td><td class="fed">~2.400</td><td>🟢 alta (CL)</td><td class="web">villarrealcf.es</td></tr>
+        <tr><td><strong>Real Sociedad</strong> (Zubieta)</td><td class="ciudad">San Sebastián</td><td class="cat">propia</td><td class="fed">~1.600</td><td>🟡 media</td><td class="web">realsociedad.eus</td></tr>
+        <tr><td><strong>Valencia CF</strong></td><td class="ciudad">Valencia</td><td class="cat">muy grande</td><td class="fed">~2.000</td><td>🟡 media</td><td class="web">valenciacf.com</td></tr>
+        <tr><td><strong>Sevilla FC</strong></td><td class="ciudad">Sevilla</td><td class="cat">muy grande</td><td class="fed">~2.200</td><td>🟢 alta</td><td class="web">sevillafc.es</td></tr>
+        <tr><td><strong>Real Betis Balompié</strong></td><td class="ciudad">Sevilla</td><td class="cat">muy grande</td><td class="fed">~1.900</td><td>🟢 alta</td><td class="web">realbetisbalompie.es</td></tr>
+        <tr><td><strong>RC Celta de Vigo</strong></td><td class="ciudad">Vigo</td><td class="cat">grande</td><td class="fed">~1.400</td><td>🟡 media</td><td class="web">celtavigo.net</td></tr>
+        <tr><td><strong>RCD Espanyol</strong></td><td class="ciudad">Cornellà</td><td class="cat">grande</td><td class="fed">~1.600</td><td>🟡 media</td><td class="web">rcdespanyol.com</td></tr>
+        <tr><td><strong>Getafe CF</strong></td><td class="ciudad">Getafe</td><td class="cat">mediana</td><td class="fed">~900</td><td>🟡 media</td><td class="web">getafecf.com</td></tr>
+        <tr><td><strong>Rayo Vallecano</strong></td><td class="ciudad">Madrid</td><td class="cat">mediana</td><td class="fed">~1.100</td><td>🟡 media</td><td class="web">rayovallecano.es</td></tr>
+        <tr><td><strong>RCD Mallorca</strong></td><td class="ciudad">Palma</td><td class="cat">mediana</td><td class="fed">~1.200</td><td>🟡 media</td><td class="web">rcdmallorca.es</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <!-- 2ª División caja alta -->
+    <h3>🟦 2ª División España · flujo de caja alto, cantera mediana</h3>
+    <div class="overflow-wrap">
+    <table>
+      <thead><tr><th>Club</th><th>Ciudad</th><th>Cat.</th><th>Fichas</th><th>Caja alta?</th><th>Web</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Deportivo La Coruña</strong></td><td class="ciudad">A Coruña</td><td class="cat">2ª Div</td><td class="fed">~1.100</td><td>🟢 sí (marca)</td><td class="web">rcdeportivo.es</td></tr>
+        <tr><td><strong>Real Zaragoza</strong></td><td class="ciudad">Zaragoza</td><td class="cat">2ª Div</td><td class="fed">~1.400</td><td>🟢 sí (SAD)</td><td class="web">realzaragoza.com</td></tr>
+        <tr><td><strong>Real Oviedo</strong></td><td class="ciudad">Oviedo</td><td class="cat">2ª Div</td><td class="fed">~900</td><td>🟢 sí (SAD)</td><td class="web">realoviedo.com</td></tr>
+        <tr><td><strong>Sporting Gijón</strong></td><td class="ciudad">Gijón</td><td class="cat">2ª Div</td><td class="fed">~1.300</td><td>🟢 sí</td><td class="web">realsporting.com</td></tr>
+        <tr><td><strong>Málaga CF</strong></td><td class="ciudad">Málaga</td><td class="cat">2ª Div</td><td class="fed">~1.200</td><td>🟡 media</td><td class="web">malagacf.com</td></tr>
+        <tr><td><strong>Granada CF</strong></td><td class="ciudad">Granada</td><td class="cat">2ª Div</td><td class="fed">~1.000</td><td>🟡 media</td><td class="web">granadacf.es</td></tr>
+        <tr><td><strong>Cádiz CF</strong></td><td class="ciudad">Cádiz</td><td class="cat">2ª Div</td><td class="fed">~950</td><td>🟡 media</td><td class="web">cadizcf.com</td></tr>
+        <tr><td><strong>UD Almería</strong></td><td class="ciudad">Almería</td><td class="cat">2ª Div</td><td class="fed">~800</td><td>🟡 media</td><td class="web">udalmeriasad.com</td></tr>
+        <tr><td><strong>Burgos CF</strong></td><td class="ciudad">Burgos</td><td class="cat">2ª Div</td><td class="fed">~600</td><td>🟡 media</td><td class="web">burgoscf.es</td></tr>
+        <tr><td><strong>Racing Santander</strong></td><td class="ciudad">Santander</td><td class="cat">2ª Div</td><td class="fed">~1.100</td><td>🟢 sí (SAD)</td><td class="web">realracingclub.es</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <!-- Academias privadas caja alta -->
+    <h3>💎 Academias privadas premium · mucha caja, pocos jugadores</h3>
+    <p>Target muy específico: pagan 15.000-40.000€/año por jugador con internado. <strong>Flujo de caja no proviene de cantera federada amateur</strong>, sino del modelo boarding school. Encaje FutbolBase bajo hoy; posible partnership a futuro.</p>
+    <div class="overflow-wrap">
+    <table>
+      <thead><tr><th>Academia</th><th>Ciudad</th><th>Modelo</th><th>Jugadores</th><th>Tarifa anual</th><th>Web</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Marcet Football Academy</strong></td><td class="ciudad">Sant Cugat (Barcelona)</td><td class="cat">Boarding</td><td class="fed">~250</td><td>30-40k€</td><td class="web">marcet.com</td></tr>
+        <tr><td><strong>SIA Academy</strong></td><td class="ciudad">Villena (Alicante)</td><td class="cat">Boarding</td><td class="fed">~180</td><td>28-35k€</td><td class="web">siaacademy.com</td></tr>
+        <tr><td><strong>Residency Academy Valencia</strong></td><td class="ciudad">Valencia</td><td class="cat">Boarding</td><td class="fed">~120</td><td>25-32k€</td><td class="web">residencyacademy.com</td></tr>
+        <tr><td><strong>Kaptiva Sports Academy</strong></td><td class="ciudad">Barcelona</td><td class="cat">Boarding</td><td class="fed">~200</td><td>30-38k€</td><td class="web">kaptivasports.com</td></tr>
+        <tr><td><strong>InterSoccer Academy</strong></td><td class="ciudad">Madrid (internacional)</td><td class="cat">Campus + clinics</td><td class="fed">~800</td><td>800€/semana</td><td class="web">intersoccer.es</td></tr>
+        <tr><td><strong>World Talent Academy</strong></td><td class="ciudad">Benidorm</td><td class="cat">Boarding</td><td class="fed">~150</td><td>25-30k€</td><td class="web">wtafootball.com</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <!-- Top Europa cantera -->
+    <h3>🌍 Top canteras Europa (academias legendarias)</h3>
+    <div class="overflow-wrap">
+    <table>
+      <thead><tr><th>Club</th><th>País / Ciudad</th><th>Academia</th><th>Fichas</th><th>Web</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Ajax Amsterdam</strong></td><td class="ciudad">🇳🇱 Amsterdam</td><td class="cat">De Toekomst</td><td class="fed">~1.400</td><td class="web">ajax.nl</td></tr>
+        <tr><td><strong>SL Benfica</strong></td><td class="ciudad">🇵🇹 Lisboa</td><td class="cat">Seixal</td><td class="fed">~2.600</td><td class="web">slbenfica.pt</td></tr>
+        <tr><td><strong>Sporting CP</strong></td><td class="ciudad">🇵🇹 Lisboa</td><td class="cat">Alcochete</td><td class="fed">~2.400</td><td class="web">sporting.pt</td></tr>
+        <tr><td><strong>FC Porto</strong></td><td class="ciudad">🇵🇹 Porto</td><td class="cat">Olival</td><td class="fed">~2.200</td><td class="web">fcporto.pt</td></tr>
+        <tr><td><strong>Olympique Lyonnais</strong></td><td class="ciudad">🇫🇷 Lyon</td><td class="cat">OL Academy</td><td class="fed">~1.800</td><td class="web">ol.fr</td></tr>
+        <tr><td><strong>Paris Saint-Germain</strong></td><td class="ciudad">🇫🇷 París</td><td class="cat">Campus PSG</td><td class="fed">~1.600</td><td class="web">psg.fr</td></tr>
+        <tr><td><strong>AS Monaco</strong></td><td class="ciudad">🇲🇨 Monaco</td><td class="cat">La Turbie</td><td class="fed">~1.200</td><td class="web">asmonaco.com</td></tr>
+        <tr><td><strong>Atalanta BC</strong></td><td class="ciudad">🇮🇹 Bergamo</td><td class="cat">Zingonia</td><td class="fed">~2.000</td><td class="web">atalanta.it</td></tr>
+        <tr><td><strong>Empoli FC</strong></td><td class="ciudad">🇮🇹 Empoli</td><td class="cat">cantera histórica</td><td class="fed">~1.400</td><td class="web">empolifc.com</td></tr>
+        <tr><td><strong>Borussia Dortmund</strong></td><td class="ciudad">🇩🇪 Dortmund</td><td class="cat">Hohenbuschei</td><td class="fed">~1.600</td><td class="web">bvb.de</td></tr>
+        <tr><td><strong>Bayer 04 Leverkusen</strong></td><td class="ciudad">🇩🇪 Leverkusen</td><td class="cat">propia</td><td class="fed">~1.400</td><td class="web">bayer04.de</td></tr>
+        <tr><td><strong>RSC Anderlecht</strong></td><td class="ciudad">🇧🇪 Bruselas</td><td class="cat">Neerpede</td><td class="fed">~1.800</td><td class="web">rsca.be</td></tr>
+        <tr><td><strong>Club Brugge KV</strong></td><td class="ciudad">🇧🇪 Brujas</td><td class="cat">propia</td><td class="fed">~1.200</td><td class="web">clubbrugge.be</td></tr>
+        <tr><td><strong>KRC Genk</strong></td><td class="ciudad">🇧🇪 Genk</td><td class="cat">propia (histórica)</td><td class="fed">~1.400</td><td class="web">krcgenk.be</td></tr>
+        <tr><td><strong>Dinamo Zagreb</strong></td><td class="ciudad">🇭🇷 Zagreb</td><td class="cat">Hitrec-Kacijan</td><td class="fed">~1.800</td><td class="web">gnkdinamo.hr</td></tr>
+        <tr><td><strong>Red Bull Salzburg</strong></td><td class="ciudad">🇦🇹 Salzburg</td><td class="cat">RB Academy</td><td class="fed">~1.200</td><td class="web">redbullsalzburg.at</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</section>
+
+<!-- =================================================================== -->
+<section id="contacts">
+  <div class="container">
+    <span class="kicker">C / Cómo conseguir el contacto real</span>
+    <h2>Metodología de prospección ética</h2>
+
+    <p>Como los emails/teléfonos cambian cada temporada, usa este orden para obtener contacto vigente:</p>
+
+    <div class="card green">
+      <h4 style="color:var(--green)">Paso 1 · Directorio oficial de la federación territorial</h4>
+      <p>Cada federación autonómica (FFCV, FCF, RFEF Madrid, etc.) mantiene un <strong>directorio público</strong> de todos sus clubes con el contacto institucional vigente. Es la fuente más confiable. Ejemplos:</p>
+      <ul style="color:var(--slate);margin-left:20px">
+        <li><a href="https://ffcv.es/clubs" target="_blank" style="color:var(--cyan)">ffcv.es/clubs</a> — Valencia</li>
+        <li><a href="https://fcf.cat/clubs" target="_blank" style="color:var(--cyan)">fcf.cat/clubs</a> — Cataluña</li>
+        <li><a href="https://rfaf.es/clubs" target="_blank" style="color:var(--cyan)">rfaf.es/clubs</a> — Andalucía</li>
+        <li><a href="https://rffm.com/clubes" target="_blank" style="color:var(--cyan)">rffm.com/clubes</a> — Madrid</li>
+      </ul>
+    </div>
+
+    <div class="card cyan">
+      <h4 style="color:var(--cyan)">Paso 2 · Web oficial del club · página "Contacto"</h4>
+      <p>Todas las webs incluidas en este documento tienen página "Contacto" / "Contacta" donde publican teléfono, email y dirección postal vigentes. Es más rápido que el directorio federativo pero requiere visita individual.</p>
+    </div>
+
+    <div class="card orange">
+      <h4 style="color:var(--orange)">Paso 3 · LinkedIn Sales Navigator · filtrar por persona decisión</h4>
+      <p>Buscar cargos concretos por club: <em>"Director Deportivo"</em>, <em>"Coordinador de cantera"</em>, <em>"Gerente"</em>, <em>"Secretario técnico"</em>. En clubes pequeños es 1 persona, fácil de identificar. LinkedIn además da email vía herramientas como Apollo.io o Hunter.io (2-3€/lead verificado).</p>
+    </div>
+
+    <div class="card purple">
+      <h4 style="color:var(--purple)">Paso 4 · Registro Mercantil · solo para SAD / clubes profesionales</h4>
+      <p>Los clubes profesionales constituidos como SAD publican cuentas anuales en el <a href="https://www.registradores.org" target="_blank" style="color:var(--cyan)">Registro Mercantil</a>. Ahí obtienes: administradores, facturación, contacto fiscal. Útil para los clubes de la sección B (big volume).</p>
+    </div>
+
+    <div class="card green">
+      <h4 style="color:var(--green)">Paso 5 · Eventos sectoriales · contacto presencial</h4>
+      <ul style="color:var(--slate);margin-left:20px">
+        <li><strong>Soccerex Europa</strong> (Manchester, otoño) — C-level clubes pro</li>
+        <li><strong>World Football Summit</strong> (Madrid, noviembre) — directivos españoles</li>
+        <li><strong>Congreso AFE</strong> (bianual) — directores de cantera</li>
+        <li><strong>Congresos RFEF territoriales</strong> — clubes amateur de la CCAA</li>
+        <li><strong>Jornadas formativas FFCV</strong> — clubes valencianos (50+ presenciales/año)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- =================================================================== -->
+<section id="tracking">
+  <div class="container">
+    <span class="kicker">D / Tracking pipeline</span>
+    <h2>Cómo usar este listado en tu CRM</h2>
+
+    <p>Recomendado: <strong>Notion / Airtable / HubSpot free</strong>. Columnas mínimas para tracking:</p>
+
+    <div class="overflow-wrap">
+    <table>
+      <thead><tr><th>Columna</th><th>Valores posibles</th><th>Por qué</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Club</strong></td><td>Nombre completo oficial</td><td>Clave única</td></tr>
+        <tr><td><strong>Lista</strong></td><td>ICP dolor · Big volume</td><td>Segmentar pipeline</td></tr>
+        <tr><td><strong>País / CCAA / Ciudad</strong></td><td>p.ej. ES/Valencia/Alzira</td><td>Agrupar campañas geo</td></tr>
+        <tr><td><strong>Categoría</strong></td><td>2ª RFEF · 3ª RFEF · Preferente · etc.</td><td>Prioridad temporal</td></tr>
+        <tr><td><strong>Fichas est.</strong></td><td>Número</td><td>Ordenar por potencial</td></tr>
+        <tr><td><strong>Web oficial</strong></td><td>URL</td><td>Fuente contacto</td></tr>
+        <tr><td><strong>Email contacto</strong></td><td>Verificado · tipo genérico</td><td>Outreach</td></tr>
+        <tr><td><strong>Decisor</strong></td><td>Nombre + cargo (cuando identificado)</td><td>Follow-up personalizado</td></tr>
+        <tr><td><strong>Estado</strong></td><td>🔍 Investigación · ✉️ Contactado · 📅 Reunión agendada · 🤝 Negociación · ✅ Cerrado · ❌ Perdido</td><td>Pipeline</td></tr>
+        <tr><td><strong>Último contacto</strong></td><td>Fecha</td><td>Cadencia follow-up</td></tr>
+        <tr><td><strong>Notas</strong></td><td>Texto libre</td><td>Contexto conversación</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h3>📊 Cadencia de outreach recomendada</h3>
+    <ul>
+      <li><strong>Día 0</strong>: email inicial personalizado (max 120 palabras, 1 CTA: demo 15min).</li>
+      <li><strong>Día 4</strong>: follow-up corto (3 líneas) referenciando email anterior.</li>
+      <li><strong>Día 10</strong>: vídeo Loom de 2 min mostrando producto específico para ese club.</li>
+      <li><strong>Día 17</strong>: llamada en frío al teléfono público del club.</li>
+      <li><strong>Día 28</strong>: último intento con ángulo distinto (caso de éxito de club similar).</li>
+      <li>Si no hay respuesta tras 5 contactos → mover a "nurture" y reintentar en 3 meses.</li>
+    </ul>
+
+    <h3>🎯 Objetivos Y1 realistas</h3>
+    <div class="kpi-row">
+      <div class="kpi"><div class="v">180</div><div class="l">Clubes contactados Y1</div></div>
+      <div class="kpi"><div class="v">60</div><div class="l">Demos realizadas</div></div>
+      <div class="kpi"><div class="v">25</div><div class="l">Clubes cerrados</div></div>
+      <div class="kpi"><div class="v">14%</div><div class="l">Conversión contacto→cierre</div></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>FUTBOLBASE · PROSPECTING LIST v1.0 · ABRIL 2026</p>
+    <p style="margin-top:8px">Datos de fichas = estimaciones ±25% · Webs y emails verificar antes de contactar · Documento vivo</p>
+    <p style="margin-top:8px">© 2026 Krujens Tech SL · pedro.paredes@kenmei.ai</p>
+  </div>
+</footer>
+
+</body>
+</html>

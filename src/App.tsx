@@ -8,6 +8,7 @@ import { ThemeProvider } from './context/ThemeContext'
 import Toast from './components/ui/Toast'
 import PageTransition from './components/ui/PageTransition'
 import RouteFallback from './components/ui/RouteFallback'
+import ErrorBoundary from './components/ui/ErrorBoundary'
 
 // Keep onboarding/login eager (first paint), lazy-load the rest
 import OnboardingPage from './pages/OnboardingPage'
@@ -20,6 +21,7 @@ const ConversationPage = lazy(() => import('./pages/ConversationPage'))
 const CommunityPage    = lazy(() => import('./pages/CommunityPage'))
 const LeaguePage       = lazy(() => import('./pages/LeaguePage'))
 const ProfilePage      = lazy(() => import('./pages/ProfilePage'))
+const LandingPage      = lazy(() => import('./pages/LandingPage'))
 
 function AnimatedRoutes() {
   const location = useLocation()
@@ -32,6 +34,7 @@ function AnimatedRoutes() {
 
   return (
     <AnimatePresence mode="wait" initial={false}>
+      <ErrorBoundary>
       <Routes location={location} key={path}>
         <Route path="/"          element={<PageTransition variant={variant}><OnboardingPage /></PageTransition>} />
         <Route path="/login"     element={<PageTransition variant={variant}><LoginPage /></PageTransition>} />
@@ -42,8 +45,10 @@ function AnimatedRoutes() {
         <Route path="/community" element={<PageTransition variant={variant}><Suspense fallback={<RouteFallback />}><CommunityPage /></Suspense></PageTransition>} />
         <Route path="/league"    element={<PageTransition variant={variant}><Suspense fallback={<RouteFallback />}><LeaguePage /></Suspense></PageTransition>} />
         <Route path="/profile"   element={<PageTransition variant={variant}><Suspense fallback={<RouteFallback />}><ProfilePage /></Suspense></PageTransition>} />
+        <Route path="/landing"   element={<PageTransition variant="fade"><Suspense fallback={<RouteFallback />}><LandingPage /></Suspense></PageTransition>} />
         <Route path="*"          element={<Navigate to="/" replace />} />
       </Routes>
+      </ErrorBoundary>
     </AnimatePresence>
   )
 }

@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FutbolBase · Dossier comercial para clubes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F0F7FA; --card:#FFFFFF; --border:#D5E1EA;
+  --text:#0B1F2E; --slate:#304B60; --muted:#5E7A91;
+  --cyan:#0891B2; --cyan-dark:#075569; --cyan-soft:#E0F2FE;
+  --orange:#EA580C; --orange-soft:#FED7AA;
+  --green:#059669; --green-soft:#D1FAE5;
+  --red:#DC2626; --red-soft:#FEE2E2;
+  --navy:#082F49;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+.wrap{max-width:1180px;margin:0 auto;padding:36px 28px 80px}
+.nav{display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:14px 20px;background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:26px;position:sticky;top:12px;z-index:50}
+.nav .brand{font-family:'Barlow Condensed';font-weight:900;font-size:18px;margin-right:auto;color:var(--cyan)}
+.nav a{color:var(--slate);text-decoration:none;font-size:12px;font-weight:600}
+.nav a:hover{color:var(--cyan)}
+
+.cover{background:linear-gradient(135deg,var(--cyan-dark) 0%,var(--navy) 100%);color:#fff;border-radius:18px;padding:60px 40px;margin-bottom:40px;position:relative;overflow:hidden}
+.cover::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 20% 70%,rgba(234,88,12,0.25),transparent 50%);pointer-events:none}
+.cover .mark{display:inline-block;padding:6px 12px;border:1px solid rgba(255,255,255,0.3);border-radius:100px;font-family:'JetBrains Mono';font-size:10px;letter-spacing:0.22em;font-weight:700;margin-bottom:24px;position:relative}
+.cover h1{font-family:'Barlow Condensed';font-weight:900;font-size:clamp(42px,6vw,72px);line-height:1;margin-bottom:14px;position:relative}
+.cover .sub{font-size:18px;opacity:0.88;max-width:740px;position:relative}
+.cover .meta{display:flex;gap:30px;margin-top:30px;padding-top:24px;border-top:1px solid rgba(255,255,255,0.2);flex-wrap:wrap;position:relative}
+.cover .meta .m .k{font-family:'JetBrains Mono';font-size:10px;letter-spacing:0.18em;opacity:0.6;font-weight:700;display:block}
+.cover .meta .m .v{font-family:'Barlow Condensed';font-weight:700;font-size:18px;color:var(--orange)}
+
+h2{font-family:'Barlow Condensed';font-weight:800;font-size:clamp(28px,3.4vw,40px);line-height:1.1;margin-bottom:14px;color:var(--navy);letter-spacing:-0.01em}
+h3{font-family:'Barlow Condensed';font-weight:700;font-size:22px;margin:20px 0 10px;color:var(--cyan)}
+.kicker{font-family:'JetBrains Mono';font-size:11px;letter-spacing:0.22em;color:var(--cyan);text-transform:uppercase;font-weight:700;margin-bottom:6px}
+
+section{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:32px 36px;margin-bottom:24px;position:relative}
+section::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--cyan);border-radius:14px 0 0 14px}
+section .num{position:absolute;top:24px;right:32px;font-family:'Barlow Condensed';font-weight:900;font-size:60px;color:var(--cyan-soft);line-height:1}
+
+p{color:var(--slate);margin-bottom:12px;font-size:14.5px}
+ul,ol{margin:10px 0 14px 22px;color:var(--slate)}
+ul li,ol li{margin-bottom:6px;font-size:14.5px}
+strong{color:var(--navy)}
+
+.grid{display:grid;gap:16px;margin:16px 0}
+.g-2{grid-template-columns:repeat(2,1fr)}
+.g-3{grid-template-columns:repeat(3,1fr)}
+.g-4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:800px){.g-2,.g-3,.g-4{grid-template-columns:1fr}}
+
+.box{background:var(--cyan-soft);border-left:4px solid var(--cyan);padding:16px 20px;border-radius:0 10px 10px 0;margin:16px 0}
+.box strong{color:var(--cyan-dark)}
+.box-orange{background:var(--orange-soft);border-left-color:var(--orange)}
+.box-green{background:var(--green-soft);border-left-color:var(--green)}
+
+.tile{padding:18px;background:#FAFCFD;border:1px solid var(--border);border-radius:10px}
+.tile .ico{font-size:22px;margin-bottom:8px}
+.tile h4{font-family:'Barlow Condensed';font-weight:700;font-size:17px;color:var(--navy);margin-bottom:4px}
+.tile p{font-size:13px;color:var(--slate);margin-bottom:0;line-height:1.6}
+
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+table th,table td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)}
+table th{background:var(--cyan-soft);color:var(--cyan-dark);font-family:'JetBrains Mono';font-size:11px;letter-spacing:0.12em;font-weight:700;text-transform:uppercase}
+table td.num{font-family:'JetBrains Mono';text-align:right}
+table tr.highlight{background:var(--green-soft)}
+
+.price-card{background:var(--card);border:2px solid var(--border);border-radius:14px;padding:24px;position:relative}
+.price-card.featured{border-color:var(--cyan);box-shadow:0 8px 24px rgba(8,145,178,0.15)}
+.price-card .name{font-family:'JetBrains Mono';font-size:11px;letter-spacing:0.18em;color:var(--muted);font-weight:700;text-transform:uppercase}
+.price-card .p{font-family:'Barlow Condensed';font-weight:900;font-size:44px;color:var(--cyan);line-height:1;margin:10px 0 4px}
+.price-card .p small{font-size:14px;color:var(--muted);font-family:'Inter';font-weight:500}
+.price-card ul{list-style:none;margin:14px 0 0;padding:0}
+.price-card ul li{padding:6px 0;border-bottom:1px dashed var(--border);font-size:13px;color:var(--slate)}
+.price-card ul li::before{content:'✓ ';color:var(--green);font-weight:700}
+
+.roi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+.roi-row .s{padding:18px;background:linear-gradient(135deg,var(--cyan-soft) 0%,rgba(8,145,178,0.02) 100%);border:1px solid var(--border);border-radius:10px;text-align:center}
+.roi-row .s .v{font-family:'Barlow Condensed';font-weight:800;font-size:30px;color:var(--cyan);line-height:1}
+.roi-row .s .l{font-size:11px;color:var(--muted);font-family:'JetBrains Mono';letter-spacing:0.1em;margin-top:4px;text-transform:uppercase;font-weight:700}
+
+.tl{position:relative;padding-left:32px;margin-top:14px}
+.tl::before{content:'';position:absolute;left:10px;top:4px;bottom:4px;width:2px;background:var(--cyan-soft)}
+.tl .ph{position:relative;padding-bottom:20px}
+.tl .ph::before{content:'';position:absolute;left:-26px;top:4px;width:14px;height:14px;border-radius:50%;background:var(--cyan);border:3px solid var(--card);box-shadow:0 0 0 2px var(--cyan)}
+.tl .ph h4{font-family:'Barlow Condensed';font-weight:700;font-size:18px;color:var(--navy);margin-bottom:2px}
+.tl .ph p{font-size:13.5px;color:var(--slate);margin-bottom:0;line-height:1.6}
+
+.sign{margin-top:40px;padding:28px;background:linear-gradient(135deg,var(--cyan-soft) 0%,var(--orange-soft) 100%);border-radius:14px;text-align:center;border:1px solid var(--border)}
+.sign h3{color:var(--navy);font-size:24px}
+.sign p{font-size:14px;color:var(--slate);max-width:680px;margin:10px auto}
+.sign .btn-row{display:flex;gap:14px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+.sign .btn{padding:12px 22px;border-radius:10px;font-family:'JetBrains Mono';font-size:12px;font-weight:700;letter-spacing:0.1em;text-decoration:none;color:#fff;background:var(--cyan)}
+.sign .btn.sec{background:transparent;color:var(--cyan);border:2px solid var(--cyan)}
+
+footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--border);text-align:center;color:var(--muted);font-size:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="nav">
+  <span class="brand">🏆 FUTBOLBASE · DOSSIER CLUBES</span>
+  <a href="./proyecto-master.html">← Índice</a>
+  <a href="#resumen">Resumen</a>
+  <a href="#problemas">Problemas</a>
+  <a href="#funcionalidades">Funcionalidades</a>
+  <a href="#mejor">Por qué mejor</a>
+  <a href="#pricing">Pricing</a>
+  <a href="#roi">ROI</a>
+  <a href="#onboarding">Onboarding</a>
+</nav>
+
+<div class="cover">
+  <span class="mark">● DOSSIER COMERCIAL · CLUBES Y ACADEMIAS</span>
+  <h1>El sistema operativo<br>de tu club</h1>
+  <p class="sub">Gestión, comunicación, scouting, reporting federativo y visibilidad del talento. Todo en una plataforma. Pensada y diseñada para clubes base y academias.</p>
+  <div class="meta">
+    <div class="m"><span class="k">DIRIGIDO A</span><span class="v">Clubes amateur y academias</span></div>
+    <div class="m"><span class="k">TAM</span><span class="v">4.200 clubes CCVV · 30k España</span></div>
+    <div class="m"><span class="k">PRECIO LANZAMIENTO</span><span class="v">desde 9€/mes</span></div>
+    <div class="m"><span class="k">ONBOARDING</span><span class="v">72 horas · sin coste</span></div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<section id="resumen">
+  <span class="num">01</span>
+  <div class="kicker">Sección 01 / Resumen ejecutivo</div>
+  <h2>Lo que FutbolBase resuelve para tu club</h2>
+  <p><strong>Gestionar un club amateur en 2026</strong> implica cientos de tareas dispersas: alineaciones en Excel, convocatorias por WhatsApp, actas en papel, comunicación con padres por 14 grupos distintos, buscar talento boca a boca y reportar a la FFCV con formularios manuales.</p>
+  <p>FutbolBase unifica todo eso en <strong>una sola plataforma</strong>, gratis en su capa básica y desde 9€/mes en su tier completo. No sustituye tu trabajo — lo multiplica.</p>
+  <div class="roi-row">
+    <div class="s"><div class="v">80%</div><div class="l">Menos tiempo en gestión</div></div>
+    <div class="s"><div class="v">3×</div><div class="l">Más comunicación familia</div></div>
+    <div class="s"><div class="v">100%</div><div class="l">Actas digitales FFCV ready</div></div>
+    <div class="s"><div class="v">72h</div><div class="l">Onboarding completo</div></div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="problemas">
+  <span class="num">02</span>
+  <div class="kicker">Sección 02 / Los 7 problemas reales</div>
+  <h2>Lo que hoy te quita tiempo, energía y jugadores</h2>
+  <div class="grid g-2">
+    <div class="tile"><h4>1 · Comunicación en 14 WhatsApps</h4><p>Grupo del primer equipo, del cadete, del juvenil, de padres del alevín A, del alevín B... ingobernable y sin trazabilidad.</p></div>
+    <div class="tile"><h4>2 · Actas en papel</h4><p>Resultados, goleadores y cambios anotados a mano. Errores al transcribir al sistema FFCV.</p></div>
+    <div class="tile"><h4>3 · Convocatorias por voz</h4><p>Llamadas y mensajes sueltos. Nunca sabes con certeza quién viene hasta el día del partido.</p></div>
+    <div class="tile"><h4>4 · Sin histórico del jugador</h4><p>Cuando un jugador llega de otro club no tienes nada — ni stats, ni lesiones, ni nivel.</p></div>
+    <div class="tile"><h4>5 · Talento que se va</h4><p>Jugadores que destacan y acaban en otro club porque nadie les hizo seguimiento. Cero visibilidad.</p></div>
+    <div class="tile"><h4>6 · Reportes a la FFCV</h4><p>Formularios manuales, actas enviadas por email con 3 días de retraso, multas por plazos.</p></div>
+    <div class="tile"><h4>7 · Padres ansiosos</h4><p>Padres que preguntan sin parar porque no tienen información: cuándo juega, cuánto juega, cómo va.</p></div>
+    <div class="tile"><h4>8 · Coordinación entre categorías</h4><p>El coordinador no sabe qué pasa en cada equipo sin preguntar uno por uno.</p></div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="funcionalidades">
+  <span class="num">03</span>
+  <div class="kicker">Sección 03 / Qué incluye FutbolBase Club</div>
+  <h2>10 herramientas clave para tu club</h2>
+  <div class="grid g-2">
+    <div class="tile"><div class="ico">📋</div><h4>Dashboard club</h4><p>Vista única con todos tus equipos, próximos partidos, convocatorias, lesiones, bajas y reuniones.</p></div>
+    <div class="tile"><div class="ico">📱</div><h4>Convocatorias 1 click</h4><p>Selecciona jugadores, el sistema envía push + recordatorio. Respuesta confirmada/no antes de 24h.</p></div>
+    <div class="tile"><div class="ico">📝</div><h4>Actas digitales</h4><p>Resultado, goles, tarjetas y cambios desde el móvil. Export FFCV automático.</p></div>
+    <div class="tile"><div class="ico">🎯</div><h4>Alineaciones interactivas</h4><p>Arrastra jugadores al campo. Guarda plantillas. Comparte la alineación con el equipo.</p></div>
+    <div class="tile"><div class="ico">👥</div><h4>Gestión de plantilla</h4><p>Fichas completas, estado físico, licencias, documentación, pagos de cuota.</p></div>
+    <div class="tile"><div class="ico">💬</div><h4>Canal oficial del club</h4><p>Comunicación directa con jugadores, padres y entrenadores. Privado. Verificado. Sin ruido.</p></div>
+    <div class="tile"><div class="ico">🔍</div><h4>Scouting interno + externo</h4><p>Descubre talento de otros clubes filtrando por edad, posición, zona. Reclutamiento informado.</p></div>
+    <div class="tile"><div class="ico">📊</div><h4>Analítica de jugador</h4><p>Evolución partido a partido, comparativas entre jugadores de la plantilla, detección de promesas.</p></div>
+    <div class="tile"><div class="ico">💰</div><h4>Cobro de cuotas</h4><p>Cuotas mensuales, matrícula, torneos. Pasarela de pago integrada — cero excel de morosos.</p></div>
+    <div class="tile"><div class="ico">📈</div><h4>Informes exportables</h4><p>Reportes para federación, patrocinadores, junta directiva con 2 clicks.</p></div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="mejor">
+  <span class="num">04</span>
+  <div class="kicker">Sección 04 / Por qué esto es mejor que lo actual</div>
+  <h2>Comparativa directa · cómo gestionas hoy vs con FutbolBase</h2>
+
+  <table>
+    <thead><tr><th>Tarea</th><th>Hoy (WhatsApp + Excel)</th><th>Con FutbolBase</th></tr></thead>
+    <tbody>
+      <tr><td>Convocar a un partido</td><td>45 min · llamadas + WhatsApp</td><td>3 min · selector + push</td></tr>
+      <tr><td>Enviar un comunicado al club</td><td>14 grupos diferentes</td><td>1 canal oficial</td></tr>
+      <tr><td>Hacer un acta</td><td>30 min + email</td><td>5 min · desde móvil · auto a FFCV</td></tr>
+      <tr><td>Consultar el histórico de un jugador</td><td>Preguntar al coach anterior</td><td>Ficha digital completa</td></tr>
+      <tr><td>Saber quién no ha pagado la cuota</td><td>Hoja de cálculo + memoria</td><td>Dashboard con morosos automático</td></tr>
+      <tr><td>Fichar un jugador de otro club</td><td>Contactos personales</td><td>Buscador + stats verificadas</td></tr>
+      <tr><td>Explicar a los padres cómo va el hijo</td><td>Conversaciones informales</td><td>Ficha del jugador en tiempo real</td></tr>
+      <tr><td>Reportar a la FFCV</td><td>Manualmente cada mes</td><td>Automático en tiempo real</td></tr>
+    </tbody>
+  </table>
+
+  <div class="box-green box">
+    <strong>Beneficio directo:</strong> el club medio amateur ahorra <strong>15-20 horas/mes</strong> en gestión administrativa. Ese tiempo se dedica a lo que de verdad importa: entrenar y formar a los jugadores.
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="pricing">
+  <span class="num">05</span>
+  <div class="kicker">Sección 05 / Pricing para clubes</div>
+  <h2>3 tiers · launch pricing Y1</h2>
+
+  <div class="grid g-3">
+    <div class="price-card">
+      <div class="name">CLUB STARTER</div>
+      <div class="p">0€<small>/mes</small></div>
+      <p style="font-size:13px;color:var(--muted);margin:8px 0 0">Para clubes con menos de 30 jugadores. Gratis para siempre.</p>
+      <ul>
+        <li>Hasta 30 jugadores</li>
+        <li>2 equipos máximo</li>
+        <li>Canal oficial básico</li>
+        <li>Convocatorias ilimitadas</li>
+        <li>Actas digitales simples</li>
+      </ul>
+    </div>
+    <div class="price-card featured">
+      <div class="name" style="color:var(--cyan)">CLUB PRO · ⭐ RECOMENDADO</div>
+      <div class="p">9€<small>/mes · Y1 launch</small></div>
+      <p style="font-size:13px;color:var(--muted);margin:8px 0 0">Para clubes base hasta 100 jugadores. Precio Y5 target: 29€/mes.</p>
+      <ul>
+        <li>Hasta 100 jugadores</li>
+        <li>Equipos ilimitados</li>
+        <li>Dashboard coach completo</li>
+        <li>Scouting interno + externo</li>
+        <li>Stats avanzadas</li>
+        <li>Cobro de cuotas integrado</li>
+        <li>Exports FFCV automáticos</li>
+        <li>Soporte prioritario</li>
+      </ul>
+    </div>
+    <div class="price-card">
+      <div class="name">ACADEMIA</div>
+      <div class="p">29€<small>/mes · Y1 launch</small></div>
+      <p style="font-size:13px;color:var(--muted);margin:8px 0 0">Para academias, clubes grandes y entidades con varias sedes.</p>
+      <ul>
+        <li>Jugadores ilimitados</li>
+        <li>Multi-sede</li>
+        <li>Coordinador global + por categoría</li>
+        <li>Analítica avanzada</li>
+        <li>Branding personalizado</li>
+        <li>Gestor de cuenta dedicado</li>
+        <li>API para integraciones propias</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="box">
+    <strong>Incluido en todos los tiers de pago:</strong> Pro gratis para todos los jugadores del club. Si el club paga 9€/mes, sus 100 jugadores reciben acceso a todas las funcionalidades Pro del jugador (stats, video, visibilidad, etc.) sin coste adicional para ellos.
+  </div>
+
+  <h3>5.1 · Política grandfather</h3>
+  <p>Todo club que contrate durante Y1 mantiene su precio de lanzamiento de por vida mientras siga activo. El precio target Y5 (29€/mes para Pro, 59€ para Academia) se aplica sólo a nuevos clubes que entren en años posteriores.</p>
+</section>
+
+<!-- ============================================================ -->
+<section id="roi">
+  <span class="num">06</span>
+  <div class="kicker">Sección 06 / Retorno de inversión</div>
+  <h2>El ROI calculado para un club de 80 jugadores</h2>
+
+  <table>
+    <thead><tr><th>Concepto</th><th>Valor anual</th></tr></thead>
+    <tbody>
+      <tr><td>Coste FutbolBase Club Pro (Y1 launch)</td><td class="num">108€</td></tr>
+      <tr><td>Tiempo ahorrado coordinador (15h/mes × 12 × 12€/h)</td><td class="num" style="color:var(--green)">+2.160€</td></tr>
+      <tr><td>Reducción morosidad cuotas (-25% impagos)</td><td class="num" style="color:var(--green)">+1.800€</td></tr>
+      <tr><td>Captación 4 jugadores extra vía visibilidad (cuota anual media)</td><td class="num" style="color:var(--green)">+1.200€</td></tr>
+      <tr><td>Reducción multas FFCV por plazos y errores</td><td class="num" style="color:var(--green)">+400€</td></tr>
+      <tr class="highlight"><td><strong>ROI neto anual</strong></td><td class="num"><strong>+5.452€</strong></td></tr>
+      <tr class="highlight"><td><strong>ROI ratio</strong></td><td class="num"><strong>×50</strong></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============================================================ -->
+<section id="onboarding">
+  <span class="num">07</span>
+  <div class="kicker">Sección 07 / Onboarding sin fricción</div>
+  <h2>De la firma al uso en 72 horas</h2>
+
+  <div class="tl">
+    <div class="ph"><h4>Día 1 · Alta y setup</h4><p>Firma del alta, importamos plantilla y calendario desde Excel o FFCV. Configuramos dashboard.</p></div>
+    <div class="ph"><h4>Día 2 · Formación</h4><p>Sesión en vivo (90 min) con coordinador, entrenadores y secretaría. Material de apoyo incluido.</p></div>
+    <div class="ph"><h4>Día 3 · Activación jugadores</h4><p>Invitamos a jugadores y padres con enlace personalizado. Onboarding automático vía push + email.</p></div>
+    <div class="ph"><h4>Semana 1 · Soporte intensivo</h4><p>Responsable de cuenta asignado durante la primera semana. Resolución de dudas en menos de 4h.</p></div>
+    <div class="ph"><h4>Mes 1 · Revisión KPIs</h4><p>Primer informe con datos de uso, satisfacción familias y feedback. Ajustes si es necesario.</p></div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="referencias">
+  <span class="num">08</span>
+  <div class="kicker">Sección 08 / Garantías</div>
+  <h2>Compromisos y garantías contigo</h2>
+  <div class="grid g-2">
+    <div class="tile"><h4>✓ Prueba 60 días sin compromiso</h4><p>Si no te convence en 60 días, devolvemos el 100%. Sin letra pequeña.</p></div>
+    <div class="tile"><h4>✓ SLA de soporte &lt;4h</h4><p>Respuesta garantizada en menos de 4 horas laborables en tier Pro. En Academia, 1h.</p></div>
+    <div class="tile"><h4>✓ Exportación total</h4><p>Si decides irte, te damos todos tus datos en CSV/JSON. Sin hostaging.</p></div>
+    <div class="tile"><h4>✓ Cumplimiento RGPD</h4><p>Todos los datos alojados en servidores europeos. Datos de menores cifrados y protegidos por consentimiento parental.</p></div>
+    <div class="tile"><h4>✓ Sin permanencia</h4><p>Tier mensual cancelable en cualquier momento. Tier anual con 20% de descuento.</p></div>
+    <div class="tile"><h4>✓ Actualizaciones gratis</h4><p>Todas las nuevas funcionalidades se incluyen automáticamente en tu tier actual.</p></div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="pilot">
+  <span class="num">09</span>
+  <div class="kicker">Sección 09 / Programa Early Adopter</div>
+  <h2>10 clubes piloto · condiciones especiales</h2>
+  <div class="box-orange box">
+    <strong>Oferta limitada:</strong> los 10 primeros clubes que firmen antes del 30 de junio de 2026 reciben:
+    <ul style="margin:10px 0 0 22px">
+      <li>6 primeros meses de Club Pro <strong>gratis</strong></li>
+      <li>Onboarding presencial por un responsable del equipo FutbolBase</li>
+      <li>Precio launch congelado a 9€/mes <strong>de por vida</strong></li>
+      <li>Mención como club pionero en redes y eventos</li>
+      <li>Acceso directo al roadmap: tus peticiones de producto tienen prioridad</li>
+    </ul>
+  </div>
+</section>
+
+<!-- CIERRE -->
+<div class="sign">
+  <h3>🚀 ¿Listos para modernizar vuestro club?</h3>
+  <p>Podemos agendar una demo personalizada en vuestras instalaciones o por videollamada. 45 minutos con un ROI concreto calculado para vuestro caso.</p>
+  <div class="btn-row">
+    <a class="btn" href="mailto:clubes@futbolbase.es">AGENDAR DEMO</a>
+    <a class="btn sec" href="./proyecto-master.html">VER OTROS DOCUMENTOS</a>
+  </div>
+</div>
+
+<footer>
+  <p>FutbolBase · Dossier comercial para clubes · v1.0 · 2026</p>
+</footer>
+
+</div>
+</body>
+</html>

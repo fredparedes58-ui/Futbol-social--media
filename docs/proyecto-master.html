@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FutbolBase · Proyecto completo · Índice de presentaciones</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FAFBFC; --card:#FFFFFF; --border:#E2E8F0;
+  --text:#0F172A; --slate:#334155; --muted:#64748B;
+  --green:#059669; --green-soft:#D1FAE5;
+  --cyan:#0891B2; --cyan-soft:#CFFAFE;
+  --orange:#EA580C; --orange-soft:#FED7AA;
+  --purple:#7C3AED; --purple-soft:#EDE9FE;
+  --yellow:#D97706; --yellow-soft:#FEF3C7;
+  --red:#DC2626; --red-soft:#FEE2E2;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+.wrap{max-width:1320px;margin:0 auto;padding:40px 28px 80px}
+.nav{display:flex;gap:18px;align-items:center;flex-wrap:wrap;padding:16px 22px;background:var(--card);border:1px solid var(--border);border-radius:14px;box-shadow:0 1px 3px rgba(15,23,42,0.04);margin-bottom:32px;position:sticky;top:16px;z-index:50}
+.nav .brand{font-family:'Barlow Condensed';font-weight:900;font-size:20px;letter-spacing:0.02em;margin-right:auto}
+.nav a{color:var(--slate);text-decoration:none;font-size:13px;font-weight:600}
+.nav a:hover{color:var(--green)}
+
+.hero{text-align:center;padding:60px 20px 50px;border-radius:20px;background:linear-gradient(135deg,#ECFDF5 0%,#CFFAFE 50%,#FEF3C7 100%);border:1px solid var(--border);margin-bottom:40px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 30% 20%,rgba(5,150,105,0.12),transparent 50%),radial-gradient(circle at 70% 80%,rgba(8,145,178,0.12),transparent 50%);pointer-events:none}
+.eyebrow{display:inline-block;background:var(--card);border:1px solid var(--border);padding:6px 14px;border-radius:100px;font-family:'JetBrains Mono';font-size:11px;letter-spacing:0.18em;color:var(--green);font-weight:700;margin-bottom:18px;position:relative}
+.title{font-family:'Barlow Condensed';font-weight:900;font-size:clamp(48px,7vw,82px);line-height:0.95;letter-spacing:-0.02em;margin-bottom:16px;position:relative}
+.title .grad{background:linear-gradient(135deg,var(--green) 0%,var(--cyan) 50%,var(--orange) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;display:inline}
+.hero-sub{font-size:18px;color:var(--slate);max-width:780px;margin:0 auto 24px;position:relative;line-height:1.7}
+
+.section-head{display:flex;justify-content:space-between;align-items:flex-end;margin:48px 0 24px;flex-wrap:wrap;gap:16px}
+.kicker{font-family:'JetBrains Mono';font-size:11px;letter-spacing:0.22em;color:var(--muted);text-transform:uppercase;font-weight:700;margin-bottom:8px}
+h2{font-family:'Barlow Condensed';font-weight:800;font-size:clamp(32px,4vw,44px);line-height:1.05;letter-spacing:-0.01em}
+.badge{background:var(--card);border:1px solid var(--border);padding:7px 14px;border-radius:100px;font-family:'JetBrains Mono';font-size:11px;letter-spacing:0.15em;color:var(--slate);font-weight:600}
+
+.grid{display:grid;gap:20px}
+.g-2{grid-template-columns:repeat(2,1fr)}
+.g-3{grid-template-columns:repeat(3,1fr)}
+.g-4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:900px){.g-2,.g-3,.g-4{grid-template-columns:1fr}}
+
+.doc-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px;transition:transform .15s,box-shadow .15s;text-decoration:none;color:inherit;display:block;position:relative;overflow:hidden}
+.doc-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(15,23,42,0.08)}
+.doc-card::before{content:'';position:absolute;top:0;left:0;right:0;height:5px;background:var(--doc-color,var(--green))}
+.doc-card .doc-num{font-family:'JetBrains Mono';font-size:10px;letter-spacing:0.25em;color:var(--doc-color,var(--green));font-weight:700;margin-bottom:8px}
+.doc-card h3{font-family:'Barlow Condensed';font-weight:800;font-size:28px;line-height:1.1;margin-bottom:10px}
+.doc-card .doc-audience{display:inline-block;background:var(--doc-bg,var(--green-soft));color:var(--doc-color,var(--green));padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;font-family:'JetBrains Mono';letter-spacing:0.1em;margin-bottom:12px}
+.doc-card p{color:var(--slate);font-size:14px;line-height:1.65}
+.doc-card .doc-items{margin-top:14px;display:flex;flex-direction:column;gap:6px}
+.doc-card .doc-items .it{font-size:13px;color:var(--slate);display:flex;gap:8px}
+.doc-card .doc-items .it::before{content:'●';color:var(--doc-color,var(--green));font-size:10px;margin-top:5px}
+.doc-card .doc-cta{margin-top:18px;padding-top:14px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.doc-card .doc-cta .go{color:var(--doc-color,var(--green));font-weight:700;font-size:13px;font-family:'JetBrains Mono';letter-spacing:0.08em}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:26px;box-shadow:0 1px 3px rgba(15,23,42,0.04)}
+.stat-big{text-align:center;padding:22px;background:var(--card);border:1px solid var(--border);border-radius:14px}
+.stat-big .v{font-family:'Barlow Condensed';font-weight:900;font-size:44px;line-height:1;color:var(--green)}
+.stat-big .l{font-size:12px;color:var(--muted);font-family:'JetBrains Mono';letter-spacing:0.15em;margin-top:6px;text-transform:uppercase;font-weight:700}
+
+.pill-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.pill{background:var(--card);border:1px solid var(--border);padding:8px 14px;border-radius:100px;font-size:13px;color:var(--slate);font-weight:600}
+
+.timeline{position:relative;padding-left:30px;margin-top:20px}
+.timeline::before{content:'';position:absolute;left:10px;top:0;bottom:0;width:2px;background:var(--border)}
+.tl-item{position:relative;padding-bottom:22px}
+.tl-item::before{content:'';position:absolute;left:-24px;top:4px;width:14px;height:14px;border-radius:50%;background:var(--green);border:3px solid var(--card);box-shadow:0 0 0 2px var(--green)}
+.tl-item h4{font-family:'Barlow Condensed';font-weight:800;font-size:18px;margin-bottom:4px}
+.tl-item p{font-size:13px;color:var(--slate);line-height:1.6}
+
+footer{margin-top:60px;padding-top:30px;border-top:1px solid var(--border);text-align:center;color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="nav">
+  <span class="brand">⚡ FutbolBase · PROYECTO</span>
+  <a href="#documentos">Documentos</a>
+  <a href="#audiencias">Audiencias</a>
+  <a href="#mejora">Por qué mejor</a>
+  <a href="#proyecciones">Proyecciones</a>
+  <a href="#roadmap">Roadmap</a>
+</nav>
+
+<header class="hero">
+  <span class="eyebrow">● DOSSIER DE PRESENTACIÓN · 5 DOCUMENTOS</span>
+  <h1 class="title">Una plataforma.<br><span class="grad">Cinco audiencias.</span><br>Un fútbol base nuevo.</h1>
+  <p class="hero-sub">FutbolBase es la plataforma social, deportiva y de gestión para el fútbol base español. Este dossier agrupa las 5 presentaciones formales: federación, clubes, padres, jugadores y el deck maestro de inversión.</p>
+  <div class="pill-row" style="justify-content:center">
+    <span class="pill" style="background:var(--green-soft);color:var(--green);border-color:var(--green)">🏛️ FFCV · Propuesta institucional</span>
+    <span class="pill" style="background:var(--cyan-soft);color:var(--cyan);border-color:var(--cyan)">🏆 Clubes · Dossier B2B</span>
+    <span class="pill" style="background:var(--orange-soft);color:var(--orange);border-color:var(--orange)">👨‍👩‍👦 Padres · Folleto familiar</span>
+    <span class="pill" style="background:var(--purple-soft);color:var(--purple);border-color:var(--purple)">⚽ Jugadores · Dossier personal</span>
+    <span class="pill" style="background:var(--yellow-soft);color:var(--yellow);border-color:var(--yellow)">💼 Inversión · Decks financieros</span>
+  </div>
+</header>
+
+<!-- ============================================================ -->
+<!-- DOCUMENTOS DEL PROYECTO                                       -->
+<!-- ============================================================ -->
+<section id="documentos">
+  <div class="section-head">
+    <div>
+      <div class="kicker">01 / Dossier completo</div>
+      <h2>Los 5 documentos del proyecto</h2>
+    </div>
+    <span class="badge">Listos para presentar</span>
+  </div>
+
+  <div class="grid g-2">
+
+    <a href="./proyecto-ffcv.html" class="doc-card" style="--doc-color:var(--green);--doc-bg:var(--green-soft)">
+      <div class="doc-num">DOCUMENTO 01 · INSTITUCIONAL</div>
+      <h3>🏛️ Propuesta FFCV</h3>
+      <span class="doc-audience">FEDERACIÓN DE FÚTBOL COMUNIDAD VALENCIANA</span>
+      <p>Documento formal para presentar a la FFCV. Acuerdo de colaboración, co-branding, integración con la licencia federativa y split económico con revenue share.</p>
+      <div class="doc-items">
+        <div class="it">Integración de licencias federativas y oficialidad</div>
+        <div class="it">Dashboard federativo · métricas agregadas anónimas</div>
+        <div class="it">Modelo de revenue share 15-20% a la FFCV</div>
+        <div class="it">Pricing premium + justificación vs 3€ actuales</div>
+        <div class="it">Plan de pilotaje comarcal · 6 meses</div>
+      </div>
+      <div class="doc-cta">
+        <span>📄 12 secciones · 4 anexos</span>
+        <span class="go">ABRIR DOCUMENTO →</span>
+      </div>
+    </a>
+
+    <a href="./proyecto-clubes.html" class="doc-card" style="--doc-color:var(--cyan);--doc-bg:var(--cyan-soft)">
+      <div class="doc-num">DOCUMENTO 02 · B2B</div>
+      <h3>🏆 Dossier Clubes</h3>
+      <span class="doc-audience">CLUBES AMATEUR Y ACADEMIAS</span>
+      <p>Propuesta comercial para clubes base y academias. Herramientas de gestión, scouting, comunicación con padres y exports federativos.</p>
+      <div class="doc-items">
+        <div class="it">Gestión de equipos, convocatorias y partidos</div>
+        <div class="it">Scouting de talento interno y externo</div>
+        <div class="it">Comunicación club → jugadores → padres</div>
+        <div class="it">Pricing B2B2C · el club paga por jugador</div>
+        <div class="it">Onboarding en 72h y SLA de soporte</div>
+      </div>
+      <div class="doc-cta">
+        <span>📄 10 secciones · ROI calculado</span>
+        <span class="go">ABRIR DOCUMENTO →</span>
+      </div>
+    </a>
+
+    <a href="./proyecto-padres.html" class="doc-card" style="--doc-color:var(--orange);--doc-bg:var(--orange-soft)">
+      <div class="doc-num">DOCUMENTO 03 · FAMILIA</div>
+      <h3>👨‍👩‍👦 Folleto Padres</h3>
+      <span class="doc-audience">FAMILIAS DE JUGADORES 6-18 AÑOS</span>
+      <p>Folleto familiar que explica cómo FutbolBase ayuda a los padres a seguir la carrera deportiva del hijo con seguridad, visibilidad y tranquilidad.</p>
+      <div class="doc-items">
+        <div class="it">Seguimiento completo del progreso deportivo</div>
+        <div class="it">Control parental · entorno seguro verificado</div>
+        <div class="it">Comunicación directa con entrenadores</div>
+        <div class="it">Visibilidad real ante scouts y academias</div>
+        <div class="it">Plan familiar · precio por hermanos</div>
+      </div>
+      <div class="doc-cta">
+        <span>📄 Formato folleto · 8 capítulos</span>
+        <span class="go">ABRIR DOCUMENTO →</span>
+      </div>
+    </a>
+
+    <a href="./proyecto-jugadores.html" class="doc-card" style="--doc-color:var(--purple);--doc-bg:var(--purple-soft)">
+      <div class="doc-num">DOCUMENTO 04 · JUGADOR</div>
+      <h3>⚽ Dossier Jugadores</h3>
+      <span class="doc-audience">JUGADORES 14-28 AÑOS</span>
+      <p>Dossier dirigido al jugador amateur y semi-profesional. Cómo usar FutbolBase para construir carrera, ganar visibilidad y medir el propio rendimiento.</p>
+      <div class="doc-items">
+        <div class="it">Perfil deportivo verificado y stats reales</div>
+        <div class="it">Visibilidad ante 240+ ojeadores registrados</div>
+        <div class="it">Video highlights · CV deportivo digital</div>
+        <div class="it">Comunidad, chats y feed social fútbol</div>
+        <div class="it">Pricing asequible · Pro desde 4,99€/temporada</div>
+      </div>
+      <div class="doc-cta">
+        <span>📄 9 secciones · Testimonios</span>
+        <span class="go">ABRIR DOCUMENTO →</span>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- Deck de inversión -->
+  <div style="margin-top:28px">
+    <div class="grid g-3">
+      <a href="./projection-premium-comparacion.html" class="doc-card" style="--doc-color:var(--yellow);--doc-bg:var(--yellow-soft)">
+        <div class="doc-num">DOCUMENTO 05a · INVERSIÓN</div>
+        <h3>💼 Deck inversor · Comparativa</h3>
+        <span class="doc-audience">INVERSIÓN · SEED</span>
+        <p>Comparativa de los 3 escenarios + pricing Y1 competitivo + análisis de churn + 6 estrategias.</p>
+        <div class="doc-cta"><span>1.400 líneas · 11 gráficos</span><span class="go">ABRIR →</span></div>
+      </a>
+      <a href="./projection-premium-realista.html" class="doc-card" style="--doc-color:var(--green);--doc-bg:var(--green-soft)">
+        <div class="doc-num">DOCUMENTO 05b · INVERSIÓN</div>
+        <h3>🟢 Deck Realista</h3>
+        <span class="doc-audience">ESCENARIO BASE</span>
+        <p>554k€ ARR Y5 · MoIC 12,2× · Fundador 13,1M€.</p>
+        <div class="doc-cta"><span>Escenario más probable</span><span class="go">ABRIR →</span></div>
+      </a>
+      <a href="./projection-premium.html" class="doc-card" style="--doc-color:var(--cyan);--doc-bg:var(--cyan-soft)">
+        <div class="doc-num">DOCUMENTO 05c · MASTER</div>
+        <h3>📊 Deck Master Premium</h3>
+        <span class="doc-audience">PRESENTACIÓN EJECUTIVA</span>
+        <p>Deck completo con 23 visualizaciones, producto, ganancias y exit strategy.</p>
+        <div class="doc-cta"><span>All-in-one</span><span class="go">ABRIR →</span></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- AUDIENCIAS                                                    -->
+<!-- ============================================================ -->
+<section id="audiencias">
+  <div class="section-head">
+    <div>
+      <div class="kicker">02 / A quién va dirigida la app</div>
+      <h2>FutbolBase es para todo el ecosistema</h2>
+    </div>
+    <span class="badge">Público objetivo · 5 pilares</span>
+  </div>
+
+  <p style="color:var(--slate);font-size:15px;line-height:1.75;max-width:880px;margin-bottom:24px">La app no se diseñó para un público único — se diseñó como la <strong>capa común</strong> del fútbol base en España. Cada audiencia tiene funciones, pricing y experiencia propios, pero todas conviven en la misma plataforma.</p>
+
+  <div class="grid g-3" style="margin-bottom:24px">
+    <div class="card" style="border-left:4px solid var(--green)">
+      <div class="stat-big" style="padding:0;border:none;text-align:left">
+        <div class="l" style="color:var(--green)">AUDIENCIA 01</div>
+        <div class="v" style="font-size:32px;color:var(--green);margin-top:4px">Jugadores 14-28</div>
+      </div>
+      <p style="margin-top:12px;font-size:14px;color:var(--slate)">El núcleo de la app. Buscan visibilidad, stats y comunidad. <strong>TAM España: 1,2M</strong>.</p>
+      <div class="pill-row">
+        <span class="pill">Pro 4,99€/temp.</span>
+        <span class="pill">Perfil + stats</span>
+        <span class="pill">Highlights</span>
+      </div>
+    </div>
+    <div class="card" style="border-left:4px solid var(--cyan)">
+      <div class="stat-big" style="padding:0;border:none;text-align:left">
+        <div class="l" style="color:var(--cyan)">AUDIENCIA 02</div>
+        <div class="v" style="font-size:32px;color:var(--cyan);margin-top:4px">Clubes base</div>
+      </div>
+      <p style="margin-top:12px;font-size:14px;color:var(--slate)">Gestión, scouting y comunicación. <strong>~4.200 clubes solo en CCVV</strong>, 30k en España.</p>
+      <div class="pill-row">
+        <span class="pill">Club 9€/mes Y1</span>
+        <span class="pill">Dashboard coach</span>
+        <span class="pill">Exports FFCV</span>
+      </div>
+    </div>
+    <div class="card" style="border-left:4px solid var(--orange)">
+      <div class="stat-big" style="padding:0;border:none;text-align:left">
+        <div class="l" style="color:var(--orange)">AUDIENCIA 03</div>
+        <div class="v" style="font-size:32px;color:var(--orange);margin-top:4px">Padres</div>
+      </div>
+      <p style="margin-top:12px;font-size:14px;color:var(--slate)">Seguimiento seguro del hijo. <strong>~800k familias activas en CCVV</strong>.</p>
+      <div class="pill-row">
+        <span class="pill">Plan familia 7,99€/mes</span>
+        <span class="pill">Control parental</span>
+        <span class="pill">Comunicación directa</span>
+      </div>
+    </div>
+    <div class="card" style="border-left:4px solid var(--purple)">
+      <div class="stat-big" style="padding:0;border:none;text-align:left">
+        <div class="l" style="color:var(--purple)">AUDIENCIA 04</div>
+        <div class="v" style="font-size:32px;color:var(--purple);margin-top:4px">Scouts y agentes</div>
+      </div>
+      <p style="margin-top:12px;font-size:14px;color:var(--slate)">Ojeo y scouting con datos reales. <strong>~2.800 scouts activos en España</strong>.</p>
+      <div class="pill-row">
+        <span class="pill">Pro Scout 29€/mes</span>
+        <span class="pill">Búsqueda avanzada</span>
+        <span class="pill">Informes</span>
+      </div>
+    </div>
+    <div class="card" style="border-left:4px solid var(--yellow)">
+      <div class="stat-big" style="padding:0;border:none;text-align:left">
+        <div class="l" style="color:var(--yellow)">AUDIENCIA 05</div>
+        <div class="v" style="font-size:32px;color:var(--yellow);margin-top:4px">Federación</div>
+      </div>
+      <p style="margin-top:12px;font-size:14px;color:var(--slate)">Partner institucional. <strong>FFCV + 18 territoriales</strong>.</p>
+      <div class="pill-row">
+        <span class="pill">Revenue share 15-20%</span>
+        <span class="pill">Dashboard agregado</span>
+        <span class="pill">Co-branding</span>
+      </div>
+    </div>
+    <div class="card" style="border-left:4px solid var(--red)">
+      <div class="stat-big" style="padding:0;border:none;text-align:left">
+        <div class="l" style="color:var(--red)">AUDIENCIA 06</div>
+        <div class="v" style="font-size:32px;color:var(--red);margin-top:4px">Marcas y sponsors</div>
+      </div>
+      <p style="margin-top:12px;font-size:14px;color:var(--slate)">Publicidad segmentada y branded content. Revenue secundario.</p>
+      <div class="pill-row">
+        <span class="pill">CPM + CPL</span>
+        <span class="pill">Branded content</span>
+        <span class="pill">Data insights</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- POR QUÉ ES MEJOR                                              -->
+<!-- ============================================================ -->
+<section id="mejora">
+  <div class="section-head">
+    <div>
+      <div class="kicker">03 / Por qué esto es mejor que lo actual</div>
+      <h2>De la licencia en papel al ecosistema digital</h2>
+    </div>
+    <span class="badge">Comparativa vs FFCV actual</span>
+  </div>
+
+  <div class="card" style="overflow-x:auto;margin-bottom:24px">
+    <table style="width:100%;min-width:720px;border-collapse:collapse">
+      <thead>
+        <tr style="border-bottom:2px solid var(--border)">
+          <th style="text-align:left;padding:14px 10px;font-family:'JetBrains Mono';font-size:11px;letter-spacing:0.15em;color:var(--muted);font-weight:700">FUNCIONALIDAD</th>
+          <th style="text-align:left;padding:14px 10px;font-family:'JetBrains Mono';font-size:11px;letter-spacing:0.15em;color:var(--red);font-weight:700">FFCV ACTUAL (3€)</th>
+          <th style="text-align:left;padding:14px 10px;font-family:'JetBrains Mono';font-size:11px;letter-spacing:0.15em;color:var(--green);font-weight:700">FUTBOLBASE</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid var(--border)"><td style="padding:12px 10px"><strong>Licencia federativa</strong></td><td style="padding:12px 10px;color:var(--slate)">Papel / PDF</td><td style="padding:12px 10px;color:var(--green)">Digital + integrada en perfil</td></tr>
+        <tr style="border-bottom:1px solid var(--border)"><td style="padding:12px 10px"><strong>Perfil deportivo</strong></td><td style="padding:12px 10px;color:var(--red)">No existe</td><td style="padding:12px 10px;color:var(--green)">Perfil público verificado</td></tr>
+        <tr style="border-bottom:1px solid var(--border)"><td style="padding:12px 10px"><strong>Estadísticas de partidos</strong></td><td style="padding:12px 10px;color:var(--red)">No</td><td style="padding:12px 10px;color:var(--green)">Goles, asistencias, minutos, heatmaps</td></tr>
+        <tr style="border-bottom:1px solid var(--border)"><td style="padding:12px 10px"><strong>Video highlights</strong></td><td style="padding:12px 10px;color:var(--red)">No</td><td style="padding:12px 10px;color:var(--green)">Subida + edición + compartición</td></tr>
+        <tr style="border-bottom:1px solid var(--border)"><td style="padding:12px 10px"><strong>Visibilidad ante scouts</strong></td><td style="padding:12px 10px;color:var(--red)">Cero · boca a boca</td><td style="padding:12px 10px;color:var(--green)">240+ scouts activos con filtros</td></tr>
+        <tr style="border-bottom:1px solid var(--border)"><td style="padding:12px 10px"><strong>Comunicación club ↔ padres</strong></td><td style="padding:12px 10px;color:var(--slate)">WhatsApp · grupos dispersos</td><td style="padding:12px 10px;color:var(--green)">Canal oficial, privado, verificado</td></tr>
+        <tr style="border-bottom:1px solid var(--border)"><td style="padding:12px 10px"><strong>Gestión de partidos</strong></td><td style="padding:12px 10px;color:var(--slate)">Excel / papel</td><td style="padding:12px 10px;color:var(--green)">Convocatorias, alineaciones, actas</td></tr>
+        <tr style="border-bottom:1px solid var(--border)"><td style="padding:12px 10px"><strong>Búsqueda de equipo / jugador</strong></td><td style="padding:12px 10px;color:var(--red)">No</td><td style="padding:12px 10px;color:var(--green)">Buscador geolocalizado</td></tr>
+        <tr style="border-bottom:1px solid var(--border)"><td style="padding:12px 10px"><strong>Comunidad y feed social</strong></td><td style="padding:12px 10px;color:var(--red)">No</td><td style="padding:12px 10px;color:var(--green)">Feed, chats, grupos, eventos</td></tr>
+        <tr style="border-bottom:1px solid var(--border)"><td style="padding:12px 10px"><strong>Control parental</strong></td><td style="padding:12px 10px;color:var(--red)">No aplicable</td><td style="padding:12px 10px;color:var(--green)">Modo menor + supervisión familiar</td></tr>
+        <tr style="border-bottom:1px solid var(--border)"><td style="padding:12px 10px"><strong>Reportes para federación</strong></td><td style="padding:12px 10px;color:var(--slate)">Manuales</td><td style="padding:12px 10px;color:var(--green)">Dashboard en tiempo real</td></tr>
+        <tr style="background:var(--green-soft)"><td style="padding:14px 10px"><strong>PRECIO</strong></td><td style="padding:14px 10px;color:var(--red)"><strong>3€ / temporada</strong></td><td style="padding:14px 10px;color:var(--green)"><strong>4,99€ launch → 39€ Y5</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Por qué podemos cobrar más -->
+  <div class="card" style="background:linear-gradient(135deg,var(--green-soft) 0%,var(--cyan-soft) 100%);border:1px solid var(--green);padding:30px">
+    <h3 style="font-family:'Barlow Condensed';font-weight:800;font-size:26px;color:var(--green);margin-bottom:12px">💰 Por qué podemos cobrar más que 3€</h3>
+    <p style="font-size:15px;line-height:1.75;color:var(--slate);margin-bottom:18px">La licencia FFCV actual es <strong>solo un trámite administrativo</strong> — da cobertura legal y seguro, nada más. FutbolBase es una <strong>plataforma completa</strong> con 14+ funcionalidades que resuelven problemas reales del usuario. El valor entregado justifica un premium del 66% (4,99€ launch) creciendo hasta 13× (39€ Y5).</p>
+    <div class="grid g-3" style="gap:14px">
+      <div style="padding:14px;background:#fff;border-radius:10px">
+        <strong style="color:var(--green);font-family:'Barlow Condensed';font-size:20px">1 · Valor deportivo</strong>
+        <p style="font-size:13px;color:var(--slate);margin-top:4px">Stats, video, heatmaps y visibilidad. Un Veo cuesta 80€/mes. Nosotros 0,42€/mes.</p>
+      </div>
+      <div style="padding:14px;background:#fff;border-radius:10px">
+        <strong style="color:var(--green);font-family:'Barlow Condensed';font-size:20px">2 · Valor familiar</strong>
+        <p style="font-size:13px;color:var(--slate);margin-top:4px">Los padres pagan por tranquilidad, entorno seguro y ver a su hijo crecer. Comparable a apps educativas (5-15€/mes).</p>
+      </div>
+      <div style="padding:14px;background:#fff;border-radius:10px">
+        <strong style="color:var(--green);font-family:'Barlow Condensed';font-size:20px">3 · Valor de red</strong>
+        <p style="font-size:13px;color:var(--slate);margin-top:4px">Cuantos más jugadores, clubes y scouts entran, más valioso se vuelve cada perfil. La FFCV no tiene efecto red.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PROYECCIONES RESUMEN                                          -->
+<!-- ============================================================ -->
+<section id="proyecciones">
+  <div class="section-head">
+    <div>
+      <div class="kicker">04 / Números del proyecto</div>
+      <h2>Proyecciones realistas · 5 años</h2>
+    </div>
+    <span class="badge">Fuente: decks premium comparación</span>
+  </div>
+
+  <div class="grid g-4" style="margin-bottom:24px">
+    <div class="stat-big"><div class="v" style="color:var(--green)">21.000</div><div class="l">Usuarios Y5 · realista</div></div>
+    <div class="stat-big"><div class="v" style="color:var(--cyan)">554k€</div><div class="l">ARR Y5 · realista</div></div>
+    <div class="stat-big"><div class="v" style="color:var(--orange)">4.500</div><div class="l">Pro pagando Y5</div></div>
+    <div class="stat-big"><div class="v" style="color:var(--purple)">150</div><div class="l">Clubes Y5</div></div>
+  </div>
+
+  <div class="grid g-3">
+    <div class="card"><strong style="color:var(--red);font-family:'Barlow Condensed';font-size:22px">🔴 Conservador</strong><p style="font-size:13px;color:var(--slate);margin-top:8px;line-height:1.6">333k€ ARR Y5 · MoIC 5,4× · Fundador 5,8M€ al exit.</p></div>
+    <div class="card" style="border:2px solid var(--green)"><strong style="color:var(--green);font-family:'Barlow Condensed';font-size:22px">🟢 Realista</strong><p style="font-size:13px;color:var(--slate);margin-top:8px;line-height:1.6">554k€ ARR Y5 · MoIC 12,2× · Fundador 13,1M€. <strong>74% probabilidad</strong> con launch pricing.</p></div>
+    <div class="card"><strong style="color:var(--yellow);font-family:'Barlow Condensed';font-size:22px">🟠 Optimista</strong><p style="font-size:13px;color:var(--slate);margin-top:8px;line-height:1.6">988k€ ARR Y5 · MoIC 20,4× · Fundador 21,9M€ al exit.</p></div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- ROADMAP                                                       -->
+<!-- ============================================================ -->
+<section id="roadmap">
+  <div class="section-head">
+    <div>
+      <div class="kicker">05 / Próximos pasos</div>
+      <h2>Roadmap de presentación y venta</h2>
+    </div>
+    <span class="badge">6 meses · hitos clave</span>
+  </div>
+
+  <div class="card">
+    <div class="timeline">
+      <div class="tl-item"><h4>Semana 1-2 · Cierre del dossier</h4><p>Revisión final de los 5 documentos, imprimir versiones físicas para la FFCV y clubes seleccionados.</p></div>
+      <div class="tl-item"><h4>Mes 1 · Primera reunión FFCV</h4><p>Presentación del doc FFCV + deck master. Objetivo: carta de intenciones para pilotaje comarcal.</p></div>
+      <div class="tl-item"><h4>Mes 2 · Ronda a 10 clubes piloto</h4><p>Presentación del dossier clubes a 10 clubes seleccionados en la comarca beachhead. Target: 5 firmas.</p></div>
+      <div class="tl-item"><h4>Mes 3 · Lanzamiento launch pricing</h4><p>Apertura pública con 4,99€/temporada. Campaña con 3 creators y presencia en 2 torneos base.</p></div>
+      <div class="tl-item"><h4>Mes 4-5 · Medición KPIs piloto</h4><p>Usuarios registrados, conversión a Pro, NPS familias, feedback clubes. Ajustes antes de escalar.</p></div>
+      <div class="tl-item"><h4>Mes 6 · Acuerdo formal FFCV</h4><p>Con datos reales del pilotaje, negociar el acuerdo formal: revenue share, integración licencias y co-branding oficial.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>FutbolBase · Dossier de presentación completo · 2026</p>
+  <p style="margin-top:6px">Archivos en <code style="font-family:'JetBrains Mono'">C:\Users\pparedes\Downloads\FutbolBase\docs\</code></p>
+</footer>
+
+</div>
+</body>
+</html>

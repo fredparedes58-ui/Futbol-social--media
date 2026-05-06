@@ -1,11 +1,24 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef } from 'react'
 import { LogOut, Trophy, Target, Zap, Star, Pencil, Check, X, Sun, Moon, Sparkles, TrendingUp, AlertCircle } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useTheme } from '../context/ThemeContext'
 import BottomNav from '../components/ui/BottomNav'
 import GlassCard from '../components/ui/GlassCard'
+import AIBorder from '../components/ui/AIBorder'
+import CountUp from '../components/ui/CountUp'
 import { generateCoachFeedback } from '../lib/aiMocks'
+import AchievementsSheet from '../features/achievements/AchievementsSheet'
+import { evaluateAchievements, RARITY_STYLE } from '../features/achievements/catalog'
+import CoachChatSheet from '../features/coach/CoachChatSheet'
+import StreakBadge from '../features/streaks/StreakBadge'
+import SeasonPassSheet from '../features/seasonPass/SeasonPassSheet'
+import HeatmapPitch from '../features/heatmap/HeatmapPitch'
+import DuelsSheet from '../features/duels/DuelsSheet'
+import MarketSheet from '../features/market/MarketSheet'
+import MatchReplaySheet from '../features/replay/MatchReplaySheet'
+import { shareFifaCard } from '../features/share/shareFifaCard'
+import { MessageCircle, Flame, Crown, Swords, Store, Share2, Film } from 'lucide-react'
 
 const STATS = [
   { icon: Trophy, label: 'Partidos',   value: 42, color: '#CCFF00' },
@@ -39,6 +52,20 @@ export default function ProfilePage() {
     name, position,
     matches: 42, goals: 32, assists: 15, mvps: 5,
   }), [name, position])
+
+  const playerStats = useMemo(() => ({
+    matches: 42, goals: 32, assists: 15, mvps: 5, wins: 28, draws: 8, losses: 6,
+  }), [])
+  const achievements = useMemo(() => evaluateAchievements(playerStats), [playerStats])
+  const unlockedCount = achievements.filter(a => a.unlocked).length
+  const latestUnlocked = achievements.filter(a => a.unlocked).slice(-3).reverse()
+  const [achievementsOpen, setAchievementsOpen] = useState(false)
+  const [coachOpen, setCoachOpen] = useState(false)
+  const [passOpen, setPassOpen] = useState(false)
+  const [duelsOpen, setDuelsOpen] = useState(false)
+  const [marketOpen, setMarketOpen] = useState(false)
+  const [replayOpen, setReplayOpen] = useState(false)
+  const fifaCardRef = useRef<HTMLDivElement>(null)
 
   const [editing, setEditing] = useState(false)
   const [draftName, setDraftName] = useState(name)
@@ -160,8 +187,44 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {/* FIFA-style card */}
+        {/* FIFA-style card — borde cónico rotando */}
         <div style={{ padding: '0 20px 20px' }}>
+          <div
+            ref={fifaCardRef}
+            style={{
+              position: 'relative',
+              borderRadius: 20,
+              padding: 2,
+              overflow: 'hidden',
+              boxShadow: '0 0 30px rgba(204, 255, 0, 0.18), 0 0 80px rgba(179, 71, 255, 0.10)',
+            }}
+          >
+            {/* Capa cónica rotando detrás → el 2px de padding deja ver el borde */}
+            <div
+              aria-hidden
+              style={{
+                position: 'absolute',
+                inset: '-50%',
+                background: 'conic-gradient(from 0deg, #CCFF00, #FFB800, #FF5B3A, #B347FF, #00D4FF, #CCFF00)',
+                animation: 'ring-sweep 5s linear infinite',
+                filter: 'blur(1px) saturate(130%)',
+                pointerEvents: 'none',
+              }}
+            />
+            {/* Capa halo difuso que bombea con la rotación */}
+            <div
+              aria-hidden
+              style={{
+                position: 'absolute',
+                inset: '-30%',
+                background: 'conic-gradient(from 180deg, transparent, #CCFF0044, transparent, #B347FF44, transparent)',
+                animation: 'ring-sweep 8s linear infinite reverse',
+                filter: 'blur(24px)',
+                pointerEvents: 'none',
+                opacity: 0.8,
+              }}
+            />
+            <div style={{ position: 'relative', borderRadius: 18, overflow: 'hidden' }}>
           <GlassCard accent="#CCFF00" padding={0}>
             <div
               style={{
@@ -188,15 +251,17 @@ export default function ProfilePage() {
 
               {/* Info */}
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div
+                <CountUp
+                  value={overall}
+                  duration={1400}
+                  whenVisible={false}
                   style={{
                     fontFamily: 'Archivo, sans-serif', fontWeight: 900, fontStyle: 'italic',
                     fontSize: 42, color: '#CCFF00', lineHeight: 1,
                     textShadow: '0 0 16px rgba(204, 255, 0, 0.5)',
+                    display: 'block',
                   }}
-                >
-                  {overall}
-                </div>
+                />
 
                 {editing ? (
                   <>
@@ -324,6 +389,55 @@ export default function ProfilePage() {
               ))}
             </div>
           </GlassCard>
+            </div>
+          </div>
+        </div>
+
+        {/* Streak + acciones */}
+        <div style={{ padding: '0 20px 14px' }}>
+          <StreakBadge onClick={() => setPassOpen(true)} />
+        </div>
+
+        <div style={{ padding: '0 20px 18px', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
+          {[
+            { label: 'Coach AI',   icon: MessageCircle, color: '#B347FF', onClick: () => setCoachOpen(true) },
+            { label: 'Pase',       icon: Crown,         color: '#FFB800', onClick: () => setPassOpen(true) },
+            { label: 'Duelos',     icon: Swords,        color: '#FF5B3A', onClick: () => setDuelsOpen(true) },
+            { label: 'Mercado',    icon: Store,         color: '#00D4FF', onClick: () => setMarketOpen(true) },
+            { label: 'Replay',     icon: Film,          color: '#CCFF00', onClick: () => setReplayOpen(true) },
+            { label: 'Compartir',  icon: Share2,        color: '#FAF5EB', onClick: async () => {
+              if (!fifaCardRef.current) return
+              const ok = await shareFifaCard(fifaCardRef.current, `${name}-fifa-card`)
+              setToast(ok ? 'Tarjeta compartida' : 'No se pudo compartir')
+            } },
+          ].map(b => {
+            const I = b.icon
+            return (
+              <button key={b.label} onClick={b.onClick} style={{
+                padding: '10px 6px', borderRadius: 12,
+                background: `${b.color}14`, border: `1px solid ${b.color}44`,
+                color: b.color, cursor: 'pointer',
+                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
+                fontFamily: 'Space Grotesk', fontSize: 10, fontWeight: 700,
+              }}>
+                <I size={16} />
+                {b.label}
+              </button>
+            )
+          })}
+        </div>
+
+        {/* Heatmap */}
+        <div style={{ padding: '0 20px 20px' }}>
+          <div style={{
+            fontFamily: 'Space Grotesk, sans-serif', fontWeight: 700,
+            fontSize: 13, color: 'rgba(250, 245, 235, 0.6)',
+            textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10,
+          }}>
+            <Flame size={12} style={{ verticalAlign: 'middle', marginRight: 4 }} />
+            Heatmap en cancha
+          </div>
+          <HeatmapPitch name={name} width={320} />
         </div>
 
         {/* Stats strip */}
@@ -343,14 +457,15 @@ export default function ProfilePage() {
                     <I size={16} />
                   </div>
                   <div>
-                    <div
+                    <CountUp
+                      value={s.value}
+                      duration={1200 + i * 120}
                       style={{
                         fontFamily: 'Archivo, sans-serif', fontWeight: 800,
                         fontSize: 20, color: '#FAF5EB',
+                        display: 'block',
                       }}
-                    >
-                      {s.value}
-                    </div>
+                    />
                     <div
                       style={{
                         fontFamily: 'Space Grotesk, sans-serif',
@@ -369,11 +484,10 @@ export default function ProfilePage() {
 
         {/* Coach AI Feedback */}
         <div style={{ padding: '0 20px 20px' }}>
+          <AIBorder colors={['#B347FF', '#00D4FF', '#B347FF']} radius={16} speed={10} halo={0.4}>
           <div style={{
-            padding: 16, borderRadius: 16,
-            background: 'linear-gradient(135deg, rgba(179, 71, 255, 0.16), rgba(0, 212, 255, 0.08))',
-            border: '1px solid rgba(179, 71, 255, 0.4)',
-            boxShadow: '0 6px 24px rgba(179, 71, 255, 0.2)',
+            padding: 16,
+            background: 'linear-gradient(135deg, rgba(179, 71, 255, 0.18), rgba(0, 212, 255, 0.08))',
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
               <div style={{
@@ -487,6 +601,75 @@ export default function ProfilePage() {
               </div>
             </div>
           </div>
+          </AIBorder>
+        </div>
+
+        {/* Achievements */}
+        <div style={{ padding: '0 20px', marginBottom: 18 }}>
+          <div style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            marginBottom: 10,
+          }}>
+            <div style={{
+              fontFamily: 'Space Grotesk, sans-serif', fontWeight: 700,
+              fontSize: 13, color: 'rgba(250, 245, 235, 0.6)',
+              textTransform: 'uppercase', letterSpacing: '0.08em',
+            }}>
+              Logros · {unlockedCount}/{achievements.length}
+            </div>
+            <button
+              onClick={() => setAchievementsOpen(true)}
+              style={{
+                background: 'transparent', border: 'none',
+                color: '#FFB800', cursor: 'pointer',
+                fontFamily: 'Space Grotesk', fontSize: 12, fontWeight: 700,
+              }}
+            >
+              Ver todos →
+            </button>
+          </div>
+          <div style={{ display: 'flex', gap: 8, overflowX: 'auto' }} className="screen-scroll">
+            {latestUnlocked.map(({ achievement: a }) => {
+              const st = RARITY_STYLE[a.rarity]
+              return (
+                <button
+                  key={a.id}
+                  onClick={() => setAchievementsOpen(true)}
+                  style={{
+                    flexShrink: 0, minWidth: 110,
+                    padding: 10, borderRadius: 12,
+                    background: st.bg,
+                    border: `1px solid ${st.color}55`,
+                    boxShadow: `0 0 14px ${st.color}22`,
+                    cursor: 'pointer', textAlign: 'left',
+                  }}
+                >
+                  <div style={{ fontSize: 22, marginBottom: 4 }}>{a.emoji}</div>
+                  <div style={{
+                    fontFamily: 'Archivo, sans-serif', fontWeight: 800, fontSize: 11,
+                    color: '#FAF5EB',
+                  }}>
+                    {a.title}
+                  </div>
+                  <div style={{
+                    fontFamily: 'Space Grotesk', fontSize: 9,
+                    color: st.color, textTransform: 'uppercase', letterSpacing: '0.08em',
+                    marginTop: 2,
+                  }}>
+                    {st.label}
+                  </div>
+                </button>
+              )
+            })}
+            {latestUnlocked.length === 0 && (
+              <div style={{
+                fontFamily: 'Space Grotesk', fontSize: 12,
+                color: 'rgba(250,245,235,0.5)', padding: 10,
+              }}>
+                Aún no desbloqueaste logros. Seguí jugando 💪
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Recent matches */}
@@ -556,6 +739,22 @@ export default function ProfilePage() {
         </div>
       </div>
 
+      <AchievementsSheet
+        open={achievementsOpen}
+        onClose={() => setAchievementsOpen(false)}
+        stats={playerStats}
+      />
+      <CoachChatSheet
+        open={coachOpen}
+        onClose={() => setCoachOpen(false)}
+        name={name}
+        position={position}
+        stats={playerStats}
+      />
+      <SeasonPassSheet open={passOpen} onClose={() => setPassOpen(false)} />
+      <DuelsSheet open={duelsOpen} onClose={() => setDuelsOpen(false)} me={name} />
+      <MarketSheet open={marketOpen} onClose={() => setMarketOpen(false)} />
+      <MatchReplaySheet open={replayOpen} onClose={() => setReplayOpen(false)} home={team} away="Rival FC" />
       <BottomNav />
     </div>
   )

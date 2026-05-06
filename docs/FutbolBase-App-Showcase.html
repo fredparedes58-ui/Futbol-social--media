@@ -1,0 +1,628 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>FutbolBase — Product Showcase</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --obsidian:#0F0D0A;
+    --obsidian-base:#141009;
+    --obsidian-surface:#1A1612;
+    --obsidian-alt:#241F18;
+    --lime:#CCFF00;
+    --amber:#FFB800;
+    --coral:#FF5B3A;
+    --violet:#B347FF;
+    --cyan:#00D4FF;
+    --warm:#FAF5EB;
+    --warm-muted:rgba(250,245,235,.62);
+    --warm-dim:rgba(250,245,235,.38);
+    --border:rgba(255,220,180,.10);
+    --shadow-lime:0 0 24px rgba(204,255,0,.45),0 0 48px rgba(204,255,0,.18);
+    --shadow-amber:0 0 24px rgba(255,184,0,.45),0 0 48px rgba(255,184,0,.18);
+    --shadow-coral:0 0 24px rgba(255,91,58,.4),0 0 48px rgba(255,91,58,.15);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--obsidian);color:var(--warm);font-family:'Space Grotesk',Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.5}
+  body{
+    background:
+      radial-gradient(900px 600px at 12% -10%,rgba(204,255,0,.10),transparent 60%),
+      radial-gradient(900px 600px at 90% 8%,rgba(255,184,0,.08),transparent 60%),
+      radial-gradient(900px 600px at 50% 100%,rgba(255,91,58,.08),transparent 60%),
+      var(--obsidian);
+    min-height:100vh;overflow-x:hidden
+  }
+  h1,h2,h3,h4{font-family:'Archivo','Barlow Condensed',sans-serif;font-weight:900;letter-spacing:-.02em;line-height:1.05}
+  .mono{font-family:'JetBrains Mono',monospace}
+  .container{max-width:1200px;margin:0 auto;padding:0 24px}
+  .grad{background:linear-gradient(135deg,#CCFF00 0%,#FFB800 50%,#FF5B3A 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+
+  /* NAV */
+  .nav{position:sticky;top:0;z-index:50;backdrop-filter:saturate(140%) blur(16px);background:rgba(15,13,10,.78);border-bottom:1px solid var(--border)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .logo{display:flex;align-items:center;gap:10px;font-family:'Archivo';font-weight:900;letter-spacing:-.02em;font-size:20px}
+  .logo-mark{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#CCFF00,#FFB800);display:grid;place-items:center;color:#0F0D0A;font-weight:900;box-shadow:var(--shadow-lime)}
+  .nav-links{display:flex;gap:28px}
+  .nav-links a{color:var(--warm-muted);text-decoration:none;font-size:14px;font-weight:600}
+  .nav-links a:hover{color:var(--lime)}
+  .nav-cta{display:inline-block;padding:9px 16px;border-radius:10px;background:var(--lime);color:#0F0D0A;font-weight:800;text-decoration:none;font-size:14px;box-shadow:var(--shadow-lime)}
+
+  /* HERO */
+  .hero{padding:80px 0 56px;position:relative}
+  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center}
+  .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;background:rgba(204,255,0,.12);border:1px solid rgba(204,255,0,.4);color:var(--lime);font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
+  .hero h1{font-size:clamp(44px,6.5vw,76px);margin:18px 0 18px}
+  .hero p.lead{font-size:18px;color:var(--warm-muted);max-width:520px;margin-bottom:28px}
+  .cta-row{display:flex;gap:12px;flex-wrap:wrap}
+  .btn-primary{padding:14px 22px;border-radius:12px;background:var(--lime);color:#0F0D0A;font-weight:800;text-decoration:none;border:none;cursor:pointer;font-size:15px;box-shadow:var(--shadow-lime);transition:transform .2s}
+  .btn-primary:hover{transform:translateY(-1px)}
+  .btn-ghost{padding:14px 22px;border-radius:12px;background:transparent;border:1px solid var(--border);color:var(--warm);font-weight:700;text-decoration:none;font-size:15px}
+  .btn-ghost:hover{border-color:var(--lime);color:var(--lime)}
+  .stats-row{display:flex;gap:36px;margin-top:36px;flex-wrap:wrap}
+  .stat-mini .v{font-family:'Archivo';font-size:30px;font-weight:900;color:var(--lime)}
+  .stat-mini .l{font-size:12px;color:var(--warm-dim);text-transform:uppercase;letter-spacing:.12em;font-weight:600}
+
+  /* PHONE FRAME */
+  .phone{width:300px;height:620px;border-radius:42px;background:#0a0805;padding:14px;border:1px solid var(--border);box-shadow:0 30px 90px rgba(0,0,0,.6),var(--shadow-lime);position:relative;animation:float 6s ease-in-out infinite}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+  .phone-screen{width:100%;height:100%;border-radius:30px;background:radial-gradient(circle at 50% 0%,#1a1510 0%,#0F0D0A 60%);overflow:hidden;position:relative;display:flex;flex-direction:column}
+  .phone-notch{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:90px;height:22px;background:#000;border-radius:14px;z-index:5}
+  .phone-status{padding:18px 16px 10px;display:flex;justify-content:space-between;align-items:center;font-size:11px;font-weight:700;color:var(--warm)}
+  .ph-hero{padding:14px 16px 8px}
+  .ph-hero .pillet{display:inline-block;padding:4px 10px;border-radius:999px;background:rgba(204,255,0,.12);border:1px solid rgba(204,255,0,.4);color:var(--lime);font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+  .ph-hero h2{font-size:24px;margin:8px 0 4px;line-height:1.05}
+  .ph-hero h2 span.gd{background:linear-gradient(135deg,#CCFF00,#FFB800);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .ph-hero p{font-size:11px;color:var(--warm-muted)}
+  .ph-features{padding:8px 16px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .ph-feat{padding:10px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid var(--border)}
+  .ph-feat .d{width:22px;height:22px;border-radius:6px;display:grid;place-items:center;margin-bottom:6px;color:#0F0D0A;font-weight:900;font-size:11px}
+  .ph-feat .t{font-size:11px;font-weight:800;color:var(--warm)}
+  .ph-feat .s{font-size:9px;color:var(--warm-dim)}
+  .ph-cta{margin:auto 16px 16px;padding:11px;border-radius:12px;background:var(--lime);color:#0F0D0A;font-weight:800;font-size:13px;text-align:center;box-shadow:var(--shadow-lime)}
+  .ph-bottom-nav{display:flex;justify-content:space-around;padding:10px 0;border-top:1px solid var(--border);background:rgba(15,13,10,.6)}
+  .ph-bn-item{font-size:9px;color:var(--warm-dim);text-align:center}
+  .ph-bn-item.active{color:var(--lime)}
+  .ph-bn-item .ic{font-size:14px;display:block;margin-bottom:2px}
+
+  /* SECTION HEADERS */
+  section{padding:96px 0}
+  .section-eyebrow{font-size:12px;color:var(--lime);font-weight:800;letter-spacing:.18em;text-transform:uppercase}
+  .section-title{font-size:clamp(36px,5vw,56px);margin:10px 0 14px}
+  .section-lead{font-size:17px;color:var(--warm-muted);max-width:680px}
+  .section-head{margin-bottom:48px}
+
+  /* VIDEO */
+  .video-frame{border-radius:18px;border:1px solid var(--border);background:var(--obsidian-base);overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+  .video-bar{display:flex;align-items:center;gap:8px;padding:12px 14px;background:#1A1612;border-bottom:1px solid var(--border)}
+  .vb-dot{width:11px;height:11px;border-radius:50%}
+  .vb-dot.r{background:#FF5B3A}.vb-dot.y{background:#FFB800}.vb-dot.g{background:#CCFF00}
+  .vb-url{margin-left:auto;font-size:12px;color:var(--warm-dim);font-family:'JetBrains Mono'}
+  .video-stage{aspect-ratio:16/9;position:relative;background:radial-gradient(circle at 50% 50%,#241F18 0%,#0F0D0A 70%);display:grid;place-items:center;cursor:pointer}
+  .play-btn{width:84px;height:84px;border-radius:50%;background:var(--lime);color:#0F0D0A;display:grid;place-items:center;font-size:32px;box-shadow:var(--shadow-lime);transition:transform .2s}
+  .play-btn:hover{transform:scale(1.08)}
+  .video-stage video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}
+
+  /* SCREENS GRID */
+  .screens-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:32px;margin-top:8px}
+  .screen-card{padding:24px;border-radius:20px;background:rgba(255,255,255,.03);border:1px solid var(--border);transition:transform .25s,border-color .25s}
+  .screen-card:hover{transform:translateY(-4px);border-color:rgba(204,255,0,.4)}
+  .screen-img{width:100%;border-radius:14px;border:1px solid var(--border);aspect-ratio:9/16;object-fit:cover;background:#0a0805}
+  .screen-card h3{font-size:22px;margin:18px 0 6px}
+  .screen-card .desc{font-size:14px;color:var(--warm-muted)}
+  .screen-card .tag{display:inline-block;margin-bottom:8px;padding:4px 10px;border-radius:999px;font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+
+  /* BIG STATS */
+  .big-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:8px}
+  .big-stat{padding:32px 24px;border-radius:18px;background:rgba(255,255,255,.03);border:1px solid var(--border);text-align:center}
+  .big-stat .n{font-family:'Archivo';font-size:54px;font-weight:900;line-height:1}
+  .big-stat .lb{font-size:13px;color:var(--warm-dim);text-transform:uppercase;letter-spacing:.14em;font-weight:700;margin-top:8px}
+
+  /* FEATURES */
+  .feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px}
+  .feat{padding:28px;border-radius:18px;background:rgba(255,255,255,.03);border:1px solid var(--border);transition:transform .25s,border-color .25s,box-shadow .25s}
+  .feat:hover{transform:translateY(-4px);border-color:rgba(204,255,0,.4);box-shadow:var(--shadow-lime)}
+  .feat .ic{width:48px;height:48px;border-radius:12px;display:grid;place-items:center;font-size:24px;margin-bottom:16px}
+  .feat h3{font-size:20px;margin-bottom:8px}
+  .feat p{font-size:14px;color:var(--warm-muted)}
+
+  /* AGENTS */
+  .agents-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
+  .agent{padding:22px;border-radius:16px;background:linear-gradient(135deg,rgba(204,255,0,.06),rgba(255,184,0,.04));border:1px solid var(--border)}
+  .agent .nb{font-family:'JetBrains Mono';color:var(--lime);font-size:12px;font-weight:700;letter-spacing:.18em}
+  .agent h4{font-size:18px;margin:6px 0 6px}
+  .agent .d{font-size:13px;color:var(--warm-muted)}
+
+  /* BUILDER */
+  .builder{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+  .builder-card{padding:32px;border-radius:22px;background:rgba(255,255,255,.04);border:1px solid var(--border)}
+  .input-row{display:flex;flex-direction:column;gap:6px;margin-bottom:18px}
+  .input-row label{font-size:12px;color:var(--warm-dim);text-transform:uppercase;letter-spacing:.12em;font-weight:700}
+  .input-row input,.input-row select{padding:11px 14px;border-radius:10px;background:var(--obsidian-base);border:1px solid var(--border);color:var(--warm);font-size:14px;font-family:inherit}
+  .input-row input:focus,.input-row select:focus{outline:none;border-color:var(--lime);box-shadow:0 0 0 3px rgba(204,255,0,.18)}
+  .slider-row{display:grid;grid-template-columns:120px 1fr 50px;align-items:center;gap:14px;margin-bottom:14px}
+  .slider-row label{font-size:13px;font-weight:700}
+  .slider-row input[type=range]{accent-color:var(--lime)}
+  .slider-row .val{font-family:'JetBrains Mono';font-weight:800;color:var(--lime);text-align:right}
+
+  .card-preview{padding:28px;border-radius:24px;background:linear-gradient(160deg,#241F18 0%,#141009 100%);border:1px solid rgba(204,255,0,.35);box-shadow:var(--shadow-lime);text-align:center;position:relative;overflow:hidden}
+  .card-preview::before{content:'';position:absolute;inset:-30%;background:radial-gradient(circle at 30% 20%,rgba(204,255,0,.18),transparent 60%);pointer-events:none}
+  .ovr-circle{margin:0 auto 14px;width:140px;height:140px;border-radius:50%;display:grid;place-items:center;position:relative;background:conic-gradient(var(--lime) 0deg,var(--lime) calc(var(--ovr,75)*3.6deg),rgba(255,255,255,.05) calc(var(--ovr,75)*3.6deg),rgba(255,255,255,.05) 360deg)}
+  .ovr-inner{width:118px;height:118px;border-radius:50%;background:#0F0D0A;display:grid;place-items:center;flex-direction:column}
+  .ovr-num{font-family:'Archivo';font-size:46px;font-weight:900;color:var(--lime);line-height:1}
+  .ovr-lab{font-size:10px;color:var(--warm-dim);text-transform:uppercase;letter-spacing:.18em;font-weight:700;margin-top:4px}
+  .card-preview .pname{font-family:'Archivo';font-weight:900;font-size:24px;letter-spacing:-.01em}
+  .card-preview .ppos{font-size:12px;color:var(--warm-muted);font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin-top:2px}
+  .card-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px;text-align:center}
+  .card-stats .cs{padding:10px 4px;border-radius:10px;background:rgba(0,0,0,.35);border:1px solid var(--border)}
+  .card-stats .cs .v{font-family:'Archivo';font-weight:900;font-size:18px;color:var(--lime)}
+  .card-stats .cs .l{font-size:9px;color:var(--warm-dim);font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+
+  /* PRICING */
+  .toggle{display:inline-flex;background:var(--obsidian-base);border:1px solid var(--border);border-radius:999px;padding:4px;margin-bottom:32px}
+  .toggle button{padding:8px 18px;border:none;background:transparent;color:var(--warm-muted);font-weight:700;cursor:pointer;font-size:13px;border-radius:999px}
+  .toggle button.active{background:var(--lime);color:#0F0D0A}
+  .price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .price{padding:32px;border-radius:20px;background:rgba(255,255,255,.03);border:1px solid var(--border);position:relative}
+  .price.featured{border-color:var(--lime);box-shadow:var(--shadow-lime)}
+  .price .ribbon{position:absolute;top:-12px;right:24px;background:var(--lime);color:#0F0D0A;padding:4px 12px;border-radius:999px;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+  .price h3{font-size:24px}
+  .price .p{font-family:'Archivo';font-size:48px;font-weight:900;margin:14px 0 4px}
+  .price .p span{font-size:16px;color:var(--warm-dim);font-family:'Space Grotesk';font-weight:600}
+  .price ul{list-style:none;margin-top:18px;display:flex;flex-direction:column;gap:10px}
+  .price li{font-size:13px;color:var(--warm-muted);display:flex;align-items:center;gap:8px}
+  .price li::before{content:'✓';color:var(--lime);font-weight:900}
+
+  /* FAQ */
+  .faq{display:flex;flex-direction:column;gap:14px;max-width:840px;margin:0 auto}
+  .faq-item{padding:22px 26px;border-radius:14px;background:rgba(255,255,255,.03);border:1px solid var(--border);cursor:pointer}
+  .faq-item summary{font-weight:800;font-size:16px;list-style:none;display:flex;justify-content:space-between;align-items:center}
+  .faq-item summary::-webkit-details-marker{display:none}
+  .faq-item summary::after{content:'+';color:var(--lime);font-size:24px;font-weight:300}
+  .faq-item[open] summary::after{content:'−'}
+  .faq-item p{margin-top:14px;color:var(--warm-muted);font-size:14px}
+
+  /* CTA / FOOTER */
+  .cta-block{text-align:center;padding:80px 32px;border-radius:30px;background:linear-gradient(135deg,rgba(204,255,0,.10),rgba(255,184,0,.06));border:1px solid rgba(204,255,0,.35)}
+  .cta-block h2{font-size:clamp(34px,5vw,52px);margin-bottom:14px}
+  .cta-block p{font-size:17px;color:var(--warm-muted);margin-bottom:28px;max-width:560px;margin-left:auto;margin-right:auto}
+
+  footer{padding:48px 0 36px;border-top:1px solid var(--border);color:var(--warm-dim);font-size:13px}
+  .footer-inner{display:flex;justify-content:space-between;flex-wrap:wrap;gap:18px;align-items:center}
+
+  @media (max-width: 920px){
+    .hero-grid{grid-template-columns:1fr;text-align:center}
+    .phone{margin:0 auto}
+    .builder{grid-template-columns:1fr}
+    .price-grid{grid-template-columns:1fr}
+    .big-stats{grid-template-columns:repeat(2,1fr)}
+    .nav-links{display:none}
+  }
+
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .8s,transform .8s}
+  .reveal.in{opacity:1;transform:none}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<header class="nav">
+  <div class="container nav-inner">
+    <div class="logo"><span class="logo-mark">FB</span><span>FutbolBase</span></div>
+    <nav class="nav-links">
+      <a href="#producto">Producto</a>
+      <a href="#pantallas">Pantallas</a>
+      <a href="#features">Features</a>
+      <a href="#tarjeta">Tarjeta FIFA</a>
+      <a href="#precios">Precios</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <a class="nav-cta" href="#cta">Empezar</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container hero-grid">
+    <div class="reveal in">
+      <span class="pill">⚡ Powered by AI Agents · RAG · App nativa iOS · Android</span>
+      <h1>El fútbol amateur <span class="grad">con cerebro propio.</span></h1>
+      <p class="lead">Una app nativa para iOS y Android pensada para clubs, equipos y familias del fútbol base. Feed social, liga FFCV en directo, coach AI, scouting con RAG y pizarra táctica — todo en una sola descarga desde la App Store y Google Play.</p>
+      <div class="cta-row">
+        <a class="btn-primary" href="#cta">▶ Empezar ahora</a>
+        <a class="btn-ghost" href="#pantallas">Ver pantallas</a>
+      </div>
+      <div class="stats-row">
+        <div class="stat-mini"><div class="v">12</div><div class="l">Badges</div></div>
+        <div class="stat-mini"><div class="v">13</div><div class="l">Equipos FFCV</div></div>
+        <div class="stat-mini"><div class="v">4</div><div class="l">Agentes IA</div></div>
+        <div class="stat-mini"><div class="v">100%</div><div class="l">Offline-first</div></div>
+      </div>
+    </div>
+
+    <!-- Phone mockup -->
+    <div style="display:grid;place-items:center">
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="phone-notch"></div>
+          <div class="phone-status"><span>9:41</span><span>5G ◉◉◉</span></div>
+          <div class="ph-hero">
+            <span class="pillet">✨ Powered by AI · RAG</span>
+            <h2>El fútbol amateur<br><span class="gd">con cerebro propio.</span></h2>
+            <p>Agentes deterministas, predicciones, coach AI y comunidad en una app nativa iOS y Android.</p>
+          </div>
+          <div class="ph-features">
+            <div class="ph-feat"><div class="d" style="background:#B347FF">🧠</div><div class="t">IA deportiva</div><div class="s">Coach + RAG + scouting</div></div>
+            <div class="ph-feat"><div class="d" style="background:#FFB800">🏆</div><div class="t">Liga + logros</div><div class="s">12 badges · ranking</div></div>
+            <div class="ph-feat"><div class="d" style="background:#00D4FF">👥</div><div class="t">Comunidad</div><div class="s">Stories · duelos 1v1</div></div>
+            <div class="ph-feat"><div class="d" style="background:#CCFF00">⚡</div><div class="t">Tiempo real</div><div class="s">Live · ticker · voz</div></div>
+          </div>
+          <div class="ph-cta">▶ Empezar ahora</div>
+          <div class="ph-bottom-nav">
+            <div class="ph-bn-item active"><span class="ic">🏠</span>Inicio</div>
+            <div class="ph-bn-item"><span class="ic">🔍</span>Explorar</div>
+            <div class="ph-bn-item"><span class="ic">⚽</span>Live</div>
+            <div class="ph-bn-item"><span class="ic">💬</span>Chat</div>
+            <div class="ph-bn-item"><span class="ic">👤</span>Perfil</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VIDEO -->
+<section id="producto">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="section-eyebrow">Walkthrough</div>
+      <h2 class="section-title">Mira la app <span class="grad">en acción.</span></h2>
+      <p class="section-lead">Recorrido por las pantallas reales: onboarding, feed con stories, liga FFCV en vivo, comunidad, chat y perfil con tarjeta FIFA.</p>
+    </div>
+    <div class="video-frame reveal">
+      <div class="video-bar">
+        <div class="vb-dot r"></div><div class="vb-dot y"></div><div class="vb-dot g"></div>
+        <div class="vb-url">futbolbase.app — demo</div>
+      </div>
+      <div class="video-stage" id="videoStage" onclick="playDemo()">
+        <div class="play-btn" id="playBtn">▶</div>
+        <video id="demoVid" muted playsinline controls preload="none">
+          <source src="assets/futbolbase-demo.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SCREENS -->
+<section id="pantallas" style="padding-top:0">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="section-eyebrow">Las pantallas reales</div>
+      <h2 class="section-title">5 vistas, <span class="grad">1 app nativa.</span></h2>
+      <p class="section-lead">Capturas reales del build actual de FutbolBase. Sin mockups inventados — todo lo que ves está implementado y funciona.</p>
+    </div>
+    <div class="screens-grid">
+      <div class="screen-card reveal">
+        <img class="screen-img" src="assets/screenshots/1-landing.png" alt="Landing">
+        <span class="tag" style="background:rgba(204,255,0,.14);color:#CCFF00">Onboarding</span>
+        <h3>Landing + Install Prompt</h3>
+        <p class="desc">Hero con partículas, 4 features animadas y descarga directa desde App Store / Google Play con deep-link al onboarding.</p>
+      </div>
+      <div class="screen-card reveal">
+        <img class="screen-img" src="assets/screenshots/2-home.png" alt="Home feed">
+        <span class="tag" style="background:rgba(255,184,0,.14);color:#FFB800">Feed</span>
+        <h3>Home — feed + stories</h3>
+        <p class="desc">Stories 24h, posts con likes/comentarios, infinite scroll y create-post modal con upload de fotos/vídeo.</p>
+      </div>
+      <div class="screen-card reveal">
+        <img class="screen-img" src="assets/screenshots/3-profile.png" alt="Profile">
+        <span class="tag" style="background:rgba(179,71,255,.14);color:#B347FF">Perfil</span>
+        <h3>Tarjeta FIFA + radar</h3>
+        <p class="desc">Perfil estilo FIFA con OVR, posición, stats radar (6 dimensiones) y editor inline para entrenadores.</p>
+      </div>
+      <div class="screen-card reveal">
+        <img class="screen-img" src="assets/screenshots/4-league.png" alt="Liga">
+        <span class="tag" style="background:rgba(255,91,58,.14);color:#FF5B3A">Liga FFCV</span>
+        <h3>Clasificación + goleadores</h3>
+        <p class="desc">Tabla de los 13 equipos juveniles de Valencia, jornadas, goleadores en vivo (datos `match_stats` Supabase).</p>
+      </div>
+      <div class="screen-card reveal">
+        <img class="screen-img" src="assets/screenshots/5-community.png" alt="Comunidad">
+        <span class="tag" style="background:rgba(0,212,255,.14);color:#00D4FF">Comunidad</span>
+        <h3>Equipos + duelos 1v1</h3>
+        <p class="desc">Buscador de equipos, stories de comunidad, duelos 1v1, eventos con RSVP y chat realtime de equipo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BIG STATS -->
+<section style="padding-top:0">
+  <div class="container">
+    <div class="big-stats">
+      <div class="big-stat reveal"><div class="n grad" data-target="13">0</div><div class="lb">Equipos liga FFCV</div></div>
+      <div class="big-stat reveal"><div class="n grad" data-target="12">0</div><div class="lb">Badges desbloqueables</div></div>
+      <div class="big-stat reveal"><div class="n grad" data-target="14">0</div><div class="lb">Rutas implementadas</div></div>
+      <div class="big-stat reveal"><div class="n grad" data-target="2">0</div><div class="lb">Plataformas nativas</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="section-eyebrow">Funcionalidades</div>
+      <h2 class="section-title">Todo lo que necesita un club <span class="grad">de fútbol base.</span></h2>
+      <p class="section-lead">App nativa para iOS y Android construida con React Native + Supabase. Realtime, push notifications y modo offline con sincronización automática.</p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat reveal"><div class="ic" style="background:rgba(204,255,0,.14);color:#CCFF00">🧠</div><h3>IA deportiva (4 agentes)</h3><p>Coach AI, Scouting AI, Predictor de partidos y Generador de tácticas. Pipeline determinista + RAG sobre el corpus del equipo.</p></div>
+      <div class="feat reveal"><div class="ic" style="background:rgba(255,184,0,.14);color:#FFB800">🏆</div><h3>Liga FFCV + ranking</h3><p>13 equipos juveniles reales de Valencia, clasificación, goleadores live, jornadas y ranking regional semanal.</p></div>
+      <div class="feat reveal"><div class="ic" style="background:rgba(179,71,255,.14);color:#B347FF">👥</div><h3>Red social del equipo</h3><p>Feed con stories 24h, posts con fotos/vídeo, likes, comentarios, infinite scroll y notificaciones realtime.</p></div>
+      <div class="feat reveal"><div class="ic" style="background:rgba(0,212,255,.14);color:#00D4FF">⚽</div><h3>Partidos + stats</h3><p>Crea partidos, registra resultado, stats por jugador (goles/asistencias/tarjetas) y MVP voting post-partido.</p></div>
+      <div class="feat reveal"><div class="ic" style="background:rgba(255,91,58,.14);color:#FF5B3A">📋</div><h3>Pizarra táctica SVG</h3><p>Formaciones (4-3-3, 4-4-2, 5-3-2, 3-5-2) con drag-drop sobre pitch SVG, anotaciones y export PNG.</p></div>
+      <div class="feat reveal"><div class="ic" style="background:rgba(204,255,0,.14);color:#CCFF00">💬</div><h3>Chat realtime</h3><p>Chat de equipo + 1-a-1 con Supabase Realtime, indicador de escritura, lectura confirmada y notificaciones push.</p></div>
+      <div class="feat reveal"><div class="ic" style="background:rgba(255,184,0,.14);color:#FFB800">🎯</div><h3>Reservas de campo</h3><p>Reserva campos F7/F11 por slot horario, gestiona disponibilidad y notifica al equipo automáticamente.</p></div>
+      <div class="feat reveal"><div class="ic" style="background:rgba(179,71,255,.14);color:#B347FF">📣</div><h3>Tablón de avisos</h3><p>Avisos prioridad normal/urgente del entrenador, con read-receipts y push para padres y jugadores.</p></div>
+      <div class="feat reveal"><div class="ic" style="background:rgba(0,212,255,.14);color:#00D4FF">📱</div><h3>App nativa iOS · Android</h3><p>Disponible en App Store y Google Play. Push nativas, biometría (Face ID / huella), cámara integrada y sincronización offline.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- AGENTS -->
+<section style="padding-top:0">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="section-eyebrow">Stack IA</div>
+      <h2 class="section-title">4 agentes <span class="grad">+ RAG.</span></h2>
+      <p class="section-lead">Cada agente tiene un rol determinista. El RAG indexa partidos, stats y feedback histórico del equipo para personalizar las respuestas.</p>
+    </div>
+    <div class="agents-grid">
+      <div class="agent reveal"><div class="nb">AGENT 01</div><h4>Coach AI</h4><div class="d">Recomienda entrenamiento personal según posición, lesiones y rendimiento del último mes.</div></div>
+      <div class="agent reveal"><div class="nb">AGENT 02</div><h4>Scouting RAG</h4><div class="d">Encuentra jugadores similares al perfil pedido recorriendo el corpus de equipos FFCV indexados.</div></div>
+      <div class="agent reveal"><div class="nb">AGENT 03</div><h4>Match Predictor</h4><div class="d">Predice resultado y goleadores del próximo partido según histórico, racha y bajas declaradas.</div></div>
+      <div class="agent reveal"><div class="nb">AGENT 04</div><h4>Tactic Generator</h4><div class="d">Genera formación + plan de partido contextualizado al rival, terreno y XI disponible esa jornada.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- BUILDER (Tarjeta FIFA) -->
+<section id="tarjeta">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="section-eyebrow">Construye tu tarjeta</div>
+      <h2 class="section-title">Tu jugador, <span class="grad">en formato FIFA.</span></h2>
+      <p class="section-lead">Mueve los sliders y observa cómo cambia tu tarjeta en tiempo real. Misma lógica que la pantalla de Perfil de la app.</p>
+    </div>
+    <div class="builder">
+      <div class="builder-card reveal">
+        <div class="input-row"><label>Nombre</label><input id="bName" value="Pedro Paredes" /></div>
+        <div class="input-row"><label>Posición</label>
+          <select id="bPos">
+            <option>POR</option><option>DFC</option><option>LD</option><option>LI</option>
+            <option>MCD</option><option selected>MCO</option><option>MD</option><option>MI</option>
+            <option>DC</option><option>ED</option><option>EI</option>
+          </select>
+        </div>
+        <div class="slider-row"><label>Velocidad</label><input type="range" min="40" max="99" value="78" id="s1"><span class="val" id="v1">78</span></div>
+        <div class="slider-row"><label>Tiro</label><input type="range" min="40" max="99" value="82" id="s2"><span class="val" id="v2">82</span></div>
+        <div class="slider-row"><label>Pase</label><input type="range" min="40" max="99" value="86" id="s3"><span class="val" id="v3">86</span></div>
+        <div class="slider-row"><label>Regate</label><input type="range" min="40" max="99" value="84" id="s4"><span class="val" id="v4">84</span></div>
+        <div class="slider-row"><label>Defensa</label><input type="range" min="40" max="99" value="62" id="s5"><span class="val" id="v5">62</span></div>
+        <div class="slider-row"><label>Físico</label><input type="range" min="40" max="99" value="74" id="s6"><span class="val" id="v6">74</span></div>
+      </div>
+
+      <div class="card-preview reveal">
+        <div class="ovr-circle" id="ovrCircle" style="--ovr:78">
+          <div class="ovr-inner"><div><div class="ovr-num" id="ovrNum">78</div><div class="ovr-lab">OVR</div></div></div>
+        </div>
+        <div class="pname" id="pName">Pedro Paredes</div>
+        <div class="ppos" id="pPos">MCO</div>
+        <div class="card-stats">
+          <div class="cs"><div class="v" id="d1">78</div><div class="l">VEL</div></div>
+          <div class="cs"><div class="v" id="d2">82</div><div class="l">TIR</div></div>
+          <div class="cs"><div class="v" id="d3">86</div><div class="l">PAS</div></div>
+          <div class="cs"><div class="v" id="d4">84</div><div class="l">REG</div></div>
+          <div class="cs"><div class="v" id="d5">62</div><div class="l">DEF</div></div>
+          <div class="cs"><div class="v" id="d6">74</div><div class="l">FÍS</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="precios">
+  <div class="container">
+    <div class="section-head reveal" style="text-align:center">
+      <div class="section-eyebrow">Planes</div>
+      <h2 class="section-title">Precio para clubs <span class="grad">de fútbol base.</span></h2>
+      <p class="section-lead" style="margin:0 auto">Empieza gratis con un equipo. Escala a club entero o federación cuando lo necesites.</p>
+      <div class="toggle" style="margin-top:24px">
+        <button class="active" id="tMonth">Mensual</button>
+        <button id="tYear">Anual <span style="color:var(--lime);font-size:11px">−20%</span></button>
+      </div>
+    </div>
+    <div class="price-grid">
+      <div class="price reveal">
+        <h3>Equipo</h3>
+        <div class="p" data-m="0" data-y="0">Gratis</div>
+        <p style="font-size:13px;color:var(--warm-dim)">Hasta 25 jugadores · 1 equipo</p>
+        <ul>
+          <li>Feed + stories + chat de equipo</li>
+          <li>Liga FFCV + tabla en vivo</li>
+          <li>Tarjeta FIFA básica</li>
+          <li>1 agente IA (Coach AI)</li>
+          <li>App nativa iOS y Android</li>
+        </ul>
+      </div>
+      <div class="price featured reveal">
+        <span class="ribbon">Más popular</span>
+        <h3>Club</h3>
+        <div class="p" data-m="49" data-y="39">€49<span>/mes</span></div>
+        <p style="font-size:13px;color:var(--warm-dim)">Hasta 8 equipos · 200 jugadores</p>
+        <ul>
+          <li>Todo de Equipo +</li>
+          <li>4 agentes IA + RAG completo</li>
+          <li>Pizarra táctica drag-drop</li>
+          <li>Reservas de campos F7/F11</li>
+          <li>Web Push notifications</li>
+          <li>Reports PDF mensuales</li>
+          <li>Soporte priorizado</li>
+        </ul>
+      </div>
+      <div class="price reveal">
+        <h3>Federación</h3>
+        <div class="p" data-m="299" data-y="239">€299<span>/mes</span></div>
+        <p style="font-size:13px;color:var(--warm-dim)">Equipos ilimitados · multi-club</p>
+        <ul>
+          <li>Todo de Club +</li>
+          <li>Multi-tenant white-label</li>
+          <li>Dashboard federativo</li>
+          <li>API + webhooks</li>
+          <li>SSO + RBAC avanzado</li>
+          <li>SLA 99.9%</li>
+          <li>Onboarding dedicado</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="container">
+    <div class="section-head reveal" style="text-align:center">
+      <div class="section-eyebrow">Preguntas</div>
+      <h2 class="section-title">FAQ</h2>
+    </div>
+    <div class="faq">
+      <details class="faq-item reveal"><summary>¿Funciona offline?</summary><p>Sí. FutbolBase es una app nativa con almacenamiento local en SQLite. Las pantallas principales funcionan sin red y la sincronización con el servidor se reanuda automáticamente al reconectar.</p></details>
+      <details class="faq-item reveal"><summary>¿Qué stack usa por dentro?</summary><p>React Native + TypeScript + Expo + Supabase (auth, Postgres, Realtime, Storage) + TanStack Query v5 + React Navigation + Reanimated + Push notifications nativas (APNs / FCM).</p></details>
+      <details class="faq-item reveal"><summary>¿Cómo es la seguridad de los datos?</summary><p>Row-Level Security en Supabase para todas las tablas, JWT por usuario, roles `coach`/`player`/`parent` con permisos granulares y backups diarios automáticos.</p></details>
+      <details class="faq-item reveal"><summary>¿Qué es la liga FFCV?</summary><p>Federación de Fútbol de la Comunidad Valenciana. La app trae cargada la temporada juvenil con 13 equipos reales y permite seguir clasificación, jornadas y goleadores en vivo.</p></details>
+      <details class="faq-item reveal"><summary>¿Los agentes IA son deterministas?</summary><p>Sí. Cada agente (Coach, Scouting, Predictor, Tactic) tiene un prompt versionado, temperature controlada y RAG sobre el corpus del equipo para reproducibilidad y trazabilidad.</p></details>
+      <details class="faq-item reveal"><summary>¿Cómo se descarga?</summary><p>FutbolBase es una app nativa. Se descarga directamente desde la App Store (iOS) y Google Play (Android). Icono propio, splash screen, push notificaciones, biometría y acceso a cámara como cualquier app nativa.</p></details>
+      <details class="faq-item reveal"><summary>¿Hay app para padres?</summary><p>Sí. El rol `parent` accede a feed, avisos urgentes, calendario de partidos, asistencia y notificaciones push. Sin permisos de edición.</p></details>
+      <details class="faq-item reveal"><summary>¿Puedo migrar mis datos actuales?</summary><p>Sí. Importador CSV para plantilla, calendario y stats históricas. Soporte dedicado en plan Club y Federación para la migración inicial.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="container">
+    <div class="cta-block reveal">
+      <h2>Lleva tu club al <span class="grad">siguiente nivel.</span></h2>
+      <p>Empieza gratis con un equipo. Sin tarjeta de crédito, instalación en 30 segundos.</p>
+      <div class="cta-row" style="justify-content:center">
+        <a class="btn-primary" href="#">▶ Crear cuenta</a>
+        <a class="btn-ghost" href="#pantallas">Ver pantallas otra vez</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container footer-inner">
+    <div class="logo"><span class="logo-mark">FB</span><span>FutbolBase</span></div>
+    <div>© 2026 FutbolBase · React 19 + Supabase · Build 1.0.0</div>
+    <div style="display:flex;gap:18px"><a href="#" style="color:var(--warm-dim)">Privacidad</a><a href="#" style="color:var(--warm-dim)">Términos</a><a href="#" style="color:var(--warm-dim)">Contacto</a></div>
+  </div>
+</footer>
+
+<script>
+  // Reveal on scroll
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  },{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  // Animated counters
+  const counterIO = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(!e.isIntersecting) return;
+      const el = e.target; const target = +el.dataset.target; const dur=1400; const start=performance.now();
+      function tick(now){
+        const t = Math.min(1,(now-start)/dur);
+        const eased = 1-Math.pow(1-t,3);
+        el.textContent = Math.round(eased*target).toLocaleString('es-ES');
+        if(t<1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+      counterIO.unobserve(el);
+    });
+  },{threshold:.4});
+  document.querySelectorAll('[data-target]').forEach(el=>counterIO.observe(el));
+
+  // Video play
+  function playDemo(){
+    const v = document.getElementById('demoVid');
+    const btn = document.getElementById('playBtn');
+    if(v.currentSrc && v.querySelector('source').src){
+      v.style.display='block'; btn.style.display='none'; v.play().catch(()=>{
+        alert('Coloca el archivo de video en docs/assets/futbolbase-demo.mp4 para activar la reproducción.');
+      });
+    } else {
+      alert('Coloca el archivo de video en docs/assets/futbolbase-demo.mp4 para activar la reproducción.');
+    }
+  }
+
+  // VSI / FIFA Card builder
+  const sliders = ['s1','s2','s3','s4','s5','s6'].map(id=>document.getElementById(id));
+  const vals = ['v1','v2','v3','v4','v5','v6'].map(id=>document.getElementById(id));
+  const dispEls = ['d1','d2','d3','d4','d5','d6'].map(id=>document.getElementById(id));
+  const ovrNum = document.getElementById('ovrNum');
+  const ovrCircle = document.getElementById('ovrCircle');
+  const pName = document.getElementById('pName');
+  const pPos = document.getElementById('pPos');
+  const bName = document.getElementById('bName');
+  const bPos = document.getElementById('bPos');
+
+  function colorFor(ovr){
+    if(ovr>=85) return '#CCFF00';
+    if(ovr>=75) return '#FFB800';
+    if(ovr>=65) return '#FF5B3A';
+    return '#B347FF';
+  }
+  function update(){
+    const v = sliders.map(s=>+s.value);
+    v.forEach((n,i)=>{ vals[i].textContent=n; dispEls[i].textContent=n; });
+    const ovr = Math.round(v.reduce((a,b)=>a+b,0)/v.length);
+    ovrNum.textContent = ovr;
+    const c = colorFor(ovr);
+    ovrCircle.style.setProperty('--ovr', ovr);
+    ovrCircle.style.background = `conic-gradient(${c} 0deg, ${c} ${ovr*3.6}deg, rgba(255,255,255,.05) ${ovr*3.6}deg, rgba(255,255,255,.05) 360deg)`;
+    ovrNum.style.color = c;
+    dispEls.forEach(el=>el.style.color = c);
+    document.querySelector('.card-preview').style.borderColor = c+'88';
+    document.querySelector('.card-preview').style.boxShadow = `0 0 24px ${c}55, 0 0 48px ${c}22`;
+  }
+  sliders.forEach(s=>s.addEventListener('input',update));
+  bName.addEventListener('input',()=>pName.textContent=bName.value||'—');
+  bPos.addEventListener('change',()=>pPos.textContent=bPos.value);
+  update();
+
+  // Pricing toggle
+  const tMonth = document.getElementById('tMonth');
+  const tYear = document.getElementById('tYear');
+  function setPricing(year){
+    tMonth.classList.toggle('active',!year);
+    tYear.classList.toggle('active',year);
+    document.querySelectorAll('.price .p').forEach(el=>{
+      const m = el.dataset.m; const y = el.dataset.y;
+      if(m==='0'){ el.innerHTML = 'Gratis'; return; }
+      const price = year ? y : m;
+      el.innerHTML = `€${price}<span>/${year?'mes · facturación anual':'mes'}</span>`;
+    });
+  }
+  tMonth.addEventListener('click',()=>setPricing(false));
+  tYear.addEventListener('click',()=>setPricing(true));
+</script>
+</body>
+</html>

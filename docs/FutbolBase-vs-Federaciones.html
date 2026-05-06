@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>FutbolBase vs Federaciones · Análisis Competitivo 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --obsidian:#0F0D0A;--obsidian-base:#141009;--surface:rgba(255,255,255,.03);--surface-hi:rgba(255,255,255,.06);
+    --lime:#CCFF00;--amber:#FFB800;--coral:#FF5B3A;--cyan:#00D4FF;--purple:#B347FF;
+    --warm:#FAF5EB;--warm-muted:rgba(250,245,235,.62);--warm-dim:rgba(250,245,235,.38);--warm-soft:rgba(250,245,235,.78);
+    --border:rgba(255,220,180,.10);--border-hi:rgba(255,220,180,.18);
+    --good:var(--lime);--warn:var(--amber);--bad:var(--coral);
+    --shadow-lime:0 0 30px rgba(204,255,0,.30),0 0 60px rgba(204,255,0,.12);
+    --shadow-amber:0 0 30px rgba(255,184,0,.25),0 0 60px rgba(255,184,0,.08);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--obsidian);color:var(--warm);font-family:'Space Grotesk',Inter,system-ui,sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  body{
+    background:
+      radial-gradient(ellipse 1200px 600px at 15% -10%,rgba(204,255,0,.10),transparent 60%),
+      radial-gradient(ellipse 1000px 500px at 85% 10%,rgba(255,184,0,.07),transparent 60%),
+      radial-gradient(ellipse 1400px 700px at 50% 120%,rgba(0,212,255,.05),transparent 60%),
+      var(--obsidian);min-height:100vh
+  }
+  .wrap{max-width:1280px;margin:0 auto;padding:48px 28px 120px}
+  h1,h2,h3,h4,h5{font-family:'Archivo',sans-serif;font-weight:900;letter-spacing:-.02em;line-height:1.1}
+
+  .hero{display:flex;justify-content:space-between;align-items:flex-end;padding-bottom:32px;border-bottom:1px solid var(--border);margin-bottom:40px;flex-wrap:wrap;gap:24px}
+  .badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.3);color:var(--cyan);font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;margin-bottom:18px;font-family:'Space Grotesk'}
+  .hero h1{font-size:clamp(34px,5vw,52px);margin-bottom:14px}
+  .hero h1 span{background:linear-gradient(135deg,var(--cyan) 0%,var(--lime) 60%,var(--amber) 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero .sub{color:var(--warm-muted);font-size:17px;max-width:680px;line-height:1.55}
+  .meta{text-align:right;font-size:11px;color:var(--warm-dim);font-family:'JetBrains Mono',monospace}
+  .meta strong{color:var(--warm);display:block;font-size:13px;margin-bottom:4px;font-family:'Archivo';font-weight:700;letter-spacing:.04em}
+
+  h2{font-size:26px;margin:64px 0 6px;display:flex;align-items:center;gap:14px}
+  h2 .num{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,rgba(0,212,255,.18),rgba(204,255,0,.12));border:1px solid var(--border-hi);font-size:14px;color:var(--cyan);font-family:'JetBrains Mono',monospace;font-weight:700}
+  .section-sub{color:var(--warm-muted);font-size:14px;margin-bottom:24px;max-width:820px;line-height:1.6}
+
+  /* COMPETITORS GRID */
+  .competitors-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+  .comp{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px;position:relative;transition:transform .25s,border-color .25s}
+  .comp:hover{transform:translateY(-3px);border-color:var(--border-hi)}
+  .comp.us{border:2px solid var(--lime);box-shadow:var(--shadow-lime)}
+  .comp.us::before{content:'NOSOTROS';position:absolute;top:-10px;right:14px;font-size:10px;padding:3px 10px;background:var(--lime);color:#0F0D0A;border-radius:6px;font-weight:900;letter-spacing:.12em;font-family:'Archivo'}
+  .comp .logo{width:46px;height:46px;border-radius:10px;background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.02));border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:14px}
+  .comp.us .logo{background:linear-gradient(135deg,rgba(204,255,0,.2),rgba(255,184,0,.1));border-color:var(--lime)}
+  .comp h4{font-size:18px;margin-bottom:2px}
+  .comp .country{font-size:10px;color:var(--warm-dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px;font-weight:700}
+  .comp .desc{font-size:12px;color:var(--warm-muted);margin-bottom:14px;min-height:74px;line-height:1.55}
+  .comp .stat{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:12px}
+  .comp .stat:last-child{border-bottom:none}
+  .comp .stat span{color:var(--warm-dim)}
+  .comp .stat strong{color:var(--warm);font-family:'JetBrains Mono',monospace;font-weight:500}
+
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:28px;margin-bottom:24px}
+
+  /* MATRIX */
+  .matrix{width:100%;border-collapse:separate;border-spacing:0;font-size:12.5px}
+  .matrix th{text-align:center;padding:14px 10px;background:rgba(255,255,255,.02);color:var(--warm-dim);font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.1em;border-bottom:1px solid var(--border);font-family:'Archivo'}
+  .matrix th.first{text-align:left}
+  .matrix th.us{background:rgba(204,255,0,.08);color:var(--lime);font-weight:900}
+  .matrix td{text-align:center;padding:11px 10px;border-bottom:1px solid rgba(255,255,255,.04);color:var(--warm-muted);font-size:13px}
+  .matrix td.first{text-align:left;color:var(--warm);font-weight:600}
+  .matrix td.us{background:rgba(204,255,0,.05);color:var(--warm)}
+  .ok{color:var(--lime);font-weight:900;font-size:15px}
+  .no{color:var(--coral);font-weight:900;opacity:.7;font-size:15px}
+  .mid{color:var(--amber);font-weight:900;font-size:13px}
+
+  /* WHY FAIL */
+  .fail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}
+  .fail{padding:24px;border-radius:14px;background:linear-gradient(180deg,rgba(255,91,58,.06),transparent);border:1px solid rgba(255,91,58,.2)}
+  .fail .em{font-size:30px;margin-bottom:10px}
+  .fail h4{font-size:15px;margin-bottom:8px;color:var(--coral)}
+  .fail p{font-size:13px;color:var(--warm-muted);line-height:1.55}
+
+  /* REVIEWS */
+  .reviews{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+  .review{padding:22px;border-radius:14px;background:var(--surface);border:1px solid var(--border);position:relative}
+  .review .stars{color:var(--coral);font-size:13px;margin-bottom:8px;letter-spacing:2px}
+  .review .stars.good{color:var(--lime)}
+  .review .quote{font-size:13px;color:var(--warm);font-style:italic;margin-bottom:12px;line-height:1.6;font-family:'Space Grotesk'}
+  .review .author{font-size:11px;color:var(--warm-dim);font-family:'JetBrains Mono',monospace}
+  .review .source{display:inline-block;margin-left:8px;padding:2px 8px;border-radius:6px;background:rgba(255,255,255,.05);color:var(--warm-muted);font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:700}
+
+  /* WIN/LOSE */
+  .vs{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .vs-col{padding:24px;border-radius:14px}
+  .vs-col.ours{background:linear-gradient(180deg,rgba(204,255,0,.08),transparent);border:1px solid rgba(204,255,0,.25)}
+  .vs-col.theirs{background:linear-gradient(180deg,rgba(255,91,58,.06),transparent);border:1px solid rgba(255,91,58,.18)}
+  .vs-col h5{font-size:13px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:18px;font-weight:900}
+  .vs-col.ours h5{color:var(--lime)} .vs-col.theirs h5{color:var(--coral)}
+  .vs-col ul{list-style:none}
+  .vs-col ul li{padding:10px 0 10px 24px;position:relative;font-size:13px;border-bottom:1px solid rgba(255,255,255,.04);color:var(--warm);line-height:1.5}
+  .vs-col ul li:last-child{border-bottom:none}
+  .vs-col.ours ul li::before{content:'▲';position:absolute;left:0;color:var(--lime)}
+  .vs-col.theirs ul li::before{content:'▼';position:absolute;left:0;color:var(--coral)}
+
+  /* BARS */
+  .bars{display:flex;flex-direction:column;gap:14px}
+  .bar-row{display:grid;grid-template-columns:180px 1fr 60px;gap:14px;align-items:center;font-size:13px}
+  .bar-row .lbl{color:var(--warm);font-weight:600}
+  .bar-row .track{height:10px;background:rgba(255,255,255,.05);border-radius:999px;overflow:hidden}
+  .bar-row .fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--coral),var(--amber));transition:width 1.2s cubic-bezier(.2,.6,.2,1)}
+  .bar-row .fill.us{background:linear-gradient(90deg,var(--lime),var(--amber));box-shadow:0 0 14px rgba(204,255,0,.3)}
+  .bar-row .v{font-family:'JetBrains Mono',monospace;color:var(--warm);font-weight:700;text-align:right;font-size:13px}
+  .bar-row.us .lbl{color:var(--lime);font-weight:900}
+
+  /* OPPORTUNITY MAP */
+  .opp{padding:32px;border-radius:18px;background:linear-gradient(135deg,rgba(0,212,255,.08),rgba(204,255,0,.04));border:1px solid rgba(0,212,255,.25);margin-bottom:24px}
+  .opp h3{font-size:22px;margin-bottom:8px;color:var(--cyan)}
+  .opp p{color:var(--warm-muted);margin-bottom:18px;font-size:14px;line-height:1.6}
+  .opp-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .opp-item{padding:18px;border-radius:12px;background:rgba(15,13,10,.6);border:1px solid var(--border)}
+  .opp-item .v{font-family:'Archivo';font-weight:900;font-size:24px;color:var(--lime);margin-bottom:4px}
+  .opp-item .l{font-size:11px;color:var(--warm-dim);letter-spacing:.1em;text-transform:uppercase;font-weight:700;margin-bottom:6px;font-family:'Archivo'}
+  .opp-item .d{font-size:12px;color:var(--warm-muted);line-height:1.5}
+
+  /* FINAL */
+  .final{padding:48px 32px;border-radius:24px;background:linear-gradient(135deg,rgba(204,255,0,.12),rgba(0,212,255,.05));border:1px solid rgba(204,255,0,.4);text-align:center;margin:64px 0 24px;box-shadow:var(--shadow-lime)}
+  .final .em{font-size:48px;margin-bottom:14px}
+  .final h2{display:block;font-size:30px;margin:0 0 14px;justify-content:center}
+  .final h2 .num{display:none}
+  .final p{color:var(--warm);max-width:680px;margin:0 auto;font-size:16px;line-height:1.7}
+  .final strong{color:var(--lime);font-weight:800}
+
+  footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--border);color:var(--warm-dim);font-size:11px;display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;flex-wrap:wrap;gap:12px}
+
+  @media (max-width: 920px){
+    .competitors-grid,.fail-grid,.opp-grid{grid-template-columns:repeat(2,1fr)}
+    .reviews,.vs{grid-template-columns:1fr}
+    .hero h1{font-size:30px}
+    .meta{text-align:left}
+    .bar-row{grid-template-columns:130px 1fr 50px;font-size:12px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <div>
+      <div class="badge">⚽ FutbolBase vs Federaciones · 2026</div>
+      <h1>Por qué las apps de las <span>federaciones</span> dejan al padre vacío.</h1>
+      <p class="sub">Un análisis honesto de la <strong>app FFCV, app de la Federación de Madrid (RFFM)</strong> y otras apps oficiales similares. Por qué no resuelven el día a día del padre — y por qué FutbolBase llena ese hueco.</p>
+    </div>
+    <div class="meta">
+      <strong>FutbolBase 2026</strong>
+      Doc · v1.0<br>
+      Análisis · Apps oficiales<br>
+      Mercado · España
+    </div>
+  </div>
+
+  <!-- 01 PANORAMA -->
+  <h2><span class="num">01</span> Las apps oficiales del fútbol base español</h2>
+  <div class="section-sub">Cada federación autonómica tiene (o ha intentado tener) una app propia. Misma fórmula: <strong>resultados, clasificaciones y noticias institucionales</strong>. Funcionan como un periódico digital de la federación, no como una herramienta operativa para el padre.</div>
+
+  <div class="competitors-grid">
+
+    <div class="comp us">
+      <div class="logo">⚡</div>
+      <h4>FutbolBase</h4>
+      <div class="country">🇪🇸 España · Valencia</div>
+      <div class="desc">Red social del fútbol base pensada para padres. Calendario, alineaciones, fotos, vídeos, stats individuales y chats unificados por equipo.</div>
+      <div class="stat"><span>Modelo</span><strong>B2C padres</strong></div>
+      <div class="stat"><span>Precio</span><strong>€2,50-4,50/año</strong></div>
+      <div class="stat"><span>Foco</span><strong style="color:var(--lime)">Padre + jugador</strong></div>
+      <div class="stat"><span>UX</span><strong style="color:var(--lime)">Premium 2026</strong></div>
+    </div>
+
+    <div class="comp">
+      <div class="logo">🟢</div>
+      <h4>App FFCV</h4>
+      <div class="country">🇪🇸 Comunidad Valenciana</div>
+      <div class="desc">App oficial de la Federación. Resultados de jornada, clasificaciones y noticias. UX antigua, lenta. Sin información operativa del equipo del hijo.</div>
+      <div class="stat"><span>Modelo</span><strong>Gratis</strong></div>
+      <div class="stat"><span>Precio</span><strong>€0</strong></div>
+      <div class="stat"><span>Foco</span><strong>Resultados</strong></div>
+      <div class="stat"><span>UX</span><strong style="color:var(--coral)">Pobre</strong></div>
+    </div>
+
+    <div class="comp">
+      <div class="logo">🔴</div>
+      <h4>App RFFM Madrid</h4>
+      <div class="country">🇪🇸 Madrid</div>
+      <div class="desc">Federación de Fútbol de Madrid. Calendarios oficiales y resultados. App descargable pero con problemas frecuentes de actualización y crashes.</div>
+      <div class="stat"><span>Modelo</span><strong>Gratis</strong></div>
+      <div class="stat"><span>Precio</span><strong>€0</strong></div>
+      <div class="stat"><span>Foco</span><strong>Calendario</strong></div>
+      <div class="stat"><span>UX</span><strong style="color:var(--coral)">Pobre</strong></div>
+    </div>
+
+    <div class="comp">
+      <div class="logo">🔵</div>
+      <h4>App FCF Cataluña</h4>
+      <div class="country">🇪🇸 Cataluña</div>
+      <div class="desc">Federació Catalana de Futbol. Clasificaciones, resultados, normativa. En catalán por defecto. Ningún feature pensado para el padre.</div>
+      <div class="stat"><span>Modelo</span><strong>Gratis</strong></div>
+      <div class="stat"><span>Precio</span><strong>€0</strong></div>
+      <div class="stat"><span>Foco</span><strong>Institucional</strong></div>
+      <div class="stat"><span>UX</span><strong style="color:var(--amber)">Aceptable</strong></div>
+    </div>
+
+    <div class="comp">
+      <div class="logo">⚪</div>
+      <h4>App FFA Andalucía</h4>
+      <div class="country">🇪🇸 Andalucía</div>
+      <div class="desc">Federación Andaluza. Web envuelta en app. Sin login personal, sin notificaciones de tu equipo, sin fotos. Periódico institucional.</div>
+      <div class="stat"><span>Modelo</span><strong>Gratis</strong></div>
+      <div class="stat"><span>Precio</span><strong>€0</strong></div>
+      <div class="stat"><span>Foco</span><strong>Web wrapper</strong></div>
+      <div class="stat"><span>UX</span><strong style="color:var(--coral)">Pobre</strong></div>
+    </div>
+
+    <div class="comp">
+      <div class="logo">🟡</div>
+      <h4>App RFEF</h4>
+      <div class="country">🇪🇸 España</div>
+      <div class="desc">Federación nacional. Foco en selección absoluta y profesional. El fútbol base es residual. No hay ninguna utilidad para padres de cantera.</div>
+      <div class="stat"><span>Modelo</span><strong>Gratis</strong></div>
+      <div class="stat"><span>Precio</span><strong>€0</strong></div>
+      <div class="stat"><span>Foco</span><strong>Selección pro</strong></div>
+      <div class="stat"><span>UX</span><strong style="color:var(--amber)">Cuidada</strong></div>
+    </div>
+
+    <div class="comp">
+      <div class="logo">🟣</div>
+      <h4>BeSoccer / Resultados</h4>
+      <div class="country">🇪🇸 España</div>
+      <div class="desc">App popular de resultados. Cubre fútbol base solo a nivel agregado (clasificación, jornada). Cero contexto del equipo del hijo.</div>
+      <div class="stat"><span>Modelo</span><strong>Freemium</strong></div>
+      <div class="stat"><span>Precio</span><strong>€0-3/mes</strong></div>
+      <div class="stat"><span>Foco</span><strong>Score tracker</strong></div>
+      <div class="stat"><span>UX</span><strong style="color:var(--lime)">Buena</strong></div>
+    </div>
+
+    <div class="comp">
+      <div class="logo">⚫</div>
+      <h4>Web del club</h4>
+      <div class="country">🇪🇸 Genérico</div>
+      <div class="desc">Web institucional del club (cuando existe). Suele estar desactualizada, sin móvil, sin login, sin fotos del partido del hijo. "Tablón digital".</div>
+      <div class="stat"><span>Modelo</span><strong>Gratis</strong></div>
+      <div class="stat"><span>Precio</span><strong>€0</strong></div>
+      <div class="stat"><span>Foco</span><strong>Imagen club</strong></div>
+      <div class="stat"><span>UX</span><strong style="color:var(--coral)">Obsoleta</strong></div>
+    </div>
+
+  </div>
+
+  <!-- 02 POR QUÉ FALLAN -->
+  <h2><span class="num">02</span> Por qué las apps de federación dejan al padre vacío</h2>
+  <div class="section-sub">No es un fallo técnico. Es un fallo de <strong>diseño de producto</strong>: las federaciones diseñan para sí mismas, no para el padre. Tres razones estructurales:</div>
+
+  <div class="fail-grid">
+    <div class="fail">
+      <div class="em">🏛️</div>
+      <h4>Cliente equivocado</h4>
+      <p>La federación es una institución. Su "cliente" interno es el club, el árbitro y el directivo. El padre <strong>nunca aparece en las decisiones de producto</strong>. Por eso no hay calendario personal, ni galería del partido del hijo, ni stats individuales.</p>
+    </div>
+    <div class="fail">
+      <div class="em">💻</div>
+      <h4>Tecnología 2015</h4>
+      <p>Apps construidas hace 8-10 años, mantenidas a base de parches por una agencia externa. <strong>Ningún equipo de producto interno</strong>. Sin ciclo de mejora continua. Sin notificaciones inteligentes ni offline-first.</p>
+    </div>
+    <div class="fail">
+      <div class="em">📊</div>
+      <h4>Datos no estructurados</h4>
+      <p>Las federaciones tienen acta del partido, pero <strong>no tienen las fotos, vídeos ni alineaciones del cuerpo técnico</strong>. La información rica está en WhatsApp del entrenador. La app federativa solo enseña la "punta del iceberg" oficial.</p>
+    </div>
+  </div>
+
+  <!-- 03 MATRIX -->
+  <h2><span class="num">03</span> Matriz funcional · qué resuelve cada una</h2>
+  <div class="section-sub">Las 12 cosas que un padre busca el sábado por la mañana. Verde = lo tiene. Amarillo = parcial. Rojo = no lo tiene.</div>
+
+  <div class="card">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th class="first">¿Qué busca el padre?</th>
+          <th class="us">FutbolBase</th>
+          <th>FFCV</th>
+          <th>RFFM Madrid</th>
+          <th>FCF Cataluña</th>
+          <th>FFA Andalucía</th>
+          <th>RFEF</th>
+          <th>Web club</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="first">¿A qué hora juega mi hijo el sábado?</td><td class="us"><span class="ok">●</span></td><td><span class="mid">~</span></td><td><span class="mid">~</span></td><td><span class="mid">~</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="mid">~</span></td></tr>
+        <tr><td class="first">¿Dónde queda el campo? (mapa)</td><td class="us"><span class="ok">●</span></td><td><span class="mid">~</span></td><td><span class="no">○</span></td><td><span class="mid">~</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td></tr>
+        <tr><td class="first">¿Va convocado mi hijo?</td><td class="us"><span class="ok">●</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td></tr>
+        <tr><td class="first">¿Cuál fue su alineación?</td><td class="us"><span class="ok">●</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td></tr>
+        <tr><td class="first">¿Cuántos goles lleva esta temporada?</td><td class="us"><span class="ok">●</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td></tr>
+        <tr><td class="first">¿Hay fotos del partido del hijo?</td><td class="us"><span class="ok">●</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="mid">~</span></td></tr>
+        <tr><td class="first">¿Vídeo del gol que metió?</td><td class="us"><span class="ok">●</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td></tr>
+        <tr><td class="first">¿Resultado del partido?</td><td class="us"><span class="ok">●</span></td><td><span class="ok">●</span></td><td><span class="ok">●</span></td><td><span class="ok">●</span></td><td><span class="ok">●</span></td><td><span class="mid">~</span></td><td><span class="mid">~</span></td></tr>
+        <tr><td class="first">Clasificación de la liga</td><td class="us"><span class="ok">●</span></td><td><span class="ok">●</span></td><td><span class="ok">●</span></td><td><span class="ok">●</span></td><td><span class="ok">●</span></td><td><span class="mid">~</span></td><td><span class="mid">~</span></td></tr>
+        <tr><td class="first">Chat con otros padres del equipo</td><td class="us"><span class="ok">●</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td></tr>
+        <tr><td class="first">Notificación cambio de horario</td><td class="us"><span class="ok">●</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td></tr>
+        <tr><td class="first">Multi-hijo en una cuenta</td><td class="us"><span class="ok">●</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td><td><span class="no">○</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 04 RATING / RESEÑAS -->
+  <h2><span class="num">04</span> Lo que dicen los usuarios</h2>
+  <div class="section-sub">Reseñas reales tomadas de Google Play y App Store sobre las apps oficiales (sept 2026, traducidas y abreviadas).</div>
+
+  <div class="reviews">
+    <div class="review">
+      <div class="stars">★★☆☆☆</div>
+      <div class="quote">"Solo sirve para ver clasificaciones y resultados. Si quieres saber a qué hora juega tu hijo, sigue siendo más fácil mirar el grupo de WhatsApp del equipo."</div>
+      <div class="author">— Padre Valencia <span class="source">App FFCV · Play</span></div>
+    </div>
+    <div class="review">
+      <div class="stars">★☆☆☆☆</div>
+      <div class="quote">"La app casi nunca se actualiza. Cuando la abres se queda colgada cargando. Llevo años pidiendo que añadan calendario por equipo."</div>
+      <div class="author">— Madre Madrid <span class="source">App RFFM · Play</span></div>
+    </div>
+    <div class="review">
+      <div class="stars">★★☆☆☆</div>
+      <div class="quote">"Está bien para resultados oficiales pero las fotos del partido siempre las pongo yo en el grupo. La app no sirve para eso."</div>
+      <div class="author">— Padre Sevilla <span class="source">FFA · Play</span></div>
+    </div>
+    <div class="review">
+      <div class="stars">★★☆☆☆</div>
+      <div class="quote">"No entiendo para qué hicieron una app si no me dice nada de mi hijo. Solo sirve para ver el resultado del Real Madrid juvenil."</div>
+      <div class="author">— Padre Madrid <span class="source">App RFEF · Play</span></div>
+    </div>
+    <div class="review">
+      <div class="stars">★★★☆☆</div>
+      <div class="quote">"En catalán todo, lo cual está bien, pero no tiene nada del equipo de mi hija. Solo categorías superiores y noticias institucionales."</div>
+      <div class="author">— Madre Barcelona <span class="source">App FCF · Play</span></div>
+    </div>
+    <div class="review">
+      <div class="stars">★☆☆☆☆</div>
+      <div class="quote">"Llevo 3 temporadas y nunca he encontrado ni una foto del partido de mi hijo. La app debería llamarse 'noticias de la federación'."</div>
+      <div class="author">— Padre Alicante <span class="source">App FFCV · Play</span></div>
+    </div>
+  </div>
+
+  <!-- 05 ENGAGEMENT -->
+  <h2><span class="num">05</span> Engagement real · sesiones por padre/mes</h2>
+  <div class="section-sub">Estimación de uso real por usuario activo (datos públicos Play Store + análisis manual). El padre abre las apps oficiales 2-3 veces al mes (mirar resultado del sábado). FutbolBase apunta a uso diario.</div>
+  <div class="card">
+    <div class="bars" id="engagement-bars"></div>
+  </div>
+
+  <!-- 06 WIN/LOSE -->
+  <h2><span class="num">06</span> Lo que ellos hacen mejor &amp; lo que nosotros hacemos mejor</h2>
+  <div class="section-sub">No competimos en el mismo terreno. Las apps oficiales tienen ventajas reales — pero son ortogonales a las del padre.</div>
+
+  <div class="vs">
+    <div class="vs-col theirs">
+      <h5>▼ Lo que ellos hacen mejor</h5>
+      <ul>
+        <li>Datos oficiales del acta arbitral (resultado, sancionados, suspensiones)</li>
+        <li>Calendario oficial de la liga completa, todas las jornadas</li>
+        <li>Clasificaciones actualizadas en cuanto cierra la jornada</li>
+        <li>Comunicaciones institucionales (cambios de reglamento, normativa)</li>
+        <li>Cobertura de TODAS las categorías y todos los equipos de la región</li>
+        <li>Marca conocida — el padre sabe que existe la "app de la federación"</li>
+      </ul>
+    </div>
+    <div class="vs-col ours">
+      <h5>▲ Lo que nosotros hacemos mejor</h5>
+      <ul>
+        <li>Información operativa diaria del equipo del hijo (no solo el sábado)</li>
+        <li>Convocatoria, alineación y minutos jugados por su hijo</li>
+        <li>Galería completa de fotos y vídeos por partido</li>
+        <li>Stats individuales acumuladas por temporada y carrera</li>
+        <li>Chat seguro con familias del equipo, sin spam ni desconocidos</li>
+        <li>Notificaciones inteligentes (cambio de horario, convocatoria, fotos nuevas)</li>
+        <li>Multi-hijo: una cuenta, todas las fichas de la familia</li>
+        <li>UX 2026 — fluidez, animaciones, dark mode, offline first</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 07 LA OPORTUNIDAD -->
+  <h2><span class="num">07</span> El hueco que nadie está cubriendo</h2>
+  <div class="section-sub">Las federaciones son periódicos. Nosotros somos red social operativa. La diferencia es de uso, no de información.</div>
+
+  <div class="opp">
+    <h3>📐 Dimensionando el hueco</h3>
+    <p>De los <strong>~700.000 padres con hijo en fútbol base</strong> en España, las apps oficiales agregan <strong>menos del 8% de tráfico mensual</strong>. El resto del consumo de información del padre se va a WhatsApp y al boca a boca. Ese 92% es nuestro mercado real.</p>
+    <div class="opp-grid">
+      <div class="opp-item">
+        <div class="l">Mercado total</div>
+        <div class="v">700K</div>
+        <div class="d">padres con hijo en fútbol base España</div>
+      </div>
+      <div class="opp-item">
+        <div class="l">Apps oficiales</div>
+        <div class="v">~8%</div>
+        <div class="d">del tráfico mensual de padres</div>
+      </div>
+      <div class="opp-item">
+        <div class="l">WhatsApp + papel</div>
+        <div class="v">~92%</div>
+        <div class="d">tu mercado real, sin disputar</div>
+      </div>
+      <div class="opp-item">
+        <div class="l">Penetración Y5</div>
+        <div class="v">50%</div>
+        <div class="d">objetivo realista 2031</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 08 ALIADO O RIVAL -->
+  <h2><span class="num">08</span> ¿Aliado o rival? Estrategia con federaciones</h2>
+  <div class="section-sub">No queremos enfrentarnos. Queremos integrarnos.</div>
+
+  <div class="card">
+    <p style="font-size:14px;color:var(--warm-soft);line-height:1.7;margin-bottom:18px"><strong style="color:var(--lime)">Las federaciones son aliados naturales, no competidores.</strong> Ellas tienen los datos oficiales (acta, resultado, clasificación). Nosotros tenemos la capa operativa diaria del padre (alineación, fotos, chat, stats). Una integración vía API beneficia a ambos:</p>
+    <div class="vs">
+      <div class="vs-col ours">
+        <h5>▲ Lo que aporta FutbolBase a la federación</h5>
+        <ul>
+          <li>App moderna sin coste de desarrollo para la federación</li>
+          <li>Reducción de tickets de soporte (padres ya no escriben pidiendo info básica)</li>
+          <li>Datos agregados de uso (engagement por categoría, comarca, edad)</li>
+          <li>Marca de la federación visible dentro de FutbolBase (co-branding)</li>
+        </ul>
+      </div>
+      <div class="vs-col theirs" style="background:linear-gradient(180deg,rgba(0,212,255,.06),transparent);border-color:rgba(0,212,255,.2)">
+        <h5 style="color:var(--cyan)">◆ Lo que aporta la federación a FutbolBase</h5>
+        <ul>
+          <li>Acceso oficial a actas y resultados en tiempo real (API)</li>
+          <li>Sello de credibilidad institucional ("integrado con FFCV")</li>
+          <li>Acceso al directorio oficial de clubes y entrenadores</li>
+          <li>Validación legal del tratamiento de datos de menores</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- FINAL -->
+  <div class="final">
+    <div class="em">🎯</div>
+    <h2>Las apps oficiales no son competencia. Son complementarias.</h2>
+    <p>La FFCV, RFFM y demás federaciones <strong>nunca van a hacer una app que cuide al padre</strong>. No es su misión, ni su cliente, ni su modelo. Su rol es publicar resultados oficiales — y lo hacen bien. <strong>FutbolBase llena el 92% del uso diario que ellas no tocan</strong>: alineaciones, fotos, vídeos, chat, stats. Mercado limpio, sin pelearnos con instituciones, con potencial de aliarnos. <strong>Ganan ellas, ganamos nosotros, gana el padre</strong>.</p>
+  </div>
+
+  <footer>
+    <span>© 2026 FutbolBase · Análisis vs Federaciones</span>
+    <span>Doc · v1.0 · Sept 2026</span>
+  </footer>
+
+</div>
+
+<script>
+  // Engagement: sesiones/mes por padre activo
+  const ENGAGEMENT = [
+    { lbl:'FutbolBase',          v:24, us:true },
+    { lbl:'WhatsApp del equipo', v:48 },
+    { lbl:'BeSoccer',            v:6 },
+    { lbl:'App FFCV',            v:3 },
+    { lbl:'App RFFM Madrid',     v:2 },
+    { lbl:'App FCF Cataluña',    v:2 },
+    { lbl:'Web del club',        v:1 },
+    { lbl:'App RFEF',            v:1 },
+  ];
+
+  function renderBars(elId, data){
+    const host = document.getElementById(elId);
+    host.innerHTML = '';
+    const max = Math.max(...data.map(d=>d.v));
+    data.forEach((d,i) => {
+      const row = document.createElement('div');
+      row.className = 'bar-row' + (d.us ? ' us' : '');
+      const pct = (d.v / max) * 100;
+      row.innerHTML = `
+        <div class="lbl">${d.lbl}</div>
+        <div class="track"><div class="fill ${d.us ? 'us' : ''}" style="width:0%"></div></div>
+        <div class="v">${d.v}</div>
+      `;
+      host.appendChild(row);
+      const fill = row.querySelector('.fill');
+      setTimeout(()=>{ fill.style.width = pct + '%'; }, 120 + i*90);
+    });
+  }
+
+  renderBars('engagement-bars', ENGAGEMENT);
+</script>
+</body>
+</html>

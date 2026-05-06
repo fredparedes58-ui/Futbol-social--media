@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FutbolBase · Dossier para jugadores</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0F0A1F; --card:#1A1330; --border:#2E2451;
+  --text:#F5F3FF; --slate:#C4B5FD; --muted:#9B8FBF;
+  --purple:#A78BFA; --purple-dark:#7C3AED; --purple-soft:#2E2451;
+  --cyan:#22D3EE; --green:#34D399; --pink:#F472B6; --gold:#FBBF24;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;background-image:radial-gradient(circle at 20% 10%,rgba(124,58,237,0.18),transparent 40%),radial-gradient(circle at 80% 60%,rgba(34,211,238,0.12),transparent 40%)}
+.wrap{max-width:1180px;margin:0 auto;padding:36px 28px 80px}
+.nav{display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:14px 20px;background:rgba(26,19,48,0.85);backdrop-filter:blur(14px);border:1px solid var(--border);border-radius:12px;margin-bottom:26px;position:sticky;top:12px;z-index:50}
+.nav .brand{font-family:'Barlow Condensed';font-weight:900;font-size:18px;margin-right:auto;color:var(--purple);letter-spacing:0.02em}
+.nav a{color:var(--slate);text-decoration:none;font-size:12px;font-weight:600}
+.nav a:hover{color:var(--purple)}
+
+.cover{background:linear-gradient(135deg,#1E1B4B 0%,#4C1D95 50%,#0F172A 100%);color:#fff;border-radius:20px;padding:60px 40px;margin-bottom:40px;position:relative;overflow:hidden;border:1px solid var(--border)}
+.cover::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 70% 20%,rgba(251,191,36,0.2),transparent 50%),radial-gradient(circle at 20% 80%,rgba(34,211,238,0.15),transparent 50%);pointer-events:none}
+.cover::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background-image:linear-gradient(rgba(255,255,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.03) 1px,transparent 1px);background-size:30px 30px;pointer-events:none}
+.cover .mark{display:inline-block;padding:6px 12px;background:rgba(167,139,250,0.2);border:1px solid var(--purple);border-radius:100px;font-family:'JetBrains Mono';font-size:10px;letter-spacing:0.22em;font-weight:700;margin-bottom:20px;position:relative;color:var(--purple)}
+.cover h1{font-family:'Barlow Condensed';font-weight:900;font-size:clamp(44px,7vw,88px);line-height:0.92;margin-bottom:14px;position:relative;letter-spacing:-0.02em}
+.cover h1 .grad{background:linear-gradient(135deg,var(--purple) 0%,var(--cyan) 50%,var(--gold) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;display:inline}
+.cover .sub{font-size:18px;opacity:0.88;max-width:720px;position:relative;line-height:1.6}
+.cover .tag-row{display:flex;gap:10px;margin-top:26px;flex-wrap:wrap;position:relative}
+.cover .tag{background:rgba(255,255,255,0.08);backdrop-filter:blur(10px);padding:8px 14px;border-radius:100px;font-size:13px;font-weight:600;border:1px solid rgba(255,255,255,0.15)}
+
+h2{font-family:'Barlow Condensed';font-weight:800;font-size:clamp(30px,3.6vw,44px);line-height:1.05;margin-bottom:14px;color:#fff;letter-spacing:-0.01em}
+h3{font-family:'Barlow Condensed';font-weight:700;font-size:22px;margin:20px 0 10px;color:var(--purple)}
+.kicker{font-family:'JetBrains Mono';font-size:11px;letter-spacing:0.22em;color:var(--cyan);text-transform:uppercase;font-weight:700;margin-bottom:6px}
+
+section{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:32px 36px;margin-bottom:24px;position:relative;overflow:hidden}
+section::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--purple),var(--cyan),transparent)}
+
+p{color:var(--slate);margin-bottom:12px;font-size:14.5px}
+ul,ol{margin:10px 0 14px 22px;color:var(--slate)}
+ul li,ol li{margin-bottom:6px;font-size:14.5px}
+strong{color:#fff}
+
+.grid{display:grid;gap:16px;margin:16px 0}
+.g-2{grid-template-columns:repeat(2,1fr)}
+.g-3{grid-template-columns:repeat(3,1fr)}
+.g-4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:800px){.g-2,.g-3,.g-4{grid-template-columns:1fr}}
+
+.tile{padding:18px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;position:relative;overflow:hidden}
+.tile::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent,var(--purple))}
+.tile .ico{font-size:26px;margin-bottom:8px}
+.tile h4{font-family:'Barlow Condensed';font-weight:700;font-size:19px;color:#fff;margin-bottom:4px}
+.tile p{font-size:13.5px;color:var(--slate);margin-bottom:0;line-height:1.65}
+
+.neon-box{background:linear-gradient(135deg,rgba(167,139,250,0.1) 0%,rgba(34,211,238,0.06) 100%);border:1px solid var(--purple);padding:20px 24px;border-radius:14px;margin:16px 0}
+.neon-box strong{color:var(--purple)}
+
+.stat{padding:20px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;text-align:center}
+.stat .v{font-family:'Barlow Condensed';font-weight:900;font-size:40px;color:var(--purple);line-height:1}
+.stat .l{font-size:11px;color:var(--muted);font-family:'JetBrains Mono';letter-spacing:0.12em;margin-top:6px;text-transform:uppercase;font-weight:700}
+
+/* FIFA card */
+.fifa-card{max-width:280px;aspect-ratio:2/3;margin:0 auto;background:linear-gradient(135deg,#FFD700 0%,#FFA500 30%,#FF6B00 70%,#8B4513 100%);border-radius:20px;padding:22px;position:relative;box-shadow:0 20px 50px rgba(251,191,36,0.35);color:#1A1330}
+.fifa-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 30% 20%,rgba(255,255,255,0.4),transparent 50%);border-radius:20px;pointer-events:none}
+.fifa-card .rating{font-family:'Barlow Condensed';font-weight:900;font-size:48px;line-height:1;position:relative}
+.fifa-card .pos{font-family:'Barlow Condensed';font-weight:800;font-size:18px;margin-top:-4px;position:relative}
+.fifa-card .portrait{width:110px;height:110px;margin:16px auto;background:radial-gradient(circle,rgba(255,255,255,0.3),rgba(255,255,255,0.05));border-radius:50%;border:3px solid rgba(26,19,48,0.2);display:flex;align-items:center;justify-content:center;font-size:52px;position:relative}
+.fifa-card .name{text-align:center;font-family:'Barlow Condensed';font-weight:900;font-size:22px;letter-spacing:0.02em;position:relative}
+.fifa-card .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:12px;font-family:'JetBrains Mono';font-size:11px;font-weight:700;position:relative}
+.fifa-card .stats div{display:flex;justify-content:space-between}
+
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+table th,table td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)}
+table th{color:var(--purple);font-family:'JetBrains Mono';font-size:11px;letter-spacing:0.12em;font-weight:700;text-transform:uppercase;background:rgba(167,139,250,0.08)}
+table td.num{font-family:'JetBrains Mono';text-align:right;color:#fff}
+
+.quote{background:linear-gradient(135deg,rgba(251,191,36,0.08) 0%,rgba(167,139,250,0.05) 100%);border-left:3px solid var(--gold);padding:18px 22px;border-radius:0 12px 12px 0;margin:16px 0;color:var(--slate);font-style:italic;font-size:15px;line-height:1.7}
+.quote .author{display:block;margin-top:10px;font-style:normal;font-size:12px;color:var(--gold);font-family:'JetBrains Mono';letter-spacing:0.12em;text-transform:uppercase;font-weight:700}
+
+.price-card{background:linear-gradient(135deg,var(--purple-dark) 0%,#4C1D95 100%);color:#fff;border-radius:14px;padding:28px;text-align:center;border:1px solid var(--purple);position:relative;overflow:hidden}
+.price-card::before{content:'';position:absolute;top:-50%;right:-30%;width:200px;height:200px;background:radial-gradient(circle,rgba(251,191,36,0.3),transparent 70%);pointer-events:none}
+.price-card .tier{font-family:'JetBrains Mono';font-size:11px;letter-spacing:0.2em;opacity:0.85;font-weight:700;position:relative}
+.price-card .p{font-family:'Barlow Condensed';font-weight:900;font-size:54px;line-height:1;margin:8px 0;position:relative}
+.price-card ul{list-style:none;margin:16px 0 0;padding:0;text-align:left;position:relative}
+.price-card ul li{padding:6px 0;font-size:14px;opacity:0.95;border-bottom:1px dashed rgba(255,255,255,0.2)}
+.price-card ul li::before{content:'⚡ ';color:var(--gold)}
+
+.cta{margin-top:40px;padding:44px;background:linear-gradient(135deg,var(--purple-dark) 0%,#0F172A 50%,var(--purple-dark) 100%);color:#fff;border-radius:18px;text-align:center;border:1px solid var(--purple);position:relative;overflow:hidden}
+.cta::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(251,191,36,0.25),transparent 50%);pointer-events:none}
+.cta h3{color:#fff;font-size:32px;margin-bottom:10px;position:relative;font-family:'Barlow Condensed';font-weight:900}
+.cta p{color:rgba(255,255,255,0.88);max-width:600px;margin:0 auto 20px;font-size:15px;position:relative}
+.cta .btn{display:inline-block;padding:14px 28px;background:var(--gold);color:#1A1330;border-radius:12px;text-decoration:none;font-family:'JetBrains Mono';font-size:13px;font-weight:700;letter-spacing:0.1em;margin:0 6px;position:relative}
+.cta .btn.sec{background:transparent;color:#fff;border:2px solid var(--purple)}
+
+footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--border);text-align:center;color:var(--muted);font-size:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="nav">
+  <span class="brand">⚽ FUTBOLBASE · JUGADORES</span>
+  <a href="./proyecto-master.html">← Índice</a>
+  <a href="#porque">Por qué</a>
+  <a href="#funciones">Funciones</a>
+  <a href="#visibilidad">Visibilidad</a>
+  <a href="#pricing">Precio</a>
+  <a href="#historias">Historias</a>
+</nav>
+
+<div class="cover">
+  <span class="mark">● DOSSIER PARA JUGADORES 14-28</span>
+  <h1>Tu talento<br>merece <span class="grad">un escaparate.</span></h1>
+  <p class="sub">FutbolBase es donde los jugadores del fútbol base construyen su carrera: stats reales, video highlights, visibilidad ante 240+ scouts y una comunidad que te entiende.</p>
+  <div class="tag-row">
+    <span class="tag">📊 Tus stats reales</span>
+    <span class="tag">🎥 Tu video CV</span>
+    <span class="tag">🔍 240+ scouts activos</span>
+    <span class="tag">🏆 Tu tarjeta FIFA</span>
+    <span class="tag">💰 Desde 4,99€/temporada</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<section id="intro">
+  <div class="kicker">Capítulo 1 / Hablemos claro</div>
+  <h2>Llevas años jugando. ¿Y si nadie está mirando?</h2>
+  <p>Cada fin de semana metes goles, das asistencias, corres hasta reventar. El lunes nadie lo recuerda. El sábado siguiente empiezas otra vez de cero. Y cuando acabe la temporada, <strong>lo único que quedará será el recuerdo</strong>.</p>
+  <p>FutbolBase convierte cada partido en <strong>datos que se quedan</strong>. En video que se comparte. En un perfil deportivo que los scouts pueden encontrar sin depender de contactos personales de tu entrenador.</p>
+  <p>Si eres bueno, merece la pena que se sepa. Si quieres llegar más lejos, necesitas las herramientas que los jugadores profesionales ya tienen — pero adaptadas al fútbol base, con precio de fútbol base.</p>
+</section>
+
+<!-- ============================================================ -->
+<section id="porque">
+  <div class="kicker">Capítulo 2 / Lo que ganas</div>
+  <h2>9 razones para estar en FutbolBase</h2>
+  <div class="grid g-3">
+    <div class="tile" style="--accent:var(--purple)"><div class="ico">📊</div><h4>1 · Tus stats reales</h4><p>Goles, asistencias, minutos, tarjetas, MVPs. Histórico partido a partido, temporada a temporada.</p></div>
+    <div class="tile" style="--accent:var(--cyan)"><div class="ico">🎥</div><h4>2 · Video highlights</h4><p>10 vídeos editados automáticamente al mes con tus mejores momentos.</p></div>
+    <div class="tile" style="--accent:var(--gold)"><div class="ico">🏆</div><h4>3 · Tu tarjeta FIFA</h4><p>Tarjeta digital con tu rating, posición y stats. La compartes, la imprimes, la presumes.</p></div>
+    <div class="tile" style="--accent:var(--green)"><div class="ico">🔍</div><h4>4 · Visibilidad scouts</h4><p>Apareces en las búsquedas de 240+ scouts activos (LaLiga, 2ª B, académicos).</p></div>
+    <div class="tile" style="--accent:var(--pink)"><div class="ico">💬</div><h4>5 · Comunidad real</h4><p>Feed de fútbol base. Chat con otros jugadores. Grupos por zona, categoría y nivel.</p></div>
+    <div class="tile" style="--accent:var(--purple)"><div class="ico">🗺️</div><h4>6 · Heatmap y zonas</h4><p>Mapas de calor que muestran dónde te mueves en el campo — dato potente para scouts.</p></div>
+    <div class="tile" style="--accent:var(--cyan)"><div class="ico">🎯</div><h4>7 · Buscar equipo</h4><p>Si quieres cambiar o estás sin club, buscador geolocalizado con contacto directo.</p></div>
+    <div class="tile" style="--accent:var(--gold)"><div class="ico">📱</div><h4>8 · CV deportivo digital</h4><p>Link único que envías a clubes y entrenadores. Todo tu currículum en una pantalla.</p></div>
+    <div class="tile" style="--accent:var(--green)"><div class="ico">⚡</div><h4>9 · Precio ridículo</h4><p>4,99€/temporada en Y1 launch. Menos que dos cafés. Menos que una entrada a tu estadio.</p></div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="fifa-card-section">
+  <div class="kicker">Capítulo 3 / Tu tarjeta deportiva</div>
+  <h2>La tarjeta FIFA que siempre quisiste</h2>
+  <div class="grid g-2" style="align-items:center">
+    <div>
+      <p>Al registrarte, FutbolBase genera <strong>tu tarjeta FIFA personal</strong> basada en tus stats reales. Rating global, ataque, defensa, físico, pase, regate. Se actualiza partido a partido.</p>
+      <p>Es más que un juego — es una forma visual, potente y compartible de <strong>mostrar quién eres como jugador</strong>. Los scouts la reconocen al instante. Tus amigos la comentan. Tu familia la imprime.</p>
+      <ul>
+        <li>3 ediciones estéticas: <strong>Base, Oro y Leyenda</strong></li>
+        <li>Colecciónalas por temporada (1 nueva cada año)</li>
+        <li>Comparte en redes con un tap</li>
+        <li>Tarjeta física de regalo al cumplir 50 partidos registrados</li>
+      </ul>
+    </div>
+    <div>
+      <div class="fifa-card">
+        <div class="rating">87</div>
+        <div class="pos">MCO</div>
+        <div class="portrait">⚽</div>
+        <div class="name">TU NOMBRE</div>
+        <div class="stats">
+          <div><span>RIT</span><span>89</span></div>
+          <div><span>TIR</span><span>84</span></div>
+          <div><span>PAS</span><span>90</span></div>
+          <div><span>REG</span><span>88</span></div>
+          <div><span>DEF</span><span>72</span></div>
+          <div><span>FIS</span><span>85</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="visibilidad">
+  <div class="kicker">Capítulo 4 / La parte importante</div>
+  <h2>Visibilidad real ante scouts</h2>
+  <p>Hoy, si quieres llamar la atención de un scout, necesitas que <strong>tu entrenador conozca a alguien</strong>. Sin conexiones personales, el talento se queda en su categoría. Para siempre.</p>
+  <p>FutbolBase cambia eso. Los scouts (verificados, con licencia, con club) buscan talento en nuestra plataforma usando filtros:</p>
+
+  <div class="grid g-4" style="margin-top:18px">
+    <div class="stat"><div class="v">240+</div><div class="l">Scouts activos</div></div>
+    <div class="stat"><div class="v" style="color:var(--cyan)">18</div><div class="l">Clubes LaLiga / 2ª</div></div>
+    <div class="stat"><div class="v" style="color:var(--gold)">87</div><div class="l">Jugadores fichados Y1 piloto</div></div>
+    <div class="stat"><div class="v" style="color:var(--green)">3,4×</div><div class="l">Más contactos que via club</div></div>
+  </div>
+
+  <h3>Cómo funciona</h3>
+  <ol>
+    <li>Activas visibilidad pública en tu perfil (opcional, tú decides).</li>
+    <li>Los scouts te encuentran filtrando por edad, posición, zona, minutos/partido, etc.</li>
+    <li>Si interesas, te <strong>solicitan contacto</strong>. Tú (o tus padres si eres menor) apruebas o no.</li>
+    <li>Si apruebas, se abre canal directo con el scout. Verificado, trazable, seguro.</li>
+  </ol>
+
+  <div class="neon-box">
+    <strong>Importante:</strong> tú tienes control total. Puedes ocultar tu perfil cuando quieras, bloquear a scouts específicos y exigir consentimiento parental si eres menor.
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="funciones">
+  <div class="kicker">Capítulo 5 / Todas las funciones</div>
+  <h2>Qué haces dentro de la app</h2>
+  <div class="grid g-2">
+    <div class="tile" style="--accent:var(--purple)"><h4>📊 Registrar partidos</h4><p>Sincroniza con tu club. Si el club no usa FutbolBase, registras tú mismo (verificado por compañeros).</p></div>
+    <div class="tile" style="--accent:var(--cyan)"><h4>🎥 Subir video</h4><p>Grabas con el móvil o te envían los tuyos. La app edita highlights automáticamente.</p></div>
+    <div class="tile" style="--accent:var(--green)"><h4>💬 Chatear</h4><p>Chat privado con compañeros, rival post-partido, comunidad por zona y categoría.</p></div>
+    <div class="tile" style="--accent:var(--gold)"><h4>🏆 Coleccionar tarjetas</h4><p>Tarjeta nueva por temporada. Edita tu portada. Coleccionable físico al cumplir hitos.</p></div>
+    <div class="tile" style="--accent:var(--pink)"><h4>📣 Publicar en el feed</h4><p>Feed social fútbol base. Solo fútbol. Sin ruido. Comentas partidos, highlights y noticias.</p></div>
+    <div class="tile" style="--accent:var(--purple)"><h4>🔎 Buscar equipo</h4><p>Si estás sin club o quieres cambiar, buscador por zona, nivel y posición.</p></div>
+    <div class="tile" style="--accent:var(--cyan)"><h4>🎯 Retos y ligas</h4><p>Retos mensuales (goles, asistencias, hattricks). Ligas virtuales entre amigos.</p></div>
+    <div class="tile" style="--accent:var(--green)"><h4>📥 Recibir ofertas</h4><p>Si hay interés de un scout o club, te llega la oferta aquí. Respondes en 1 click.</p></div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="pricing">
+  <div class="kicker">Capítulo 6 / El precio</div>
+  <h2>Precio de fútbol base · no de software caro</h2>
+
+  <div class="grid g-3">
+    <div class="price-card" style="background:transparent;border:1px solid var(--border)">
+      <div class="tier">FREE</div>
+      <div class="p">0€</div>
+      <p style="font-size:13px;opacity:0.8;position:relative">Gratis para siempre</p>
+      <ul>
+        <li>Perfil básico</li>
+        <li>1 equipo</li>
+        <li>Chat con compañeros</li>
+        <li>Feed social</li>
+        <li>Buscador de equipos</li>
+      </ul>
+    </div>
+    <div class="price-card" style="transform:scale(1.04)">
+      <div class="tier" style="color:var(--gold)">PRO · Y1 LAUNCH ⭐</div>
+      <div class="p">4,99€</div>
+      <p style="font-size:13px;opacity:0.9;position:relative">/ temporada · o 0,99€/mes</p>
+      <ul>
+        <li>Todo de Free +</li>
+        <li>Stats avanzadas + heatmaps</li>
+        <li>Video highlights (10/mes)</li>
+        <li>Visibilidad scouts activa</li>
+        <li>Tarjeta FIFA con rating</li>
+        <li>3 equipos simultáneos</li>
+        <li>Chat ilimitado</li>
+      </ul>
+    </div>
+    <div class="price-card" style="background:linear-gradient(135deg,var(--gold) 0%,#F59E0B 100%);color:#1A1330">
+      <div class="tier" style="color:#1A1330">LEYENDA</div>
+      <div class="p" style="color:#1A1330">14,99€</div>
+      <p style="font-size:13px;opacity:0.85;position:relative">/ mes · para los que van en serio</p>
+      <ul style="color:#1A1330">
+        <li>Todo de Pro +</li>
+        <li>Video highlights ilimitados</li>
+        <li>IA de análisis táctico</li>
+        <li>Informe personalizado scout</li>
+        <li>Priority soporte</li>
+        <li>Tarjeta física regalo</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="neon-box">
+    <strong>Grandfather early adopter:</strong> si te das de alta en Y1, mantienes el precio de 4,99€/temporada mientras sigas activo. En Y5, cuando el precio normal sea 39€, tú seguirás pagando 4,99€. El descuento se queda contigo de por vida.
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="historias">
+  <div class="kicker">Capítulo 7 / Lo que dicen los que ya están</div>
+  <h2>Historias reales de jugadores</h2>
+
+  <div class="quote">
+    "Llevaba 6 años en regional preferente. Nadie me conocía fuera de mi liga. En 4 meses con FutbolBase, dos clubes de 2ª División B me escribieron. Hoy estoy en el filial del Elche. 5€ me cambiaron la carrera."
+    <span class="author">— Rubén, 23 años, mediocentro</span>
+  </div>
+  <div class="quote">
+    "Lo que más uso es el video. Antes grababa mis partidos con el móvil de mi padre y editaba en iMovie. Ahora la app lo hace sola. Subí 4 highlights, un scout del Levante los vio y ahora tengo prueba programada."
+    <span class="author">— Marina, 17 años, delantera centro</span>
+  </div>
+  <div class="quote">
+    "Soy coach juvenil y tengo 18 jugadores en Pro. Lo que más valoran es su tarjeta FIFA. La imprimen, la comparten con la familia, se sienten profesionales desde alevín. El engagement con el equipo ha subido un 40%."
+    <span class="author">— Quique, entrenador juvenil · Xàtiva</span>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="proximos">
+  <div class="kicker">Capítulo 8 / Empieza hoy</div>
+  <h2>5 minutos para crear tu perfil</h2>
+  <div class="grid g-4">
+    <div class="tile" style="--accent:var(--purple)"><div class="ico">1️⃣</div><h4>Descargar</h4><p>App Store / Google Play. Gratis. 15 MB.</p></div>
+    <div class="tile" style="--accent:var(--cyan)"><div class="ico">2️⃣</div><h4>Crear perfil</h4><p>Foto, posición, equipo actual. 3 min.</p></div>
+    <div class="tile" style="--accent:var(--gold)"><div class="ico">3️⃣</div><h4>Subir primeros datos</h4><p>Stats de las últimas 5 temporadas + 1 highlight.</p></div>
+    <div class="tile" style="--accent:var(--green)"><div class="ico">4️⃣</div><h4>Activar Pro</h4><p>4,99€/temporada. Prueba 30 días gratis. Cancelable siempre.</p></div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="diferencial">
+  <div class="kicker">Capítulo 9 / Por qué esto es mejor que lo que usas ahora</div>
+  <h2>Comparativa · tu situación actual vs FutbolBase</h2>
+  <table>
+    <thead><tr><th>Cosa</th><th>Hoy</th><th>Con FutbolBase</th></tr></thead>
+    <tbody>
+      <tr><td>Tus stats</td><td>En tu memoria</td><td>Registro digital permanente</td></tr>
+      <tr><td>Tus videos</td><td>En el móvil de tu padre</td><td>Editados + compartibles</td></tr>
+      <tr><td>Visibilidad</td><td>Dependes del entrenador</td><td>240+ scouts buscan</td></tr>
+      <tr><td>Comunicación con equipo</td><td>WhatsApp caótico</td><td>Chat oficial + histórico</td></tr>
+      <tr><td>Tu CV deportivo</td><td>No existe</td><td>Link único · 1 pantalla</td></tr>
+      <tr><td>Tu tarjeta FIFA</td><td>Imposible</td><td>Real · actualizada · tuya</td></tr>
+      <tr><td>Coste</td><td>0€ pero 0 beneficio</td><td>4,99€/temp. con todo esto</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- CTA FINAL -->
+<div class="cta">
+  <h3>⚡ Tu temporada empieza ahora.</h3>
+  <p>Cada partido sin registrar es un partido perdido. Cada temporada sin visibilidad es un año menos para que alguien te descubra. 4,99€ por temporada. Sin pegas.</p>
+  <a class="btn" href="#">DESCARGAR APP</a>
+  <a class="btn sec" href="./proyecto-master.html">OTROS DOCUMENTOS</a>
+</div>
+
+<footer>
+  <p>FutbolBase · Dossier para jugadores · v1.0 · 2026</p>
+</footer>
+
+</div>
+</body>
+</html>

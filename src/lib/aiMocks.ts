@@ -117,6 +117,38 @@ const RULES_ES: ReplyRule[] = [
     },
   },
   {
+    match: /(llu|lluvia|clima|fr[ií]o|calor)/i,
+    replies: {
+      casual: ['¿Y si llueve qué hacemos?', 'Espero que mejore el clima', 'Revisa el pronóstico 🌤', 'Igual se juega ¿no?'],
+      hype:   ['¡Llueva o truene jugamos! 🌧🔥', '¡Con barro se juega mejor! 💪'],
+      formal: ['¿Se suspende por condiciones climáticas?', 'Consulto el pronóstico y aviso', 'Evaluemos el estado de la cancha'],
+    },
+  },
+  {
+    match: /(dinero|plata|cuota|pag|costo|precio)/i,
+    replies: {
+      casual: ['¿Cuánto sale? 💸', 'Te transfiero después', '¿CBU/alias?', 'Lo paso hoy'],
+      hype:   ['¡Lo que sea, jugamos!', '¡Pongo mi parte sin drama! 💪'],
+      formal: ['¿Cuál es el monto exacto?', 'Envíenme los datos bancarios', 'Realizo la transferencia hoy'],
+    },
+  },
+  {
+    match: /(lesion|dolor|me duele|molesta|tobillo|rodilla|musculo|m[uú]sculo)/i,
+    replies: {
+      casual: ['Uf, mejórate 🙏', '¿Fuiste al médico?', 'Descansa lo que haga falta', 'Hielo y reposo 💪'],
+      hype:   ['¡Vuelve pronto crack! 🔥', '¡Te esperamos recuperado!'],
+      formal: ['Cuídate, priorizá la recuperación', 'Recomiendo consulta médica', 'Descanso completo es clave'],
+    },
+  },
+  {
+    match: /(convoc|lista|citad|plantel|alineaci)/i,
+    replies: {
+      casual: ['¿Quiénes van hoy?', 'Avísame si me necesitas', 'Contame la lista'],
+      hype:   ['¡Mándame en la titular! 🔥', '¡Voy desde el arranque!'],
+      formal: ['¿Podrían compartir la convocatoria?', 'Confirmo disponibilidad', 'Quedo a la espera'],
+    },
+  },
+  {
     match: /\?$/,
     replies: {
       casual: ['Sí, dale', 'Depende, contame más', 'Déjame ver y te aviso', 'Mmm no sé, tú decís'],
@@ -718,4 +750,452 @@ function recapEN(f: MatchFact, tone: Tone): MatchRecap {
   if (f.attendance && f.attendance >= 200) highlights.push(`👥 ${f.attendance} in attendance`)
 
   return { headline, tagline, body, highlights, tone, lang: 'en' }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Video Highlights — auto-cut                                                */
+/* -------------------------------------------------------------------------- */
+
+export type ClipType = 'goal' | 'save' | 'skill' | 'tackle' | 'chance'
+
+export interface VideoClip {
+  id: string
+  start: number
+  end: number
+  type: ClipType
+  label: string
+  confidence: number
+}
+
+export interface VideoMeta {
+  duration: number
+  title?: string
+  homeScore?: number
+  awayScore?: number
+  topScorer?: string
+}
+
+const CLIP_LABEL: Record<ClipType, string[]> = {
+  goal:   ['Gol clavado al ángulo', 'Gol tras contra fulminante', 'Golazo de media distancia', 'Cabezazo letal'],
+  save:   ['Atajadón del arquero', 'Mano cambiada increíble', 'Reflejo de categoría', 'Salvada bajo el arco'],
+  skill:  ['Caño + asistencia', 'Gambeta endiablada', 'Sombrerito y definición', 'Taco de lujo'],
+  tackle: ['Barrida perfecta', 'Quite limpio en el área', 'Anticipo de crack'],
+  chance: ['Tiro al palo', 'Remate exigente al arquero', 'Centro peligroso'],
+}
+
+const CLIP_EMOJI: Record<ClipType, string> = {
+  goal: '⚽', save: '🧤', skill: '✨', tackle: '🛡', chance: '🎯',
+}
+
+export function clipEmoji(t: ClipType): string { return CLIP_EMOJI[t] }
+
+export function formatClipTime(sec: number): string {
+  const m = Math.floor(sec / 60)
+  const s = sec % 60
+  return `${m}:${s.toString().padStart(2, '0')}`
+}
+
+export function suggestVideoClips(meta: VideoMeta): VideoClip[] {
+  const total = Math.max(60, Math.floor(meta.duration || 5400))
+  const goals = Math.max(0, (meta.homeScore || 0) + (meta.awayScore || 0))
+  const numClips = Math.min(6, Math.max(3, goals + 2))
+
+  const typesPool: ClipType[] = []
+  for (let i = 0; i < goals; i++) typesPool.push('goal')
+  typesPool.push('save', 'skill')
+  const fillers: ClipType[] = ['skill', 'save', 'tackle', 'chance']
+  while (typesPool.length < numClips) typesPool.push(fillers[typesPool.length % fillers.length])
+
+  const clips: VideoClip[] = []
+  for (let i = 0; i < numClips; i++) {
+    const type = typesPool[i]
+    const center = Math.floor(((i + 0.5) / numClips) * total)
+    const jitter = Math.floor((Math.sin(i * 9.31) + 1) * 30)
+    const start = Math.max(0, center + jitter - 6)
+    const end = Math.min(total, start + (type === 'goal' ? 18 : 12))
+    const labels = CLIP_LABEL[type]
+    const label = labels[i % labels.length]
+    const confidence = type === 'goal' ? 0.92 - i * 0.03 : 0.78 - i * 0.04
+    clips.push({
+      id: 'clip-' + (i + 1),
+      start, end, type, label,
+      confidence: Math.max(0.55, +confidence.toFixed(2)),
+    })
+  }
+  return clips.sort((a, b) => b.confidence - a.confidence)
+}
+
+/* -------------------------------------------------------------------------- */
+/* App Assistant — FAQ bot                                                    */
+/* -------------------------------------------------------------------------- */
+
+export interface AssistantAnswer {
+  reply: string
+  suggestions?: string[]
+}
+
+type FaqRule = {
+  match: RegExp
+  answer: string
+  followups?: string[]
+}
+
+const FAQ: FaqRule[] = [
+  {
+    match: /(hola|buenas|hey|holi|saludos)/i,
+    answer: '¡Hola! 👋 Soy el asistente de FútbolBase. Puedo ayudarte con predicciones, equipos, chats, highlights y tu perfil. ¿Qué querés saber?',
+    followups: ['¿Cómo hago una predicción?', '¿Cómo uno a un equipo?', '¿Qué es el Coach AI?'],
+  },
+  {
+    match: /(predic|quiniel|pron[oó]stico|apuesta)/i,
+    answer: 'Para predecir: tocá un partido en Home → abre Quiniela Copilot. Elegí modo (⚖ balanceado, 🔥 optimista, 📊 analítico) y tocá "Usar sugerencia". Tu pick se guarda solo.',
+    followups: ['¿Qué es el Match Preview?', '¿Puedo cambiar mi predicción?'],
+  },
+  {
+    match: /(equipo|unirme|comunidad|club)/i,
+    answer: 'En Comunidad buscás equipos con lenguaje natural ("competitivo sábados") o hacés el Team Matcher (3 preguntas) que recomienda los 2 mejores según tu estilo.',
+    followups: ['¿Cómo funciona el Team Matcher?'],
+  },
+  {
+    match: /(matcher|quiz|recomendac)/i,
+    answer: 'El Team Matcher hace 3 preguntas (nivel, compromiso, estilo) y calcula score de compatibilidad. Muestra top-2 con porcentaje y razones.',
+  },
+  {
+    match: /(chat|mensaje|conversaci[oó]n|hablar)/i,
+    answer: 'En Chat tenés tus conversaciones. Al escribir aparecen respuestas sugeridas (chips). Podés cambiar el tono casual/hype/formal — se recuerda por chat.',
+    followups: ['¿Cómo cambio el tono?'],
+  },
+  {
+    match: /(tono|casual|hype|formal)/i,
+    answer: 'El tono ajusta las respuestas sugeridas: casual (relajado), hype (energético con emojis) o formal (educado). Se guarda por conversación.',
+  },
+  {
+    match: /(highlight|video|clip|recap|resumen)/i,
+    answer: 'Cada partido finalizado tiene "Recap AI" — resumen narrativo (tono + idioma) e highlights con timestamps. Podés generar clips automáticos.',
+    followups: ['¿Qué es el Weekly Digest?'],
+  },
+  {
+    match: /(coach|feedback|consejo|mejorar)/i,
+    answer: 'Coach AI (en Perfil) analiza tus stats y te da: nota (A+ a C), fortalezas, puntos a mejorar y foco para la próxima semana.',
+  },
+  {
+    match: /(digest|semana|weekly|resumen semanal)/i,
+    answer: 'Weekly Digest está en Home (ícono periódico). Narrativa con tus stats de la semana + objetivo para la siguiente.',
+  },
+  {
+    match: /(idioma|espa[ñn]ol|ingl[eé]s|language)/i,
+    answer: 'El recap soporta ES/EN — usá el switcher dentro del panel.',
+  },
+  {
+    match: /(tag|hashtag|menci[oó]n|foto|post)/i,
+    answer: 'Al postear fotos/videos la AI sugiere hashtags y @menciones leyendo tu caption. Tocás para aplicar.',
+  },
+  {
+    match: /(perfil|profile|stats|estad)/i,
+    answer: 'Tu perfil muestra tarjeta FIFA, stats, últimos 3 partidos y Coach AI actualizado.',
+  },
+  {
+    match: /(notific|aviso|alerta)/i,
+    answer: 'Notificaciones en la campana del header: confirmaciones, menciones y updates del equipo.',
+  },
+  {
+    match: /(gracias|genial|perfecto|ok|dale)/i,
+    answer: '¡De nada! 🙌 Si necesitás algo más, estoy acá.',
+    followups: ['¿Qué más podés hacer?'],
+  },
+  {
+    match: /(qu[eé] pod[eé]s|qu[eé] haces|ayuda|help|capacidades|funcion)/i,
+    answer: 'Puedo explicar: predicciones, Team Matcher, chats y tonos, highlights, Coach AI, Weekly Digest, auto-tags, idioma, perfil y notificaciones. Preguntame 👇',
+    followups: ['¿Cómo hago una predicción?', '¿Qué es el Coach AI?', '¿Cómo uno un equipo?'],
+  },
+]
+
+export function answerAppQuestion(query: string): AssistantAnswer {
+  const q = (query || '').trim()
+  if (!q) {
+    return {
+      reply: 'Contame qué querés saber de FútbolBase 👇',
+      suggestions: ['¿Cómo hago una predicción?', '¿Qué es el Coach AI?', '¿Cómo uno un equipo?'],
+    }
+  }
+  for (const rule of FAQ) {
+    if (rule.match.test(q)) return { reply: rule.answer, suggestions: rule.followups }
+  }
+  return {
+    reply: 'Mmm, no tengo respuesta exacta para eso. Puedo con predicciones, equipos, chats, highlights, Coach AI o perfil. ¿Cuál te interesa?',
+    suggestions: ['¿Cómo hago una predicción?', '¿Cómo uno a un equipo?', '¿Qué es el Coach AI?'],
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Auto-alineación (Tier 5)                                                   */
+/* -------------------------------------------------------------------------- */
+
+export type Formation = '4-3-3' | '4-4-2' | '3-5-2' | '4-2-3-1' | '5-3-2'
+export type FieldPos = 'GK' | 'DEF' | 'MID' | 'FWD'
+
+export interface LineupPlayer {
+  name: string
+  number: number
+  role: FieldPos
+  slot: string           // etiqueta específica: "LB", "CM", "ST", etc.
+  x: number              // 0..100 (campo horizontal desde portería propia)
+  y: number              // 0..100 (ancho del campo)
+  rating: number         // 60..99
+  note?: string          // razón de la AI ("en forma", "marca de rival", etc.)
+}
+
+export interface Lineup {
+  formation: Formation
+  opponent: string
+  style: 'ofensivo' | 'equilibrado' | 'defensivo'
+  players: LineupPlayer[]
+  keyPlayer: string
+  risk: string
+  hypeLine: string
+}
+
+// Pool de jugadores mock
+const PLAYER_POOL = [
+  { name: 'Alex Rivera',     number: 10, rating: 88, best: ['MID', 'FWD'] },
+  { name: 'Carlos Méndez',   number: 9,  rating: 90, best: ['FWD'] },
+  { name: 'Diego Fuentes',   number: 1,  rating: 84, best: ['GK'] },
+  { name: 'Mateo Silva',     number: 4,  rating: 82, best: ['DEF'] },
+  { name: 'Lucas Arana',     number: 5,  rating: 80, best: ['DEF'] },
+  { name: 'Nico Torres',     number: 3,  rating: 78, best: ['DEF'] },
+  { name: 'Bruno Vega',      number: 2,  rating: 79, best: ['DEF'] },
+  { name: 'Pablo Lanza',     number: 6,  rating: 85, best: ['MID'] },
+  { name: 'Santi Romero',    number: 8,  rating: 83, best: ['MID'] },
+  { name: 'Gabo Ruiz',       number: 11, rating: 81, best: ['MID', 'FWD'] },
+  { name: 'Rafa Ortiz',      number: 7,  rating: 87, best: ['FWD', 'MID'] },
+  { name: 'Tincho Paredes',  number: 14, rating: 76, best: ['MID'] },
+]
+
+const FORMATION_SLOTS: Record<Formation, { slot: string; role: FieldPos; x: number; y: number }[]> = {
+  '4-3-3': [
+    { slot: 'GK', role: 'GK',  x: 6,  y: 50 },
+    { slot: 'RB', role: 'DEF', x: 22, y: 82 },
+    { slot: 'CB', role: 'DEF', x: 20, y: 60 },
+    { slot: 'CB', role: 'DEF', x: 20, y: 40 },
+    { slot: 'LB', role: 'DEF', x: 22, y: 18 },
+    { slot: 'CM', role: 'MID', x: 46, y: 50 },
+    { slot: 'CM', role: 'MID', x: 42, y: 28 },
+    { slot: 'CM', role: 'MID', x: 42, y: 72 },
+    { slot: 'LW', role: 'FWD', x: 76, y: 20 },
+    { slot: 'ST', role: 'FWD', x: 82, y: 50 },
+    { slot: 'RW', role: 'FWD', x: 76, y: 80 },
+  ],
+  '4-4-2': [
+    { slot: 'GK', role: 'GK',  x: 6,  y: 50 },
+    { slot: 'RB', role: 'DEF', x: 22, y: 82 },
+    { slot: 'CB', role: 'DEF', x: 20, y: 60 },
+    { slot: 'CB', role: 'DEF', x: 20, y: 40 },
+    { slot: 'LB', role: 'DEF', x: 22, y: 18 },
+    { slot: 'RM', role: 'MID', x: 48, y: 82 },
+    { slot: 'CM', role: 'MID', x: 44, y: 60 },
+    { slot: 'CM', role: 'MID', x: 44, y: 40 },
+    { slot: 'LM', role: 'MID', x: 48, y: 18 },
+    { slot: 'ST', role: 'FWD', x: 78, y: 58 },
+    { slot: 'ST', role: 'FWD', x: 78, y: 42 },
+  ],
+  '3-5-2': [
+    { slot: 'GK', role: 'GK',  x: 6,  y: 50 },
+    { slot: 'CB', role: 'DEF', x: 20, y: 70 },
+    { slot: 'CB', role: 'DEF', x: 18, y: 50 },
+    { slot: 'CB', role: 'DEF', x: 20, y: 30 },
+    { slot: 'RWB', role: 'MID', x: 42, y: 86 },
+    { slot: 'CM', role: 'MID', x: 44, y: 62 },
+    { slot: 'CM', role: 'MID', x: 44, y: 50 },
+    { slot: 'CM', role: 'MID', x: 44, y: 38 },
+    { slot: 'LWB', role: 'MID', x: 42, y: 14 },
+    { slot: 'ST', role: 'FWD', x: 78, y: 58 },
+    { slot: 'ST', role: 'FWD', x: 78, y: 42 },
+  ],
+  '4-2-3-1': [
+    { slot: 'GK',  role: 'GK',  x: 6,  y: 50 },
+    { slot: 'RB',  role: 'DEF', x: 22, y: 82 },
+    { slot: 'CB',  role: 'DEF', x: 20, y: 60 },
+    { slot: 'CB',  role: 'DEF', x: 20, y: 40 },
+    { slot: 'LB',  role: 'DEF', x: 22, y: 18 },
+    { slot: 'DM',  role: 'MID', x: 38, y: 40 },
+    { slot: 'DM',  role: 'MID', x: 38, y: 60 },
+    { slot: 'AM',  role: 'MID', x: 60, y: 50 },
+    { slot: 'LW',  role: 'FWD', x: 70, y: 20 },
+    { slot: 'RW',  role: 'FWD', x: 70, y: 80 },
+    { slot: 'ST',  role: 'FWD', x: 84, y: 50 },
+  ],
+  '5-3-2': [
+    { slot: 'GK',  role: 'GK',  x: 6,  y: 50 },
+    { slot: 'RWB', role: 'DEF', x: 26, y: 88 },
+    { slot: 'CB',  role: 'DEF', x: 20, y: 66 },
+    { slot: 'CB',  role: 'DEF', x: 18, y: 50 },
+    { slot: 'CB',  role: 'DEF', x: 20, y: 34 },
+    { slot: 'LWB', role: 'DEF', x: 26, y: 12 },
+    { slot: 'CM',  role: 'MID', x: 48, y: 60 },
+    { slot: 'CM',  role: 'MID', x: 44, y: 50 },
+    { slot: 'CM',  role: 'MID', x: 48, y: 40 },
+    { slot: 'ST',  role: 'FWD', x: 80, y: 58 },
+    { slot: 'ST',  role: 'FWD', x: 80, y: 42 },
+  ],
+}
+
+const NOTES_POOL: Record<FieldPos, string[]> = {
+  GK:  ['En forma', 'Buenas manos las últimas 3 fechas'],
+  DEF: ['Cubre al mejor del rival', 'Lectura de contraataques', 'Sale jugando limpio', 'Anticipa bien'],
+  MID: ['Dueño del medio', 'Presión alta', 'Pases filtrados', 'Box-to-box', 'Pisa área'],
+  FWD: ['Desmarque constante', 'Ancha la cancha', 'Definidor clínico', 'Remate de cabeza', 'Va por dentro'],
+}
+
+export function generateLineup(
+  opponent: string,
+  formation: Formation = '4-3-3',
+  style: Lineup['style'] = 'equilibrado',
+): Lineup {
+  const slots = FORMATION_SLOTS[formation]
+  const byRole: Record<FieldPos, typeof PLAYER_POOL> = { GK: [], DEF: [], MID: [], FWD: [] }
+  PLAYER_POOL.forEach(p => {
+    (p.best as FieldPos[]).forEach(r => byRole[r].push(p))
+  })
+
+  const used = new Set<string>()
+  const players: LineupPlayer[] = slots.map((s) => {
+    // Picking: mejor rating del rol que no esté ya usado
+    const candidates = byRole[s.role]
+      .filter(p => !used.has(p.name))
+      .sort((a, b) => b.rating - a.rating)
+    const p = candidates[0] ?? PLAYER_POOL.find(pp => !used.has(pp.name))!
+    used.add(p.name)
+    const notes = NOTES_POOL[s.role]
+    const note = notes[Math.floor(Math.random() * notes.length)]
+    return {
+      name: p.name,
+      number: p.number,
+      role: s.role,
+      slot: s.slot,
+      x: s.x, y: s.y,
+      rating: p.rating,
+      note,
+    }
+  })
+
+  const best = [...players].sort((a, b) => b.rating - a.rating)[0]
+  const riskByStyle: Record<Lineup['style'], string> = {
+    ofensivo: `Dejamos espacios atrás — cuidado con la contra de ${opponent}.`,
+    equilibrado: `Balance cubre errores, pero ${opponent} puede dominar si presionamos mal.`,
+    defensivo: `Posible que no generemos volumen ofensivo — necesitamos ser clínicos.`,
+  }
+  const hypeByStyle: Record<Lineup['style'], string> = {
+    ofensivo: `¡${formation} al ataque! Salimos a comerlos 🔥`,
+    equilibrado: `${formation} estándar — ganamos la pelota y lastimamos.`,
+    defensivo: `${formation} muralla — aguantar y salir rápido.`,
+  }
+
+  return {
+    formation,
+    opponent,
+    style,
+    players,
+    keyPlayer: best.name,
+    risk: riskByStyle[style],
+    hypeLine: hypeByStyle[style],
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Rival scouting report (Tier 5)                                             */
+/* -------------------------------------------------------------------------- */
+
+export interface RivalReport {
+  opponent: string
+  overall: number                   // 50..95
+  form: ('W' | 'D' | 'L')[]         // últimos 5
+  strengths: string[]
+  weaknesses: string[]
+  dangerPlayer: { name: string; role: string; note: string }
+  preferredFormation: Formation
+  preferredStyle: 'alta presión' | 'contragolpe' | 'posesión' | 'defensivo'
+  tacticalAdvice: string[]
+  threatLevel: 'bajo' | 'medio' | 'alto' | 'extremo'
+  confidence: number                // 0..1
+}
+
+const RIVAL_DB: Record<string, Partial<RivalReport>> = {
+  'Rayo Urbano':      { overall: 78, preferredStyle: 'contragolpe',   threatLevel: 'alto',   dangerPlayer: { name: 'Kevin "Rayo" Durán', role: 'RW', note: 'desequilibra por afuera' } },
+  'Águilas Doradas':  { overall: 82, preferredStyle: 'posesión',      threatLevel: 'alto',   dangerPlayer: { name: 'Martín Solís',       role: 'AM',  note: 'último pase letal' } },
+  'Halcones FC':      { overall: 74, preferredStyle: 'alta presión',  threatLevel: 'medio',  dangerPlayer: { name: 'Dylan Castro',       role: 'CM',  note: 'recuperador implacable' } },
+  'Titanes':          { overall: 80, preferredStyle: 'posesión',      threatLevel: 'alto',   dangerPlayer: { name: 'Axel Romero',        role: 'ST',  note: '8 goles en 5 partidos' } },
+  'Atlético Sur':     { overall: 68, preferredStyle: 'defensivo',     threatLevel: 'bajo',   dangerPlayer: { name: 'Tomás Ibáñez',       role: 'CB',  note: 'aéreo dominante' } },
+}
+
+const STRENGTH_POOL = [
+  'Pressing alto coordinado', 'Centros precisos al área', 'Salida limpia desde el fondo',
+  'Transiciones rápidas en 4 segundos', 'Remates de media distancia', 'Dominio por bandas',
+  'Juego aéreo en ABP', 'Rotaciones ofensivas', 'Bloque bajo sólido',
+]
+const WEAKNESS_POOL = [
+  'Vulnerables al balón parado a favor', 'Línea defensiva alta', 'Lateral izq. queda expuesto',
+  'Bajo rendimiento en segundos tiempos', 'Pocos recursos contra presión alta', 'Arquero indeciso en centros',
+  'Falta de profundidad en el banco', 'Tarjetas amarillas frecuentes', 'Defienden mal las transiciones',
+]
+const ADVICE_POOL = [
+  'Atacá la espalda del lateral derecho en los primeros 15 min.',
+  'Buscá al 10 con pases filtrados entre líneas.',
+  'Saca el pressing a los centrales en salida — pierden la pelota.',
+  'En ABP a favor, tirá segundo palo.',
+  'No entres a su ritmo los primeros 10 — aguantá y contragolpeá.',
+  'Doble marca al 9 — es donde canalizan todo.',
+  'Subí los laterales — su medio es lento para cubrir.',
+]
+
+function pickN<T>(arr: readonly T[], n: number, seed: number): T[] {
+  const out: T[] = []
+  const used = new Set<number>()
+  for (let i = 0; i < n; i++) {
+    const idx = (seed * (i + 1) * 31) % arr.length
+    const safe = used.has(idx) ? (idx + 1) % arr.length : idx
+    used.add(safe)
+    out.push(arr[safe])
+  }
+  return out
+}
+
+export function generateRivalReport(opponent: string): RivalReport {
+  const seed = opponent.split('').reduce((a, c) => a + c.charCodeAt(0), 0)
+  const db = RIVAL_DB[opponent] ?? {}
+  const overall = db.overall ?? 65 + (seed % 25)
+
+  // forma aleatoria basada en overall
+  const form: ('W' | 'D' | 'L')[] = []
+  for (let i = 0; i < 5; i++) {
+    const r = (seed * (i + 7)) % 100
+    const winThresh = overall - 20
+    const drawThresh = overall + 10
+    form.push(r < winThresh ? 'W' : r < drawThresh ? 'D' : 'L')
+  }
+
+  const threatLevel = db.threatLevel ?? (
+    overall >= 85 ? 'extremo' :
+    overall >= 75 ? 'alto' :
+    overall >= 65 ? 'medio' : 'bajo'
+  )
+
+  const formations: Formation[] = ['4-3-3', '4-4-2', '3-5-2', '4-2-3-1', '5-3-2']
+
+  return {
+    opponent,
+    overall,
+    form,
+    strengths: pickN(STRENGTH_POOL, 3, seed),
+    weaknesses: pickN(WEAKNESS_POOL, 3, seed + 5),
+    dangerPlayer: db.dangerPlayer ?? {
+      name: 'Jugador #10',
+      role: 'AM',
+      note: 'figura histórica del equipo',
+    },
+    preferredFormation: db.preferredFormation ?? formations[seed % formations.length],
+    preferredStyle: db.preferredStyle ?? 'posesión',
+    tacticalAdvice: pickN(ADVICE_POOL, 3, seed + 3),
+    threatLevel,
+    confidence: Math.min(0.95, 0.6 + (seed % 30) / 100),
+  }
 }

@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FutbolBase · Propuesta institucional · FFCV</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F5F7FA; --card:#FFFFFF; --border:#DDE3EA;
+  --text:#0B1A2E; --slate:#2A3B52; --muted:#5D6B82;
+  --ffcv:#0B5D3B; --ffcv-light:#E8F5EE;
+  --gold:#C8A341; --gold-soft:#FEF5D7;
+  --navy:#0B2545; --navy-soft:#E1E8F2;
+  --red:#B91C1C; --red-soft:#FEE2E2;
+  --green:#059669; --green-soft:#D1FAE5;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+.wrap{max-width:1180px;margin:0 auto;padding:36px 28px 80px}
+.nav{display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:14px 20px;background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:26px;position:sticky;top:12px;z-index:50}
+.nav .brand{font-family:'Barlow Condensed';font-weight:900;font-size:18px;margin-right:auto;color:var(--ffcv)}
+.nav a{color:var(--slate);text-decoration:none;font-size:12px;font-weight:600}
+.nav a:hover{color:var(--ffcv)}
+
+.cover{background:linear-gradient(135deg,var(--ffcv) 0%,var(--navy) 100%);color:#fff;border-radius:18px;padding:60px 40px;margin-bottom:40px;position:relative;overflow:hidden}
+.cover::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 80% 20%,rgba(200,163,65,0.25),transparent 50%);pointer-events:none}
+.cover .mark{display:inline-block;padding:6px 12px;border:1px solid rgba(255,255,255,0.3);border-radius:100px;font-family:'JetBrains Mono';font-size:10px;letter-spacing:0.22em;font-weight:700;margin-bottom:24px;position:relative}
+.cover h1{font-family:'Barlow Condensed';font-weight:900;font-size:clamp(42px,6vw,72px);line-height:1;margin-bottom:14px;position:relative}
+.cover .sub{font-size:18px;opacity:0.88;max-width:740px;position:relative}
+.cover .meta{display:flex;gap:30px;margin-top:30px;padding-top:24px;border-top:1px solid rgba(255,255,255,0.2);flex-wrap:wrap;position:relative}
+.cover .meta .m{display:flex;flex-direction:column;gap:2px}
+.cover .meta .m .k{font-family:'JetBrains Mono';font-size:10px;letter-spacing:0.18em;opacity:0.6;font-weight:700}
+.cover .meta .m .v{font-family:'Barlow Condensed';font-weight:700;font-size:18px;color:var(--gold)}
+
+h2{font-family:'Barlow Condensed';font-weight:800;font-size:clamp(28px,3.4vw,40px);line-height:1.1;margin-bottom:14px;color:var(--navy);letter-spacing:-0.01em}
+h3{font-family:'Barlow Condensed';font-weight:700;font-size:22px;margin:20px 0 10px;color:var(--ffcv)}
+.kicker{font-family:'JetBrains Mono';font-size:11px;letter-spacing:0.22em;color:var(--ffcv);text-transform:uppercase;font-weight:700;margin-bottom:6px}
+
+section{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:32px 36px;margin-bottom:24px;position:relative}
+section::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--ffcv);border-radius:14px 0 0 14px}
+section .num{position:absolute;top:24px;right:32px;font-family:'Barlow Condensed';font-weight:900;font-size:60px;color:var(--ffcv-light);line-height:1}
+
+p{color:var(--slate);margin-bottom:12px;font-size:14.5px}
+ul,ol{margin:10px 0 14px 22px;color:var(--slate)}
+ul li,ol li{margin-bottom:6px;font-size:14.5px}
+strong{color:var(--navy)}
+
+.grid{display:grid;gap:16px;margin:16px 0}
+.g-2{grid-template-columns:repeat(2,1fr)}
+.g-3{grid-template-columns:repeat(3,1fr)}
+.g-4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:800px){.g-2,.g-3,.g-4{grid-template-columns:1fr}}
+
+.box{background:var(--ffcv-light);border-left:4px solid var(--ffcv);padding:16px 20px;border-radius:0 10px 10px 0;margin:16px 0}
+.box strong{color:var(--ffcv)}
+.box-gold{background:var(--gold-soft);border-left-color:var(--gold)}
+.box-gold strong{color:#92630B}
+.box-navy{background:var(--navy-soft);border-left-color:var(--navy)}
+
+.tile{padding:18px;background:#FAFCFD;border:1px solid var(--border);border-radius:10px}
+.tile .ico{font-size:22px;margin-bottom:8px}
+.tile h4{font-family:'Barlow Condensed';font-weight:700;font-size:17px;color:var(--navy);margin-bottom:4px}
+.tile p{font-size:13px;color:var(--slate);margin-bottom:0;line-height:1.6}
+
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+table th,table td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)}
+table th{background:var(--ffcv-light);color:var(--ffcv);font-family:'JetBrains Mono';font-size:11px;letter-spacing:0.12em;font-weight:700;text-transform:uppercase}
+table td.num{font-family:'JetBrains Mono';text-align:right}
+table tr.highlight{background:var(--ffcv-light)}
+
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+.stat-row .s{padding:16px;background:#FAFCFD;border:1px solid var(--border);border-radius:10px;text-align:center}
+.stat-row .s .v{font-family:'Barlow Condensed';font-weight:800;font-size:30px;color:var(--ffcv);line-height:1}
+.stat-row .s .l{font-size:11px;color:var(--muted);font-family:'JetBrains Mono';letter-spacing:0.1em;margin-top:4px;text-transform:uppercase;font-weight:700}
+
+.tl{position:relative;padding-left:32px;margin-top:14px}
+.tl::before{content:'';position:absolute;left:10px;top:4px;bottom:4px;width:2px;background:var(--ffcv-light)}
+.tl .ph{position:relative;padding-bottom:20px}
+.tl .ph::before{content:'';position:absolute;left:-26px;top:4px;width:14px;height:14px;border-radius:50%;background:var(--ffcv);border:3px solid var(--card);box-shadow:0 0 0 2px var(--ffcv)}
+.tl .ph h4{font-family:'Barlow Condensed';font-weight:700;font-size:18px;color:var(--navy);margin-bottom:2px}
+.tl .ph p{font-size:13.5px;color:var(--slate);margin-bottom:0;line-height:1.6}
+
+.sign{margin-top:48px;padding:28px;background:linear-gradient(135deg,var(--navy-soft) 0%,var(--ffcv-light) 100%);border-radius:14px;text-align:center;border:1px solid var(--border)}
+.sign h3{color:var(--navy);font-size:24px}
+.sign p{font-size:14px;color:var(--slate);max-width:680px;margin:10px auto}
+.sign .contacts{display:flex;gap:24px;justify-content:center;margin-top:18px;flex-wrap:wrap;font-family:'JetBrains Mono';font-size:13px;color:var(--navy);font-weight:700}
+
+footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--border);text-align:center;color:var(--muted);font-size:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="nav">
+  <span class="brand">🏛️ FUTBOLBASE · DOCUMENTO FFCV</span>
+  <a href="./proyecto-master.html">← Índice</a>
+  <a href="#presentacion">Presentación</a>
+  <a href="#problema">Problema</a>
+  <a href="#solucion">Solución</a>
+  <a href="#beneficios">Beneficios FFCV</a>
+  <a href="#integracion">Integración</a>
+  <a href="#economico">Modelo económico</a>
+  <a href="#pricing">Pricing justificado</a>
+  <a href="#pilotaje">Pilotaje</a>
+  <a href="#compromisos">Compromisos</a>
+</nav>
+
+<!-- PORTADA -->
+<div class="cover">
+  <span class="mark">● DOCUMENTO INSTITUCIONAL · CONFIDENCIAL</span>
+  <h1>Propuesta de colaboración estratégica<br>FutbolBase × FFCV</h1>
+  <p class="sub">Una plataforma digital para modernizar el fútbol base valenciano, generar un nuevo flujo de ingresos para la Federación y devolver valor real a jugadores, clubes y familias.</p>
+  <div class="meta">
+    <div class="m"><span class="k">DIRIGIDO A</span><span class="v">Federación Fútbol C. Valenciana</span></div>
+    <div class="m"><span class="k">FORMATO</span><span class="v">Propuesta formal · 12 secciones</span></div>
+    <div class="m"><span class="k">VIGENCIA</span><span class="v">Temporada 2026/27 en adelante</span></div>
+    <div class="m"><span class="k">VERSIÓN</span><span class="v">v1.0 · abril 2026</span></div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 01 · PRESENTACIÓN                                             -->
+<!-- ============================================================ -->
+<section id="presentacion">
+  <span class="num">01</span>
+  <div class="kicker">Sección 01 / Presentación</div>
+  <h2>Quiénes somos y qué proponemos</h2>
+  <p><strong>FutbolBase</strong> es una plataforma digital española diseñada específicamente para el ecosistema del fútbol base: jugadores, clubes, familias y federaciones. No es una red social genérica adaptada, no es una herramienta de gestión aislada — es la primera plataforma que integra los <strong>tres pilares</strong> (deportivo, social y federativo) en un único producto.</p>
+  <p>Proponemos a la <strong>Federación de Fútbol de la Comunidad Valenciana (FFCV)</strong> un acuerdo de colaboración estratégica que:</p>
+  <ol>
+    <li>Modernice digitalmente la experiencia de los 232.000+ federados de la Comunidad Valenciana sin coste de desarrollo para la FFCV.</li>
+    <li>Genere un <strong>nuevo flujo de ingresos recurrente</strong> a la Federación vía revenue share (15-20% del ARR local).</li>
+    <li>Dote a la FFCV de un <strong>panel de control en tiempo real</strong> con métricas agregadas y anónimas sobre el estado del fútbol base valenciano.</li>
+    <li>Ofrezca co-branding oficial en el producto, posicionando a la FFCV como pionera digital entre las federaciones territoriales españolas.</li>
+  </ol>
+
+  <div class="box-gold box">
+    <strong>Tesis central:</strong> en 2026 el fútbol base no puede seguir gestionándose con papel, Excel y WhatsApp. La FFCV tiene la oportunidad histórica de liderar esa transformación sin arriesgar presupuesto propio, quedándose con el 15-20% del nuevo revenue generado.
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 02 · AUDIENCIA                                                -->
+<!-- ============================================================ -->
+<section id="audiencia">
+  <span class="num">02</span>
+  <div class="kicker">Sección 02 / A quién va dirigida la app</div>
+  <h2>Todo el ecosistema del fútbol base</h2>
+  <p>FutbolBase está diseñada como la <strong>capa común</strong> del fútbol base. No hablamos a un único perfil — hablamos a todos los actores, con funcionalidades, pricing y privacidad diferenciados.</p>
+
+  <div class="grid g-3">
+    <div class="tile"><div class="ico">⚽</div><h4>Jugadores 14-28</h4><p>Alevines, cadetes, juveniles, regional, amateur. TAM en CCVV: ~128.000 federados en estas edades.</p></div>
+    <div class="tile"><div class="ico">👨‍👩‍👦</div><h4>Familias</h4><p>Padres y madres que siguen la carrera deportiva del hijo. ~180.000 familias con un menor federado en CCVV.</p></div>
+    <div class="tile"><div class="ico">🏆</div><h4>Clubes</h4><p>Desde clubes de barrio hasta escuelas y academias. ~4.200 clubes registrados FFCV.</p></div>
+    <div class="tile"><div class="ico">🎯</div><h4>Entrenadores</h4><p>Coaches amateur, coordinadores y directores deportivos. ~18.500 con licencia FFCV activa.</p></div>
+    <div class="tile"><div class="ico">🔎</div><h4>Scouts y ojeadores</h4><p>Desde profesionales de LaLiga hasta ojeadores amateur. ~380 activos en CCVV.</p></div>
+    <div class="tile"><div class="ico">🏛️</div><h4>La propia FFCV</h4><p>Como partner institucional con acceso al dashboard agregado y al revenue share.</p></div>
+  </div>
+
+  <p style="margin-top:14px">Cada perfil tiene permisos, precio y experiencia propios. Un jugador menor de edad nunca ve el feed público. Un scout sólo accede a perfiles con visibilidad activada. La FFCV recibe datos agregados y anonimizados — nunca información individual sin consentimiento.</p>
+</section>
+
+<!-- ============================================================ -->
+<!-- 03 · PROBLEMA                                                 -->
+<!-- ============================================================ -->
+<section id="problema">
+  <span class="num">03</span>
+  <div class="kicker">Sección 03 / El problema actual</div>
+  <h2>Lo que hoy no funciona</h2>
+  <p>Más allá del trámite de la licencia (3€/temporada, cobertura legal y seguro), el ecosistema actual del fútbol base valenciano presenta <strong>carencias estructurales</strong> que afectan a todos los actores:</p>
+
+  <div class="grid g-2">
+    <div class="tile"><h4>🧾 Licencia sin valor digital</h4><p>La licencia federativa actual es papel/PDF. No genera perfil, no conecta datos, no ofrece servicios adicionales. Es únicamente administrativa.</p></div>
+    <div class="tile"><h4>💬 Comunicación fragmentada</h4><p>WhatsApp con grupos caducos, sin trazabilidad, sin privacidad para menores, sin separación vida personal / club.</p></div>
+    <div class="tile"><h4>📊 Datos perdidos</h4><p>Los rendimientos del jugador no se guardan en ningún sitio. Cada temporada empieza de cero. No hay histórico digital.</p></div>
+    <div class="tile"><h4>👀 Cero visibilidad</h4><p>El jugador amateur depende 100% del boca a boca. Los scouts no tienen herramientas para descubrir talento fuera de su red personal.</p></div>
+    <div class="tile"><h4>🗂️ Gestión ineficiente</h4><p>Clubes que gestionan convocatorias, alineaciones y comunicaciones con Excel, papel o WhatsApp.</p></div>
+    <div class="tile"><h4>📉 FFCV sin datos en tiempo real</h4><p>La Federación carece de dashboard para medir: abandono deportivo, participación femenina, distribución territorial de licencias en tiempo real.</p></div>
+  </div>
+
+  <div class="box">
+    <strong>Consecuencia:</strong> el 37% de jugadores jóvenes abandona el fútbol federado entre los 14 y los 18 años (datos FEF 2024). Parte de ese abandono es evitable con mejor comunicación, seguimiento y sensación de pertenencia — exactamente lo que FutbolBase resuelve.
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 04 · SOLUCIÓN                                                 -->
+<!-- ============================================================ -->
+<section id="solucion">
+  <span class="num">04</span>
+  <div class="kicker">Sección 04 / La solución</div>
+  <h2>FutbolBase · 14 funcionalidades en una app</h2>
+  <p>FutbolBase integra en una aplicación móvil y web las herramientas que hoy están dispersas. Lista no exhaustiva de funcionalidades:</p>
+
+  <div class="grid g-2">
+    <div class="tile"><h4>1 · Perfil deportivo verificado</h4><p>Foto, posición, pie dominante, equipo actual, trayectoria, stats. Verificado vía club + licencia FFCV.</p></div>
+    <div class="tile"><h4>2 · Estadísticas de partidos</h4><p>Goles, asistencias, minutos, tarjetas, MVPs. Registro partido a partido — histórico completo.</p></div>
+    <div class="tile"><h4>3 · Video highlights</h4><p>Subida, edición básica y compartición de los mejores momentos del jugador.</p></div>
+    <div class="tile"><h4>4 · Heatmaps y mapas de calor</h4><p>Visualización del rendimiento del jugador en el campo (via captura manual o dispositivos).</p></div>
+    <div class="tile"><h4>5 · Chat y comunidad</h4><p>Mensajes privados, grupos de equipo, canal oficial de club, feed social deportivo.</p></div>
+    <div class="tile"><h4>6 · Buscador de equipos y jugadores</h4><p>Geolocalizado, por edad, posición, nivel. Con contacto directo y solicitudes de prueba.</p></div>
+    <div class="tile"><h4>7 · Gestión de partidos</h4><p>Convocatorias, alineaciones, actas, lesiones, disponibilidad de jugadores.</p></div>
+    <div class="tile"><h4>8 · Dashboard coach</h4><p>Panel completo para entrenadores: táctica, planificación, comparativa de jugadores.</p></div>
+    <div class="tile"><h4>9 · Control parental</h4><p>Modo menor con supervisión familiar, filtro de contactos, visibilidad limitada.</p></div>
+    <div class="tile"><h4>10 · Scouting</h4><p>Herramientas para scouts: búsqueda avanzada, informes, comparativas, shortlist.</p></div>
+    <div class="tile"><h4>11 · Tarjeta FIFA personal</h4><p>Tarjeta coleccionable estilo videojuego con stats del jugador. Gamificación y sentido de pertenencia.</p></div>
+    <div class="tile"><h4>12 · Licencia federativa digital</h4><p>QR verificable integrado en la app. Sustituye al PDF actual.</p></div>
+    <div class="tile"><h4>13 · Exports federativos</h4><p>Actas, listados, informes listos para la FFCV en un click.</p></div>
+    <div class="tile"><h4>14 · Dashboard FFCV agregado</h4><p>Panel institucional con KPIs territoriales, demográficos y deportivos en tiempo real (anonimizado).</p></div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 05 · BENEFICIOS ESPECÍFICOS FFCV                              -->
+<!-- ============================================================ -->
+<section id="beneficios">
+  <span class="num">05</span>
+  <div class="kicker">Sección 05 / Qué gana la Federación</div>
+  <h2>5 beneficios directos para la FFCV</h2>
+
+  <div class="grid g-2">
+    <div class="tile" style="border-left:4px solid var(--gold)"><h4>💰 1 · Nuevo flujo de ingresos</h4><p>Revenue share del 15-20% sobre el ARR generado en territorio CCVV. Estimación realista: <strong>83k-111k€/año</strong> a partir del Y3.</p></div>
+    <div class="tile" style="border-left:4px solid var(--ffcv)"><h4>📊 2 · Dashboard en tiempo real</h4><p>Panel institucional con licencias activas, distribución territorial, participación femenina, tasa de abandono, demografía — datos que hoy tarda meses en recopilar.</p></div>
+    <div class="tile" style="border-left:4px solid var(--navy)"><h4>🏆 3 · Posicionamiento pionero</h4><p>La FFCV sería la <strong>primera federación territorial</strong> en ofrecer licencia digital integrada + plataforma para todo su ecosistema. Referente nacional.</p></div>
+    <div class="tile" style="border-left:4px solid var(--green)"><h4>🤝 4 · Servicio al federado sin coste</h4><p>Los federados reciben un producto moderno sin que la FFCV desembolse un euro en desarrollo, mantenimiento o soporte.</p></div>
+    <div class="tile" style="border-left:4px solid #8B5CF6"><h4>📉 5 · Reducción del abandono</h4><p>Mayor pertenencia al ecosistema = menos abandono. Objetivo: bajar la tasa del 37% al 28% en 3 temporadas.</p></div>
+    <div class="tile" style="border-left:4px solid #EC4899"><h4>🎯 6 · Visibilidad del talento</h4><p>Jugadores de la CCVV con acceso a 240+ scouts de LaLiga y Segunda B — talento que hoy se pierde por falta de escaparate.</p></div>
+  </div>
+
+  <div class="box-navy box">
+    <strong>Diferencial clave:</strong> todos los beneficios anteriores son acumulables. La FFCV no renuncia a nada de lo que hoy hace — añade una capa digital nueva que le reporta ingresos, datos y reputación.
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 06 · INTEGRACIÓN                                              -->
+<!-- ============================================================ -->
+<section id="integracion">
+  <span class="num">06</span>
+  <div class="kicker">Sección 06 / Plan de integración</div>
+  <h2>Cómo se conecta FutbolBase con la FFCV</h2>
+
+  <h3>6.1 · Integración técnica</h3>
+  <ul>
+    <li><strong>API bidireccional</strong> entre el sistema de licencias FFCV y la app, con validación en tiempo real del estado federativo del jugador.</li>
+    <li><strong>QR de licencia</strong> verificable en la app, con sello oficial FFCV, sustituyendo progresivamente al PDF actual.</li>
+    <li><strong>Sincronización de clubes, categorías y competiciones</strong> oficiales para auto-completar perfiles.</li>
+    <li><strong>Dashboard FFCV</strong> accesible vía SSO con las credenciales corporativas de la Federación.</li>
+  </ul>
+
+  <h3>6.2 · Integración institucional</h3>
+  <ul>
+    <li><strong>Co-branding</strong>: logo FFCV en splash de la app, en la tarjeta digital y en el pie de perfil de jugadores federados CCVV.</li>
+    <li><strong>Canal oficial FFCV</strong> dentro de la app para comunicaciones, noticias y eventos federativos.</li>
+    <li><strong>Programa de embajadores</strong>: 10 clubes FFCV firman como early adopters con condiciones preferentes.</li>
+    <li><strong>Presencia en eventos</strong> oficiales FFCV (Copas Generalitat, Fases finales, Gala del fútbol valenciano).</li>
+  </ul>
+
+  <h3>6.3 · Protección de datos</h3>
+  <p>FutbolBase opera en estricto cumplimiento de RGPD y LOPDGDD. Todos los datos de menores están protegidos por consentimiento parental verificado. La FFCV recibe únicamente datos agregados y anonimizados — nunca información identificativa individual sin autorización explícita.</p>
+</section>
+
+<!-- ============================================================ -->
+<!-- 07 · MODELO ECONÓMICO                                         -->
+<!-- ============================================================ -->
+<section id="economico">
+  <span class="num">07</span>
+  <div class="kicker">Sección 07 / Modelo económico · revenue share</div>
+  <h2>Cómo gana la FFCV con FutbolBase</h2>
+
+  <p>Proponemos un <strong>revenue share del 15% durante Y1-Y2 y del 20% a partir de Y3</strong>, aplicable sobre todo el ARR generado en territorio CCVV (jugadores, clubes y familias con licencia FFCV).</p>
+
+  <h3>7.1 · Estimación de ingresos FFCV por revenue share</h3>
+  <table>
+    <thead><tr><th>Año</th><th>ARR territorio CCVV</th><th>% RevShare</th><th>Ingresos FFCV</th><th>Equivalente en licencias</th></tr></thead>
+    <tbody>
+      <tr><td>Y1 · launch</td><td class="num">52.000€</td><td class="num">15%</td><td class="num"><strong>7.800€</strong></td><td class="num">2.600 licencias</td></tr>
+      <tr><td>Y2</td><td class="num">145.000€</td><td class="num">15%</td><td class="num"><strong>21.750€</strong></td><td class="num">7.250 licencias</td></tr>
+      <tr><td>Y3</td><td class="num">310.000€</td><td class="num">20%</td><td class="num"><strong>62.000€</strong></td><td class="num">20.660 licencias</td></tr>
+      <tr><td>Y4</td><td class="num">460.000€</td><td class="num">20%</td><td class="num"><strong>92.000€</strong></td><td class="num">30.660 licencias</td></tr>
+      <tr class="highlight"><td><strong>Y5 · target</strong></td><td class="num"><strong>554.000€</strong></td><td class="num">20%</td><td class="num"><strong>110.800€</strong></td><td class="num">36.930 licencias</td></tr>
+      <tr><td><strong>Acumulado 5 años</strong></td><td class="num">1.521.000€</td><td class="num">—</td><td class="num"><strong>294.350€</strong></td><td class="num">98.100 licencias</td></tr>
+    </tbody>
+  </table>
+
+  <div class="box-gold box">
+    <strong>Contexto:</strong> la FFCV ingresa aproximadamente <strong>696.000€/año</strong> por licencias a 3€ (232k licencias × 3€). FutbolBase añade <strong>+110k€/año en Y5</strong>, es decir un <strong>+15,9% de ingresos adicionales</strong> sin coste operativo para la Federación.
+  </div>
+
+  <h3>7.2 · Costes para la FFCV</h3>
+  <p><strong>0€.</strong> No hay coste de desarrollo, ni de mantenimiento, ni de soporte. FutbolBase asume todo. La FFCV aporta únicamente su respaldo institucional, la integración técnica (API) y la licencia de uso del logotipo.</p>
+</section>
+
+<!-- ============================================================ -->
+<!-- 08 · PRICING JUSTIFICADO                                      -->
+<!-- ============================================================ -->
+<section id="pricing">
+  <span class="num">08</span>
+  <div class="kicker">Sección 08 / Pricing · por qué más que 3€</div>
+  <h2>Por qué podemos cobrar un poco más</h2>
+  <p>Una de las preguntas legítimas de la FFCV es: <em>"Si la licencia cuesta 3€/temporada, ¿por qué FutbolBase cobra más?"</em>. La respuesta es que <strong>FutbolBase no sustituye a la licencia — la complementa</strong>.</p>
+
+  <h3>8.1 · Lo que cubre cada cosa</h3>
+  <table>
+    <thead><tr><th>Concepto</th><th>Licencia FFCV (3€)</th><th>FutbolBase Pro</th></tr></thead>
+    <tbody>
+      <tr><td>Cobertura legal y seguro</td><td style="color:var(--ffcv)">✓ Sí</td><td style="color:var(--muted)">— (requiere licencia)</td></tr>
+      <tr><td>Perfil digital deportivo</td><td style="color:var(--red)">✗</td><td style="color:var(--green)">✓</td></tr>
+      <tr><td>Stats, highlights, heatmaps</td><td style="color:var(--red)">✗</td><td style="color:var(--green)">✓</td></tr>
+      <tr><td>Visibilidad ante scouts</td><td style="color:var(--red)">✗</td><td style="color:var(--green)">✓</td></tr>
+      <tr><td>Chat, feed, comunidad</td><td style="color:var(--red)">✗</td><td style="color:var(--green)">✓</td></tr>
+      <tr><td>Gestión de club</td><td style="color:var(--red)">✗</td><td style="color:var(--green)">✓ (tier Club)</td></tr>
+      <tr><td>Control parental</td><td style="color:var(--red)">✗</td><td style="color:var(--green)">✓</td></tr>
+    </tbody>
+  </table>
+
+  <h3>8.2 · Pricing escalonado con launch competitivo</h3>
+  <p>Para respetar la sensibilidad del usuario federado, lanzamos Y1 con precios muy cercanos al benchmark FFCV:</p>
+  <table>
+    <thead><tr><th>Tier</th><th>Y1 launch</th><th>Y3</th><th>Y5 target</th></tr></thead>
+    <tbody>
+      <tr><td>Pro jugador · anual</td><td class="num" style="color:var(--green)"><strong>4,99€/temp.</strong></td><td class="num">24,99€</td><td class="num">39€</td></tr>
+      <tr><td>Pro jugador · mensual</td><td class="num" style="color:var(--green)"><strong>0,99€/mes</strong></td><td class="num">2,99€</td><td class="num">4,99€</td></tr>
+      <tr><td>Plan familiar</td><td class="num" style="color:var(--green)"><strong>7,99€/mes</strong></td><td class="num">12,99€</td><td class="num">14,99€</td></tr>
+      <tr><td>Club · base</td><td class="num" style="color:var(--green)"><strong>9€/mes</strong></td><td class="num">19€</td><td class="num">29€</td></tr>
+      <tr class="highlight"><td><strong>Free forever</strong></td><td class="num"><strong>0€</strong></td><td class="num"><strong>0€</strong></td><td class="num"><strong>0€</strong></td></tr>
+    </tbody>
+  </table>
+
+  <div class="box">
+    <strong>Política grandfather:</strong> todo usuario que entre Y1 mantendrá su precio de lanzamiento mientras conserve la suscripción activa. Esto reduce el churn al 8% y premia la lealtad temprana.
+  </div>
+
+  <h3>8.3 · El argumento de valor</h3>
+  <p>Un gimnasio cuesta 30-50€/mes. Una app de fitness tipo Strava Premium cuesta 8,99€/mes. Un software de análisis deportivo profesional (Veo, Playermaker) cuesta 60-120€/mes. FutbolBase Pro a 4,99€/temporada supone <strong>0,42€/mes</strong> — una décima parte de lo más barato del mercado, con funcionalidades adaptadas al fútbol base.</p>
+  <p>La justificación no es un "sube de 3€ a 5€" — es "hay un producto nuevo, separado de la licencia, que cuesta lo que vale el servicio que entrega".</p>
+</section>
+
+<!-- ============================================================ -->
+<!-- 09 · COMPARATIVA VS ACTUAL                                    -->
+<!-- ============================================================ -->
+<section id="comparativa">
+  <span class="num">09</span>
+  <div class="kicker">Sección 09 / Por qué esto es mejor que lo actual</div>
+  <h2>Comparativa directa · hoy vs con FutbolBase</h2>
+
+  <table>
+    <thead><tr><th>Dimensión</th><th>Hoy</th><th>Con FutbolBase</th></tr></thead>
+    <tbody>
+      <tr><td>Licencia</td><td>PDF/papel, sólo cobertura legal</td><td>QR digital + perfil + servicios</td></tr>
+      <tr><td>Comunicación club ↔ familia</td><td>WhatsApp caótico</td><td>Canal oficial, verificado, privado</td></tr>
+      <tr><td>Histórico del jugador</td><td>Se pierde cada año</td><td>Perfil permanente con trayectoria</td></tr>
+      <tr><td>Visibilidad ante scouts</td><td>Boca a boca</td><td>Perfil descubrible por 240+ scouts</td></tr>
+      <tr><td>Gestión del club</td><td>Excel + WhatsApp + papel</td><td>Dashboard completo integrado</td></tr>
+      <tr><td>Control parental de menores</td><td>Difuso o inexistente</td><td>Modo menor con supervisión familiar</td></tr>
+      <tr><td>Informes para la FFCV</td><td>Manuales, tardíos</td><td>Dashboard en tiempo real</td></tr>
+      <tr><td>Sentido de pertenencia</td><td>Medio — centrado en el club</td><td>Alto — club + territorio + ecosistema</td></tr>
+      <tr><td>Ingresos para la FFCV</td><td>Sólo licencias (696k€/año)</td><td>Licencias + revshare (hasta +110k€/año)</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============================================================ -->
+<!-- 10 · PILOTAJE                                                 -->
+<!-- ============================================================ -->
+<section id="pilotaje">
+  <span class="num">10</span>
+  <div class="kicker">Sección 10 / Plan de pilotaje</div>
+  <h2>6 meses · una comarca · métricas claras</h2>
+  <p>Proponemos un pilotaje de <strong>6 meses en una comarca representativa</strong> (por ejemplo, Camp de Morvedre o La Safor) antes del despliegue regional.</p>
+
+  <div class="tl">
+    <div class="ph"><h4>Mes 1 · Firma y alta</h4><p>Firma del convenio, integración API con la FFCV, onboarding de los 10 clubes piloto seleccionados.</p></div>
+    <div class="ph"><h4>Mes 2 · Lanzamiento público</h4><p>Presentación en el territorio piloto con campaña comarcal. Activación del canal oficial FFCV en la app.</p></div>
+    <div class="ph"><h4>Mes 3-4 · Medición intermedia</h4><p>KPIs: registros, conversión Pro, NPS familias, uso del dashboard club. Primer informe a la FFCV.</p></div>
+    <div class="ph"><h4>Mes 5 · Ajuste producto</h4><p>Iteración de producto basada en feedback. Cierre de bugs y quick wins antes de escalar.</p></div>
+    <div class="ph"><h4>Mes 6 · Evaluación</h4><p>Informe final con resultados vs objetivos. Decisión sobre acuerdo plurianual y despliegue regional.</p></div>
+  </div>
+
+  <h3>10.1 · KPIs del pilotaje</h3>
+  <div class="stat-row">
+    <div class="s"><div class="v">60%</div><div class="l">% registro vs licencias CCVV piloto</div></div>
+    <div class="s"><div class="v">22%</div><div class="l">Conversión Free → Pro</div></div>
+    <div class="s"><div class="v">65+</div><div class="l">NPS familias</div></div>
+    <div class="s"><div class="v">8/10</div><div class="l">Clubes renovando</div></div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 11 · COMPROMISOS                                              -->
+<!-- ============================================================ -->
+<section id="compromisos">
+  <span class="num">11</span>
+  <div class="kicker">Sección 11 / Compromisos mutuos</div>
+  <h2>Qué aporta cada parte</h2>
+
+  <div class="grid g-2">
+    <div class="tile" style="border-left:4px solid var(--ffcv)">
+      <h4>Lo que aporta FutbolBase</h4>
+      <ul>
+        <li>Desarrollo, mantenimiento y evolución de la plataforma</li>
+        <li>Soporte 24/7 a usuarios y clubes</li>
+        <li>Marketing y adquisición de usuarios</li>
+        <li>Cumplimiento RGPD + seguridad de datos</li>
+        <li>Dashboard federativo en tiempo real</li>
+        <li>Revenue share 15-20% sobre ARR CCVV</li>
+        <li>Co-branding y visibilidad FFCV en el producto</li>
+      </ul>
+    </div>
+    <div class="tile" style="border-left:4px solid var(--gold)">
+      <h4>Lo que aporta la FFCV</h4>
+      <ul>
+        <li>Respaldo institucional y convenio oficial</li>
+        <li>Licencia de uso de logotipo y marca FFCV</li>
+        <li>Integración API con el sistema de licencias</li>
+        <li>Comunicación oficial a clubes, entrenadores y jugadores</li>
+        <li>Presencia en eventos oficiales (Gala, finales, copas)</li>
+        <li>Feedback institucional sobre evolución del producto</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="box-gold box">
+    <strong>Cláusula de salida:</strong> si al término del pilotaje (6 meses) cualquiera de las partes no está satisfecha, el convenio se disuelve sin penalización. Los usuarios registrados mantendrán el acceso a la plataforma, pero sin integración oficial FFCV.
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 12 · CIERRE Y CONTACTO                                        -->
+<!-- ============================================================ -->
+<section id="cierre">
+  <span class="num">12</span>
+  <div class="kicker">Sección 12 / Próximos pasos</div>
+  <h2>Cómo avanzamos</h2>
+  <ol>
+    <li><strong>Reunión preliminar</strong> con el equipo directivo de la FFCV (90 min) — presentación en vivo de producto y plan.</li>
+    <li><strong>Demo técnica</strong> al equipo IT/digital de la FFCV (60 min) — integración API, seguridad, RGPD.</li>
+    <li><strong>Firma de carta de intenciones</strong> no vinculante — marco para arrancar pilotaje.</li>
+    <li><strong>Convenio formal de pilotaje</strong> (6 meses, territorio acotado, KPIs públicos).</li>
+    <li><strong>Evaluación</strong> y convenio plurianual (si KPIs se cumplen).</li>
+  </ol>
+</section>
+
+<!-- CIERRE -->
+<div class="sign">
+  <h3>🤝 Abrimos diálogo con la FFCV</h3>
+  <p>Este documento es el punto de partida. Estamos disponibles para cualquier aclaración, ajuste o profundización — especialmente sobre el modelo económico, la integración técnica y el plan de pilotaje.</p>
+  <div class="contacts">
+    <span>📧 fundador@futbolbase.es</span>
+    <span>📞 +34 6XX XXX XXX</span>
+    <span>🌐 futbolbase.es</span>
+  </div>
+</div>
+
+<footer>
+  <p>FutbolBase · Propuesta institucional · Documento confidencial · v1.0 · 2026</p>
+  <p style="margin-top:4px">Volver al <a href="./proyecto-master.html" style="color:var(--ffcv);font-weight:700">índice del proyecto</a></p>
+</footer>
+
+</div>
+</body>
+</html>

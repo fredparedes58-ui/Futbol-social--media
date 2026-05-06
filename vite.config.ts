@@ -25,6 +25,13 @@ export default defineConfig({
           { src: '/icon-192.png', sizes: '192x192', type: 'image/png' },
           { src: '/icon-512.png', sizes: '512x512', type: 'image/png' },
         ],
+        screenshots: [
+          { src: '/screenshots/1-landing.png',   sizes: '390x844', type: 'image/png', form_factor: 'narrow', label: 'Landing — IA + RAG + logros' },
+          { src: '/screenshots/2-home.png',      sizes: '390x844', type: 'image/png', form_factor: 'narrow', label: 'Home — feed, stories y ticker en vivo' },
+          { src: '/screenshots/3-profile.png',   sizes: '390x844', type: 'image/png', form_factor: 'narrow', label: 'Perfil — tarjeta FIFA y Coach AI' },
+          { src: '/screenshots/4-league.png',    sizes: '390x844', type: 'image/png', form_factor: 'narrow', label: 'Liga — logros y leaderboard' },
+          { src: '/screenshots/5-community.png', sizes: '390x844', type: 'image/png', form_factor: 'narrow', label: 'Comunidad — equipos y duelos' },
+        ],
       },
     }),
   ],

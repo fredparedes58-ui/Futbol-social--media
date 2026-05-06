@@ -5,6 +5,7 @@ import GlassCard from '../components/ui/GlassCard'
 import BottomSheet from '../components/ui/BottomSheet'
 import { Skeleton } from '../components/ui/Skeleton'
 import { useSimulatedLoad } from '../hooks/useSimulatedLoad'
+import LeaderboardSheet from '../features/leaderboard/LeaderboardSheet'
 
 interface Standing { pos: number; team: string; pts: number; pj: number; gf: number; gc: number }
 interface Scorer   { player: string; team: string; goals: number }
@@ -43,6 +44,7 @@ export default function LeaguePage() {
   const loading = useSimulatedLoad(700)
   const [tab, setTab] = useState<Tab>('tabla')
   const [drawer, setDrawer] = useState<Drawer>(null)
+  const [lbOpen, setLbOpen] = useState(false)
 
   const drawerTitle =
     drawer?.kind === 'standing' ? drawer.data.team :
@@ -90,6 +92,22 @@ export default function LeaguePage() {
               Temporada 2026 · Jornada 16
             </div>
           </div>
+          <button
+            onClick={() => setLbOpen(true)}
+            style={{
+              marginLeft: 'auto',
+              padding: '10px 14px', borderRadius: 12,
+              background: 'linear-gradient(135deg, rgba(255,184,0,0.2), rgba(204,255,0,0.12))',
+              border: '1px solid rgba(255,184,0,0.5)',
+              color: '#FFB800',
+              display: 'flex', alignItems: 'center', gap: 6,
+              cursor: 'pointer',
+              fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 12,
+              boxShadow: '0 0 14px rgba(255,184,0,0.25)',
+            }}
+          >
+            <Award size={14} /> Ranking
+          </button>
         </div>
 
         {/* Tabs */}
@@ -485,6 +503,8 @@ export default function LeaguePage() {
           </div>
         )}
       </BottomSheet>
+
+      <LeaderboardSheet open={lbOpen} onClose={() => setLbOpen(false)} />
 
       <BottomNav />
     </div>

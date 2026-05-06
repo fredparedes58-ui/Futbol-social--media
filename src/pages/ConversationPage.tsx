@@ -1,13 +1,19 @@
 import { useState, useRef, useEffect, useMemo } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { ArrowLeft, Send, Smile, Paperclip, Sparkles } from 'lucide-react'
+import { ArrowLeft, Send, Smile, Paperclip, Sparkles, Mic, MicOff } from 'lucide-react'
+import { useSpeechRecognition } from '../hooks/useSpeechRecognition'
 import { suggestReplies, type Tone } from '../lib/aiMocks'
+import { assistantAgent } from '../ai/agents/assistantAgent'
+
+interface Citation { topic: string; source?: string }
 
 interface Message {
   id: string
   text: string
   mine: boolean
   time: string
+  citations?: Citation[]
+  confidence?: number
 }
 
 const INITIAL: Record<string, Message[]> = {
@@ -28,13 +34,21 @@ function nowTime() {
 export default function ConversationPage() {
   const nav = useNavigate()
   const loc = useLocation()
-  const state = (loc.state ?? {}) as { name?: string; badge?: string; color?: string; active?: boolean }
+  const state = (loc.state ?? {}) as { name?: string; badge?: string; color?: string; active?: boolean; bot?: boolean }
   const name   = state.name   ?? 'Chat'
   const badge  = state.badge  ?? 'CH'
   const color  = state.color  ?? '#CCFF00'
   const active = state.active ?? false
+  const isBot  = state.bot    ?? false
 
-  const [messages, setMessages] = useState<Message[]>(INITIAL.default)
+  const [messages, setMessages] = useState<Message[]>(
+    isBot
+      ? [{ id: 'b0', text: '¡Hola! 👋 Soy el asistente de FútbolBase. Preguntame lo que quieras: predicciones, equipos, chats, highlights, Coach AI, Weekly Digest, perfil… lo que sea.', mine: false, time: nowTime() }]
+      : INITIAL.default,
+  )
+  const [botSuggestions, setBotSuggestions] = useState<string[]>(
+    isBot ? ['¿Cómo hago una predicción?', '¿Qué es el Coach AI?', '¿Cómo uno a un equipo?'] : [],
+  )
   const [draft, setDraft] = useState('')
   const [typing, setTyping] = useState(false)
   const [tone, setTone] = useState<Tone>(() => {
@@ -48,6 +62,25 @@ export default function ConversationPage() {
     if ('vibrate' in navigator) navigator.vibrate(8)
   }
   const scrollRef = useRef<HTMLDivElement>(null)
+  const speech = useSpeechRecognition('es-AR')
+
+  // Sincronizar transcripción con el draft mientras escucha
+  useEffect(() => {
+    if (speech.listening && speech.transcript) {
+      setDraft(speech.transcript)
+    }
+  }, [speech.listening, speech.transcript])
+
+  function toggleMic() {
+    if (!speech.supported) return
+    if (speech.listening) {
+      speech.stop()
+      if ('vibrate' in navigator) navigator.vibrate(8)
+    } else {
+      speech.start()
+      if ('vibrate' in navigator) navigator.vibrate([8, 30, 8])
+    }
+  }
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' })
@@ -56,16 +89,38 @@ export default function ConversationPage() {
   // Smart-reply chips: se calculan sobre el último mensaje ajeno.
   // Se ocultan cuando el usuario ya está escribiendo o cuando el último mensaje es propio.
   const suggestions = useMemo(() => {
+    if (isBot) return botSuggestions
     const lastOther = [...messages].reverse().find(m => !m.mine)
     if (!lastOther) return []
     return suggestReplies(lastOther.text, { teamName: name, active, tone })
-  }, [messages, name, active, tone])
+  }, [messages, name, active, tone, isBot, botSuggestions])
 
   const showChips = suggestions.length > 0 && draft.trim().length === 0 && !typing
 
   function pickSuggestion(text: string) {
-    setDraft(text)
     if ('vibrate' in navigator) navigator.vibrate(12)
+    if (isBot) {
+      // En modo asistente, enviar directamente al tocar el chip.
+      const msg: Message = { id: `m${Date.now()}`, text, mine: true, time: nowTime() }
+      setMessages(prev => [...prev, msg])
+      setBotSuggestions([])
+      setTimeout(() => setTyping(true), 400)
+      void (async () => {
+        const r = await assistantAgent.run({ query: text })
+        setTimeout(() => {
+          setTyping(false)
+          const d = r.data
+          setMessages(prev => [...prev, {
+            id: `b${Date.now() + 1}`,
+            text: d?.reply ?? '...', mine: false, time: nowTime(),
+            citations: d?.citations, confidence: d?.confidence,
+          }])
+          setBotSuggestions(d?.suggestions ?? [])
+        }, 500)
+      })()
+      return
+    }
+    setDraft(text)
   }
 
   function send() {
@@ -75,6 +130,25 @@ export default function ConversationPage() {
     setMessages(prev => [...prev, msg])
     setDraft('')
     if ('vibrate' in navigator) navigator.vibrate(15)
+
+    if (isBot) {
+      // Bot mode: RAG-backed assistant agent
+      setTimeout(() => setTyping(true), 400)
+      void (async () => {
+        const r = await assistantAgent.run({ query: text })
+        setTimeout(() => {
+          setTyping(false)
+          const d = r.data
+          setMessages(prev => [...prev, {
+            id: `b${Date.now() + 1}`,
+            text: d?.reply ?? '...', mine: false, time: nowTime(),
+            citations: d?.citations, confidence: d?.confidence,
+          }])
+          setBotSuggestions(d?.suggestions ?? [])
+        }, 700)
+      })()
+      return
+    }
 
     // Simulated auto-reply
     setTimeout(() => setTyping(true), 500)
@@ -141,8 +215,8 @@ export default function ConversationPage() {
           <div style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 800, fontSize: 16, color: '#FAF5EB' }}>
             {name}
           </div>
-          <div style={{ fontFamily: 'Space Grotesk, sans-serif', fontSize: 11, color: active ? '#CCFF00' : 'rgba(250,245,235,0.5)' }}>
-            {active ? 'En línea' : 'Visto hace 1h'}
+          <div style={{ fontFamily: 'Space Grotesk, sans-serif', fontSize: 11, color: isBot ? '#B347FF' : (active ? '#CCFF00' : 'rgba(250,245,235,0.5)') }}>
+            {isBot ? 'Asistente AI · Siempre disponible' : (active ? 'En línea' : 'Visto hace 1h')}
           </div>
         </div>
       </div>
@@ -183,6 +257,32 @@ export default function ConversationPage() {
             >
               {m.text}
             </div>
+            {!m.mine && m.citations && m.citations.length > 0 && (
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginTop: 6 }}>
+                {m.citations.map((c, i) => (
+                  <span key={i} style={{
+                    fontFamily: 'Space Grotesk, sans-serif', fontSize: 10,
+                    padding: '2px 8px', borderRadius: 999,
+                    background: 'rgba(179, 71, 255, 0.12)',
+                    border: '1px solid rgba(179, 71, 255, 0.35)',
+                    color: '#D4A8FF',
+                  }}>
+                    📚 {c.topic}
+                  </span>
+                ))}
+                {typeof m.confidence === 'number' && (
+                  <span style={{
+                    fontFamily: 'Space Grotesk, sans-serif', fontSize: 10,
+                    padding: '2px 8px', borderRadius: 999,
+                    background: 'rgba(204, 255, 0, 0.08)',
+                    border: '1px solid rgba(204, 255, 0, 0.25)',
+                    color: '#CCFF00',
+                  }}>
+                    conf {(m.confidence * 100).toFixed(0)}%
+                  </span>
+                )}
+              </div>
+            )}
             <div
               style={{
                 marginTop: 3,
@@ -225,8 +325,8 @@ export default function ConversationPage() {
       {/* Smart-reply chips (AI mock) */}
       {showChips && (
         <div style={{ flexShrink: 0, padding: '8px 12px 0' }}>
-          {/* Tone switcher */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
+          {/* Tone switcher (solo en chats reales) */}
+          {!isBot && <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
             <Sparkles size={11} color="#CCFF00" />
             <span style={{
               fontFamily: 'Space Grotesk, sans-serif', fontSize: 10,
@@ -251,7 +351,7 @@ export default function ConversationPage() {
                 {t}
               </button>
             ))}
-          </div>
+          </div>}
           <div
             style={{
               display: 'flex', gap: 8,
@@ -263,6 +363,7 @@ export default function ConversationPage() {
             <button
               key={`${s}-${i}`}
               onClick={() => pickSuggestion(s)}
+              className={isBot ? 'chip-shimmer chip-shimmer--violet' : 'chip-shimmer'}
               style={{
                 flexShrink: 0,
                 display: 'inline-flex',
@@ -270,8 +371,8 @@ export default function ConversationPage() {
                 gap: 6,
                 padding: '8px 12px',
                 borderRadius: 999,
-                background: 'rgba(204, 255, 0, 0.08)',
-                border: '1px solid rgba(204, 255, 0, 0.35)',
+                background: isBot ? 'rgba(179, 71, 255, 0.10)' : 'rgba(204, 255, 0, 0.08)',
+                border: isBot ? '1px solid rgba(179, 71, 255, 0.45)' : '1px solid rgba(204, 255, 0, 0.35)',
                 color: '#FAF5EB',
                 fontFamily: 'Space Grotesk, sans-serif',
                 fontSize: 13,
@@ -284,7 +385,7 @@ export default function ConversationPage() {
                 animationFillMode: 'backwards',
               }}
             >
-              <Sparkles size={12} color="#CCFF00" />
+              <Sparkles size={12} color={isBot ? '#B347FF' : '#CCFF00'} />
               {s}
             </button>
           ))}
@@ -304,18 +405,42 @@ export default function ConversationPage() {
           display: 'flex', alignItems: 'center', gap: 8,
         }}
       >
-        <button
-          style={{
-            width: 38, height: 38, borderRadius: 12,
-            background: 'rgba(255, 255, 255, 0.05)',
-            border: '1px solid rgba(255, 220, 180, 0.08)',
-            color: 'rgba(250, 245, 235, 0.6)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            cursor: 'pointer', flexShrink: 0,
-          }}
-        >
-          <Paperclip size={16} />
-        </button>
+        {speech.supported ? (
+          <button
+            onClick={toggleMic}
+            aria-label={speech.listening ? 'Detener grabación' : 'Dictar por voz'}
+            style={{
+              width: 38, height: 38, borderRadius: 12,
+              background: speech.listening
+                ? 'linear-gradient(135deg, rgba(255,91,58,0.22), rgba(255,184,0,0.18))'
+                : 'rgba(255, 255, 255, 0.05)',
+              border: speech.listening
+                ? '1px solid rgba(255,91,58,0.55)'
+                : '1px solid rgba(255, 220, 180, 0.08)',
+              color: speech.listening ? '#FF5B3A' : 'rgba(250, 245, 235, 0.6)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              cursor: 'pointer', flexShrink: 0,
+              boxShadow: speech.listening ? '0 0 14px rgba(255,91,58,0.45)' : 'none',
+              animation: speech.listening ? 'pulse-glow 1.2s ease-in-out infinite' : 'none',
+              transition: 'all 180ms',
+            }}
+          >
+            {speech.listening ? <Mic size={16} /> : <MicOff size={16} />}
+          </button>
+        ) : (
+          <button
+            style={{
+              width: 38, height: 38, borderRadius: 12,
+              background: 'rgba(255, 255, 255, 0.05)',
+              border: '1px solid rgba(255, 220, 180, 0.08)',
+              color: 'rgba(250, 245, 235, 0.6)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              cursor: 'pointer', flexShrink: 0,
+            }}
+          >
+            <Paperclip size={16} />
+          </button>
+        )}
         <div
           style={{
             flex: 1,

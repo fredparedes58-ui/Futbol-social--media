@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Redes sociales del deporte — Proyección 5 años (2027-2031)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --obsidian:#0F0D0A;--obsidian-base:#141009;
+    --lime:#CCFF00;--amber:#FFB800;--coral:#FF5B3A;
+    --warm:#FAF5EB;--warm-muted:rgba(250,245,235,.62);--warm-dim:rgba(250,245,235,.38);
+    --border:rgba(255,220,180,.10);
+    --shadow-lime:0 0 24px rgba(204,255,0,.45),0 0 48px rgba(204,255,0,.18);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--obsidian);color:var(--warm);font-family:'Space Grotesk',Inter,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.55;overflow-x:hidden}
+  body{
+    background:
+      radial-gradient(900px 600px at 12% -10%,rgba(204,255,0,.08),transparent 60%),
+      radial-gradient(900px 600px at 90% 8%,rgba(255,184,0,.06),transparent 60%),
+      var(--obsidian);min-height:100vh
+  }
+  h1,h2,h3,h4{font-family:'Archivo',sans-serif;font-weight:900;letter-spacing:-.02em;line-height:1.05}
+  .container{max-width:1040px;margin:0 auto;padding:0 24px}
+  .grad{background:linear-gradient(135deg,#CCFF00,#FFB800 50%,#FF5B3A);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+
+  .hero{padding:80px 0 32px;text-align:center}
+  .pill{display:inline-flex;gap:8px;padding:7px 16px;border-radius:999px;background:rgba(204,255,0,.10);border:1px solid rgba(204,255,0,.4);color:var(--lime);font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;margin-bottom:18px}
+  .hero h1{font-size:clamp(40px,6vw,68px);margin-bottom:18px}
+  .hero p{font-size:17px;color:var(--warm-muted);max-width:580px;margin:0 auto}
+
+  .scope-toggle{display:flex;justify-content:center;margin:28px auto 40px;width:fit-content;max-width:100%;background:var(--obsidian-base);border:1px solid var(--border);border-radius:999px;padding:6px;gap:4px;position:relative;z-index:5}
+  .scope-btn{padding:14px 28px;border:none;background:transparent;color:var(--warm-muted);font-weight:800;cursor:pointer;font-size:15px;border-radius:999px;font-family:inherit;transition:all .25s;-webkit-tap-highlight-color:rgba(204,255,0,.3);touch-action:manipulation;user-select:none;white-space:nowrap}
+  .scope-btn:active{transform:scale(.96)}
+  .scope-btn.active{background:var(--lime);color:#0F0D0A;box-shadow:var(--shadow-lime)}
+
+  /* ASSUMPTIONS BANNER */
+  .assump{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px}
+  .assump .a{padding:18px 16px;border-radius:14px;background:rgba(255,255,255,.03);border:1px solid var(--border);text-align:center}
+  .assump .a .k{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--warm-dim);margin-bottom:8px}
+  .assump .a .v{font-family:'Archivo';font-size:22px;font-weight:900;color:var(--lime)}
+  .assump .a .s{font-size:11px;color:var(--warm-muted);margin-top:4px}
+
+  /* TWO BIG NUMBERS */
+  .duo-cards{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-bottom:40px}
+  .duo{padding:40px 28px;border-radius:24px;border:1px solid var(--border);text-align:center}
+  .duo.gross{background:linear-gradient(160deg,rgba(255,184,0,.06),rgba(255,184,0,.02));border-color:rgba(255,184,0,.35)}
+  .duo.net{background:linear-gradient(160deg,rgba(204,255,0,.10),rgba(255,184,0,.04));border-color:rgba(204,255,0,.45);box-shadow:var(--shadow-lime)}
+  .duo .icon{font-size:36px;margin-bottom:12px}
+  .duo .label{font-size:13px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;margin-bottom:14px}
+  .duo.gross .label{color:var(--amber)}
+  .duo.net .label{color:var(--lime)}
+  .duo .num{font-family:'Archivo';font-size:clamp(50px,8.5vw,90px);font-weight:900;line-height:1;letter-spacing:-.03em}
+  .duo.gross .num{background:linear-gradient(135deg,#FFB800,#FF5B3A);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .duo.net .num{background:linear-gradient(135deg,#CCFF00,#FFB800);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .duo .sub{font-size:14px;color:var(--warm-muted);margin-top:14px}
+
+  /* SECTION */
+  .section{padding:36px;border-radius:22px;background:rgba(255,255,255,.02);border:1px solid var(--border);margin-bottom:36px}
+  .section h2{font-size:26px;margin-bottom:8px}
+  .section .sub{color:var(--warm-muted);font-size:15px;margin-bottom:36px}
+
+  /* CHART */
+  .chart-wrap{padding-top:90px}
+  .chart{display:grid;grid-template-columns:repeat(5,1fr);gap:22px;align-items:end;height:340px;border-bottom:1px solid var(--border);position:relative}
+  .bar-col{display:flex;flex-direction:column;align-items:center;height:100%;justify-content:flex-end;position:relative}
+  .bar-stack{width:78%;max-width:78px;display:flex;flex-direction:column;justify-content:flex-end;border-radius:12px 12px 0 0;overflow:hidden;position:relative;cursor:pointer;transition:transform .3s;min-height:38px}
+  .bar-subs{background:linear-gradient(180deg,#FFB800,#cc9300);width:100%}
+  .bar-ads{background:linear-gradient(180deg,#FF5B3A,#c44424);width:100%}
+  .bar-col:hover .bar-stack{transform:translateY(-6px)}
+  .bar-labels{position:absolute;left:50%;transform:translateX(-50%);bottom:100%;margin-bottom:10px;display:flex;flex-direction:column;align-items:center;gap:6px;white-space:nowrap}
+  .bar-gross{font-family:'Archivo';font-weight:900;font-size:18px;color:var(--amber)}
+  .bar-net{font-family:'Space Grotesk';font-size:11px;color:var(--lime);font-weight:800;padding:4px 10px;border-radius:999px;background:rgba(204,255,0,.10);border:1px solid rgba(204,255,0,.3)}
+  .bar-net.neg{color:var(--coral);background:rgba(255,91,58,.10);border-color:rgba(255,91,58,.3)}
+  .bar-label-bottom{margin-top:14px;text-align:center}
+  .bar-label-bottom .y{font-family:'Archivo';font-weight:900;font-size:18px}
+  .bar-label-bottom .yr{font-size:10px;color:var(--warm-dim);font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+
+  .legend{display:flex;justify-content:center;gap:24px;margin-top:24px;flex-wrap:wrap}
+  .legend .item{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--warm-muted);font-weight:600}
+  .legend .sw{width:14px;height:14px;border-radius:4px}
+
+  /* SCENARIOS */
+  .scenarios{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .scen{padding:28px 22px;border-radius:18px;background:rgba(255,255,255,.03);border:1px solid var(--border);text-align:center}
+  .scen .em{font-size:36px;margin-bottom:10px}
+  .scen h4{font-size:18px;margin-bottom:8px}
+  .scen .v{font-family:'Archivo';font-weight:900;font-size:30px;margin:14px 0 4px}
+  .scen.cons .v{color:#FF5B3A}
+  .scen.real .v{color:#FFB800}
+  .scen.opt .v{color:#CCFF00}
+  .scen p{font-size:13px;color:var(--warm-muted)}
+
+  /* FINAL */
+  .final{padding:48px 32px;border-radius:24px;background:linear-gradient(135deg,rgba(204,255,0,.12),rgba(255,184,0,.05));border:1px solid rgba(204,255,0,.4);text-align:center;margin-bottom:48px}
+  .final .em{font-size:48px;margin-bottom:14px}
+  .final h2{font-size:28px;margin-bottom:14px}
+  .final p{color:var(--warm);max-width:660px;margin:0 auto;font-size:17px;line-height:1.7}
+  .final strong{color:var(--lime);font-weight:800}
+
+  footer{padding:36px 0;border-top:1px solid var(--border);color:var(--warm-dim);font-size:13px;text-align:center}
+
+  @media (max-width: 920px){
+    .duo-cards,.scenarios{grid-template-columns:1fr}
+    .assump{grid-template-columns:repeat(2,1fr)}
+    .chart{gap:8px;height:300px}
+    .chart-wrap{padding-top:110px}
+    .scope-toggle{width:100%;max-width:360px}
+    .scope-btn{flex:1;padding:14px 18px;font-size:14px}
+  }
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="container">
+    <div class="pill">📈 Proyección · 2027 → 2031</div>
+    <h1>Cuánto puedes ganar con las <span class="grad">redes sociales del deporte.</span></h1>
+    <p>Modelo B2C: <strong>1 padre paga por cada ficha de jugador</strong>. Cinco años en Valencia y en toda España. Redes sociales del deporte aplicadas al territorio.</p>
+  </div>
+</section>
+
+<div class="container">
+
+  <div class="scope-toggle">
+    <button type="button" class="scope-btn active" data-scope="valencia" onclick="switchScope('valencia')">📍 Valencia</button>
+    <button type="button" class="scope-btn" data-scope="espana" onclick="switchScope('espana')">🇪🇸 España</button>
+  </div>
+
+  <!-- ASSUMPTIONS -->
+  <div class="assump">
+    <div class="a"><div class="k">Mercado base</div><div class="v" id="aMarket">160.000</div><div class="s">fichas redes sociales del deporte</div></div>
+    <div class="a"><div class="k">Precio año 1</div><div class="v">€2,50</div><div class="s">por temporada · padre</div></div>
+    <div class="a"><div class="k">Precio año 5</div><div class="v">€4,50</div><div class="s">por temporada · padre</div></div>
+    <div class="a"><div class="k">Penetración Y5</div><div class="v">50%</div><div class="s">de las fichas redes sociales del deporte</div></div>
+  </div>
+
+  <!-- TWO BIG NUMBERS -->
+  <div class="duo-cards">
+    <div class="duo gross">
+      <div class="icon">💵</div>
+      <div class="label">Lo que entra</div>
+      <div class="num" id="grossNum">€742K</div>
+      <div class="sub">Total 2027-2031 (suscripciones de padres)</div>
+    </div>
+    <div class="duo net">
+      <div class="icon">💰</div>
+      <div class="label">Lo que ganas</div>
+      <div class="num" id="netNum">€597K</div>
+      <div class="sub">Lo que te queda al final</div>
+    </div>
+  </div>
+
+  <!-- CHART -->
+  <div class="section">
+    <h2>📊 Año a año</h2>
+    <div class="sub">Cada barra son los <strong style="color:var(--amber)">ingresos por suscripciones de padres</strong>. La etiqueta verde es lo que te queda limpio tras costes.</div>
+    <div class="chart-wrap">
+      <div class="chart" id="chart"></div>
+    </div>
+    <div class="legend">
+      <div class="item"><div class="sw" style="background:linear-gradient(180deg,#FFB800,#cc9300)"></div>Suscripciones padres</div>
+      <div class="item"><div class="sw" style="background:rgba(204,255,0,.6);border:1px solid var(--lime)"></div>Beneficio neto</div>
+    </div>
+  </div>
+
+  <!-- SCENARIOS -->
+  <div class="section">
+    <h2>🎲 Si va peor o mejor</h2>
+    <div class="sub">Tres caminos posibles a 5 años. Lo que ganas limpio en cada uno:</div>
+    <div class="scenarios" id="scens"></div>
+  </div>
+
+  <!-- FINAL -->
+  <div class="final">
+    <div class="em">🎯</div>
+    <h2>En resumen</h2>
+    <p id="finalP">En <strong>5 años (2027-2031)</strong> habrás generado <strong>€742K</strong> en Valencia y te quedan <strong>~€597K limpios</strong>. Si saltas a toda España, suben a <strong>~€3,3M</strong> y <strong>~€2,66M limpios</strong>.</p>
+  </div>
+
+</div>
+
+<footer>
+  <div class="container">© 2026 Redes sociales del deporte · Proyección 5 años · 2027-2031 · Modelo B2C (1 padre paga por ficha de jugador)</div>
+</footer>
+
+<script>
+  // ============================================================
+  // MODELO B2C · 1 padre paga por cada ficha de jugador
+  // Mercado: fichas redes sociales del deporte (Valencia y España)
+  // Año 0 (2026) = desarrollo y beta — sin ingresos
+  // Años 1-5 = 2027 → 2031
+  // ============================================================
+
+  const DATA = {
+    valencia: {
+      label: 'Valencia',
+      market: '160.000',
+      grossTotal: '€742K',
+      netTotal: '€597K',
+      // year, ingresos suscripción €, costes €
+      // Base: 160.000 fichas redes sociales del deporte · 1 padre paga por cada ficha
+      // Penetración 2% → 50% · Precio €2,50 → €4,50
+      years: [
+        { y:'2027', subs:8000,    cost:10000 },
+        { y:'2028', subs:38400,   cost:15000 },
+        { y:'2029', subs:112000,  cost:25000 },
+        { y:'2030', subs:224000,  cost:40000 },
+        { y:'2031', subs:360000,  cost:55000 },
+      ],
+      scen: {
+        cons: { em:'🐢', label:'Conservador', val:'+€270K', desc:'Penetración solo 25% en año 5.' },
+        real: { em:'⚽', label:'Realista',    val:'+€597K', desc:'Penetración 50% en año 5.' },
+        opt:  { em:'🚀', label:'Optimista',   val:'+€960K', desc:'Penetración 75% + acuerdo institucional.' },
+      },
+      finalText: 'En <strong>5 años (2027-2031)</strong> habrás generado <strong>€742K</strong> en Valencia y te quedan <strong>~€597K limpios</strong>. Eso es <strong>~80.000 padres pagando €4,50/temporada</strong> en 2031. Si saltas a toda España, suben a <strong>~€3,3M</strong> y <strong>~€2,66M limpios</strong>.'
+    },
+    espana: {
+      label: 'España',
+      market: '700.000',
+      grossTotal: '€3,3M',
+      netTotal: '€2,66M',
+      // ~4,4x Valencia (~700K fichas redes sociales del deporte a nivel nacional)
+      years: [
+        { y:'2027', subs:35000,    cost:25000  },
+        { y:'2028', subs:170000,   cost:60000  },
+        { y:'2029', subs:495000,   cost:110000 },
+        { y:'2030', subs:990000,   cost:180000 },
+        { y:'2031', subs:1590000,  cost:240000 },
+      ],
+      scen: {
+        cons: { em:'🐢', label:'Conservador', val:'+€1,2M', desc:'Expansión nacional más lenta.' },
+        real: { em:'⚽', label:'Realista',    val:'+€2,66M', desc:'Penetración 50% en año 5.' },
+        opt:  { em:'🚀', label:'Optimista',   val:'+€4,3M', desc:'Si entra acuerdo institucional nacional.' },
+      },
+      finalText: 'A nivel nacional, en <strong>5 años (2027-2031)</strong> habrás generado <strong>~€3,3M</strong> y te quedan <strong>~€2,66M limpios</strong>. En 2031 ya estás ingresando <strong>€1,59M al año</strong> con <strong>~350.000 padres pagando</strong>. Es un negocio sólido y vendible.'
+    }
+  };
+
+  function fmtEUR(n){
+    const abs = Math.abs(n);
+    const sign = n<0 ? '−' : '';
+    if(abs>=1000000) return sign+'€'+(abs/1000000).toFixed(2).replace('.',',')+'M';
+    if(abs>=1000) return sign+'€'+Math.round(abs/1000)+'K';
+    return sign+'€'+abs.toLocaleString('es-ES');
+  }
+
+  function render(scope){
+    const D = DATA[scope];
+    document.getElementById('grossNum').textContent = D.grossTotal;
+    document.getElementById('netNum').textContent = D.netTotal;
+    document.getElementById('aMarket').textContent = D.market;
+    document.getElementById('finalP').innerHTML = D.finalText;
+
+    const rev = D.years.map(y => ({
+      y: y.y,
+      subs: y.subs,
+      gross: y.subs,
+      net: y.subs - y.cost
+    }));
+    const maxGross = Math.max(...rev.map(r=>r.gross));
+
+    const chart = document.getElementById('chart');
+    chart.innerHTML = '';
+    rev.forEach((r,idx) => {
+      const totalH = (r.gross / maxGross) * 100;
+      const netClass = r.net < 0 ? 'bar-net neg' : 'bar-net';
+      const netLabel = r.net < 0
+        ? `${fmtEUR(r.net)} pierdes`
+        : `+${fmtEUR(r.net)} ganas`;
+
+      const col = document.createElement('div');
+      col.className = 'bar-col';
+      col.innerHTML = `
+        <div class="bar-labels">
+          <div class="${netClass}">${netLabel}</div>
+          <div class="bar-gross">${fmtEUR(r.gross)}</div>
+        </div>
+        <div class="bar-stack" style="height:${totalH * 0.85}%">
+          <div class="bar-subs" style="height:100%"></div>
+        </div>
+        <div class="bar-label-bottom"><div class="y">${r.y}</div><div class="yr">año ${idx+1}</div></div>
+      `;
+      chart.appendChild(col);
+      const stack = col.querySelector('.bar-stack');
+      stack.style.height = '0%';
+      setTimeout(()=>{ stack.style.transition='height 1.2s cubic-bezier(.2,.6,.2,1)'; stack.style.height = (totalH * 0.85) + '%'; }, 100 + idx*180);
+    });
+
+    const sc = document.getElementById('scens');
+    const S = D.scen;
+    sc.innerHTML = `
+      <div class="scen cons"><div class="em">${S.cons.em}</div><h4>${S.cons.label}</h4><div class="v">${S.cons.val}</div><p>${S.cons.desc}</p></div>
+      <div class="scen real"><div class="em">${S.real.em}</div><h4>${S.real.label}</h4><div class="v">${S.real.val}</div><p>${S.real.desc}</p></div>
+      <div class="scen opt"><div class="em">${S.opt.em}</div><h4>${S.opt.label}</h4><div class="v">${S.opt.val}</div><p>${S.opt.desc}</p></div>
+    `;
+  }
+
+  function switchScope(scope){
+    document.querySelectorAll('.scope-btn').forEach(b=>{
+      b.classList.toggle('active', b.dataset.scope === scope);
+    });
+    render(scope);
+  }
+  // Exponer para los onclick inline
+  window.switchScope = switchScope;
+
+  // Doble seguro: también vinculamos addEventListener por si algún navegador móvil
+  // se traga el onclick (raro pero pasa con SW antiguos cacheados)
+  document.querySelectorAll('.scope-btn').forEach(btn=>{
+    const handler = (e)=>{ e.preventDefault(); switchScope(btn.dataset.scope); };
+    btn.addEventListener('click', handler);
+    btn.addEventListener('touchend', handler, {passive:false});
+  });
+
+  render('valencia');
+</script>
+</body>
+</html>

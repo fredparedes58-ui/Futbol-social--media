@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FutbolBase · Brand & Marketing Context — una solución Krujens</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#050D1A;
+    --navy-2:#0A1628;
+    --navy-3:#111E33;
+    --green:#00FF87;
+    --green-soft:#00E676;
+    --cyan:#00D4FF;
+    --orange:#FF6B00;
+    --purple:#B347FF;
+    --gold:#FFB800;
+    --white:#FFFFFF;
+    --slate:#94A3B8;
+    --slate-dim:#64748B;
+    --border:rgba(255,255,255,0.08);
+    --card-bg:rgba(255,255,255,0.04);
+    --card-border:rgba(255,255,255,0.1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Inter',system-ui,sans-serif;
+    background:var(--navy);
+    color:var(--white);
+    line-height:1.7;
+    font-size:15px;
+    overflow-x:hidden;
+  }
+  body::before{
+    content:'';
+    position:fixed;inset:0;
+    background:
+      radial-gradient(ellipse 80% 50% at 20% 0%, rgba(0,255,135,0.08), transparent),
+      radial-gradient(ellipse 60% 40% at 80% 30%, rgba(0,212,255,0.06), transparent),
+      radial-gradient(ellipse 50% 40% at 50% 100%, rgba(179,71,255,0.05), transparent);
+    z-index:-1;
+    pointer-events:none;
+  }
+  .container{max-width:1180px;margin:0 auto;padding:0 28px}
+
+  /* ===== HEADER / HERO ===== */
+  header.hero{
+    padding:80px 0 60px;
+    border-bottom:1px solid var(--border);
+    position:relative;
+    overflow:hidden;
+  }
+  header.hero::before{
+    content:'';
+    position:absolute;inset:0;
+    background:
+      linear-gradient(135deg, transparent 0%, rgba(0,255,135,0.04) 50%, transparent 100%),
+      repeating-linear-gradient(0deg, transparent 0 39px, rgba(0,255,135,0.03) 39px 40px);
+    z-index:0;
+  }
+  .hero-inner{position:relative;z-index:1}
+  .endorsement{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:8px 14px;
+    border:1px solid var(--green);
+    border-radius:999px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;letter-spacing:0.16em;text-transform:uppercase;
+    color:var(--green);
+    background:rgba(0,255,135,0.05);
+    box-shadow:0 0 20px rgba(0,255,135,0.2);
+    margin-bottom:24px;
+  }
+  .endorsement .dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green)}
+  h1.brand{
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:900;
+    font-size:clamp(56px,10vw,120px);
+    line-height:0.95;
+    letter-spacing:-0.02em;
+    margin-bottom:20px;
+    background:linear-gradient(120deg,#fff 0%,#00FF87 40%,#00D4FF 70%,#B347FF 100%);
+    -webkit-background-clip:text;background-clip:text;
+    color:transparent;
+    -webkit-text-fill-color:transparent;
+  }
+  .hero-sub{
+    font-size:clamp(18px,2.4vw,24px);
+    color:var(--slate);
+    max-width:780px;
+    line-height:1.5;
+    margin-bottom:32px;
+  }
+  .hero-sub strong{color:#fff;font-weight:600}
+  .hero-meta{
+    display:flex;flex-wrap:wrap;gap:18px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;letter-spacing:0.1em;text-transform:uppercase;
+    color:var(--slate-dim);
+  }
+  .hero-meta span{padding:6px 12px;border:1px solid var(--border);border-radius:6px}
+
+  /* ===== NAV ===== */
+  nav.toc{
+    position:sticky;top:0;z-index:10;
+    background:rgba(5,13,26,0.85);
+    backdrop-filter:blur(16px);
+    border-bottom:1px solid var(--border);
+    padding:14px 0;
+  }
+  .toc-inner{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+  .toc-inner::-webkit-scrollbar{display:none}
+  .toc a{
+    flex-shrink:0;
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;letter-spacing:0.08em;text-transform:uppercase;
+    color:var(--slate-dim);
+    padding:8px 14px;
+    border-radius:6px;
+    text-decoration:none;
+    transition:all 0.2s;
+    white-space:nowrap;
+  }
+  .toc a:hover{color:var(--green);background:rgba(0,255,135,0.06)}
+
+  /* ===== SECTION ===== */
+  section{padding:70px 0;border-bottom:1px solid var(--border)}
+  .kicker{
+    display:inline-block;
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;letter-spacing:0.18em;text-transform:uppercase;
+    color:var(--green);
+    margin-bottom:14px;
+  }
+  h2{
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:800;
+    font-size:clamp(32px,5vw,56px);
+    line-height:1.05;
+    margin-bottom:22px;
+    letter-spacing:-0.01em;
+  }
+  h3{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    font-size:22px;
+    margin-bottom:14px;
+    color:#fff;
+  }
+  h4{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    font-size:16px;
+    margin-bottom:10px;
+    color:#fff;
+  }
+  p{color:var(--slate);margin-bottom:14px}
+  p strong{color:#fff;font-weight:600}
+  ul,ol{color:var(--slate);padding-left:24px;margin-bottom:14px}
+  li{margin-bottom:8px}
+  li strong{color:#fff}
+
+  /* ===== CARD ===== */
+  .card{
+    background:var(--card-bg);
+    border:1px solid var(--card-border);
+    border-radius:16px;
+    padding:28px;
+    backdrop-filter:blur(10px);
+    transition:transform 0.3s,border-color 0.3s,box-shadow 0.3s;
+  }
+  .card:hover{transform:translateY(-2px)}
+  .card.accent-green{border-left:3px solid var(--green);box-shadow:0 0 40px rgba(0,255,135,0.08)}
+  .card.accent-cyan{border-left:3px solid var(--cyan);box-shadow:0 0 40px rgba(0,212,255,0.08)}
+  .card.accent-orange{border-left:3px solid var(--orange);box-shadow:0 0 40px rgba(255,107,0,0.08)}
+  .card.accent-purple{border-left:3px solid var(--purple);box-shadow:0 0 40px rgba(179,71,255,0.08)}
+  .card.accent-gold{border-left:3px solid var(--gold);box-shadow:0 0 40px rgba(255,184,0,0.08)}
+  .grid{display:grid;gap:18px}
+  .g-2{grid-template-columns:repeat(2,1fr)}
+  .g-3{grid-template-columns:repeat(3,1fr)}
+  .g-4{grid-template-columns:repeat(4,1fr)}
+  @media(max-width:900px){.g-2,.g-3,.g-4{grid-template-columns:1fr}}
+
+  /* ===== PARENT-CHILD DIAGRAM ===== */
+  .hierarchy{
+    background:linear-gradient(135deg,rgba(0,255,135,0.04),rgba(0,212,255,0.04));
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:40px 28px;
+    text-align:center;
+    margin-top:20px;
+  }
+  .parent-node{
+    display:inline-block;
+    padding:16px 36px;
+    background:rgba(255,255,255,0.04);
+    border:2px solid var(--green);
+    border-radius:14px;
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    font-size:20px;
+    letter-spacing:0.05em;
+    box-shadow:0 0 30px rgba(0,255,135,0.2);
+    margin-bottom:30px;
+  }
+  .connector{width:2px;height:30px;background:linear-gradient(180deg,var(--green),transparent);margin:0 auto 10px}
+  .children{display:flex;flex-wrap:wrap;justify-content:center;gap:14px}
+  .child{
+    padding:14px 20px;
+    background:rgba(255,255,255,0.03);
+    border:1px solid var(--border);
+    border-radius:10px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px;
+    color:var(--slate);
+  }
+  .child.active{
+    border:2px solid var(--cyan);
+    color:var(--cyan);
+    background:rgba(0,212,255,0.06);
+    box-shadow:0 0 20px rgba(0,212,255,0.25);
+    font-weight:700;
+  }
+
+  /* ===== PALETTE SWATCH ===== */
+  .palette{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:16px}
+  .swatch{
+    border-radius:12px;
+    overflow:hidden;
+    border:1px solid var(--border);
+  }
+  .swatch .col{height:80px}
+  .swatch .info{padding:10px 12px;background:rgba(0,0,0,0.3);font-family:'JetBrains Mono',monospace;font-size:11px}
+  .swatch .info b{display:block;color:#fff;font-size:13px;margin-bottom:2px}
+
+  /* ===== TABLE ===== */
+  table{width:100%;border-collapse:collapse;margin-top:14px;font-size:13px}
+  th,td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--border)}
+  th{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;letter-spacing:0.1em;text-transform:uppercase;
+    color:var(--green);
+    background:rgba(0,255,135,0.03);
+  }
+  td{color:var(--slate)}
+  td strong{color:#fff}
+
+  /* ===== QUOTE ===== */
+  blockquote{
+    border-left:3px solid var(--green);
+    padding:18px 24px;
+    margin:20px 0;
+    background:rgba(0,255,135,0.04);
+    border-radius:0 12px 12px 0;
+    font-family:'Space Grotesk',sans-serif;
+    font-size:17px;
+    color:#fff;
+    font-style:italic;
+  }
+  blockquote .author{
+    display:block;
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;letter-spacing:0.12em;text-transform:uppercase;
+    color:var(--slate-dim);
+    margin-top:10px;
+    font-style:normal;
+  }
+
+  /* ===== PITCH CARDS ===== */
+  .pitch-card{
+    position:relative;
+    padding:28px;
+    background:linear-gradient(135deg,rgba(0,255,135,0.05),rgba(0,212,255,0.03));
+    border:1px solid var(--card-border);
+    border-radius:14px;
+    margin-bottom:18px;
+  }
+  .pitch-card .pitch-label{
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;letter-spacing:0.16em;text-transform:uppercase;
+    color:var(--green);
+    margin-bottom:10px;
+  }
+  .pitch-card .pitch-text{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:16px;
+    line-height:1.55;
+    color:#fff;
+  }
+
+  /* ===== CHECKLIST ===== */
+  .checklist{
+    list-style:none;padding:0;
+  }
+  .checklist li{
+    padding:12px 14px 12px 42px;
+    position:relative;
+    background:rgba(255,255,255,0.02);
+    border:1px solid var(--border);
+    border-radius:8px;
+    margin-bottom:8px;
+    color:var(--slate);
+  }
+  .checklist li::before{
+    content:'☐';
+    position:absolute;
+    left:14px;top:10px;
+    font-size:20px;
+    color:var(--green);
+  }
+
+  /* ===== TAG / BADGE ===== */
+  .tag{
+    display:inline-block;
+    padding:4px 10px;
+    border-radius:6px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;letter-spacing:0.1em;text-transform:uppercase;
+    font-weight:700;
+    margin-right:6px;
+  }
+  .tag-green{background:rgba(0,255,135,0.15);color:var(--green);border:1px solid var(--green)}
+  .tag-cyan{background:rgba(0,212,255,0.15);color:var(--cyan);border:1px solid var(--cyan)}
+  .tag-orange{background:rgba(255,107,0,0.15);color:var(--orange);border:1px solid var(--orange)}
+  .tag-purple{background:rgba(179,71,255,0.15);color:var(--purple);border:1px solid var(--purple)}
+  .tag-gold{background:rgba(255,184,0,0.15);color:var(--gold);border:1px solid var(--gold)}
+
+  /* ===== DO / DONT ===== */
+  .do-dont{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}
+  @media(max-width:700px){.do-dont{grid-template-columns:1fr}}
+  .do,.dont{padding:22px;border-radius:12px}
+  .do{background:rgba(0,255,135,0.05);border:1px solid rgba(0,255,135,0.25)}
+  .dont{background:rgba(255,91,58,0.05);border:1px solid rgba(255,91,58,0.25)}
+  .do h4{color:var(--green)}
+  .dont h4{color:#FF5B3A}
+  .do ul,.dont ul{list-style:none;padding:0}
+  .do li,.dont li{padding-left:24px;position:relative;margin-bottom:8px}
+  .do li::before{content:'✓';position:absolute;left:0;color:var(--green);font-weight:700}
+  .dont li::before{content:'✗';position:absolute;left:0;color:#FF5B3A;font-weight:700}
+
+  /* ===== FOOTER ===== */
+  footer{
+    padding:60px 0 40px;
+    text-align:center;
+    color:var(--slate-dim);
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    letter-spacing:0.08em;
+  }
+  footer .krujens-mark{
+    display:inline-block;
+    padding:8px 16px;
+    border:1px solid var(--green);
+    border-radius:6px;
+    color:var(--green);
+    margin-bottom:14px;
+    box-shadow:0 0 20px rgba(0,255,135,0.15);
+  }
+
+  /* ===== HIGHLIGHT KPI ===== */
+  .kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin:20px 0}
+  .kpi{
+    padding:20px;
+    background:rgba(255,255,255,0.03);
+    border:1px solid var(--border);
+    border-radius:12px;
+    text-align:center;
+  }
+  .kpi .v{
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:800;
+    font-size:42px;
+    line-height:1;
+    background:linear-gradient(120deg,#00FF87,#00D4FF);
+    -webkit-background-clip:text;background-clip:text;
+    color:transparent;
+    -webkit-text-fill-color:transparent;
+    margin-bottom:6px;
+  }
+  .kpi .l{
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;letter-spacing:0.12em;text-transform:uppercase;
+    color:var(--slate-dim);
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="container hero-inner">
+    <div class="endorsement">
+      <span class="dot"></span>
+      <span>Una solución Krujens · Vertical #1 · 2026</span>
+    </div>
+    <h1 class="brand">FUTBOLBASE</h1>
+    <p class="hero-sub">
+      La primera plataforma integral para el ecosistema del <strong>fútbol base español</strong>:
+      jugadores federados, clubes, familias y federaciones autonómicas — conectados en una PWA mobile-first con IA aplicada.
+    </p>
+    <div class="hero-meta">
+      <span>🏷️ Vertical de Krujens</span>
+      <span>📱 PWA · React 19 · Supabase</span>
+      <span>🟢 Brand & Marketing Context v1.0</span>
+      <span>📅 Abril 2026</span>
+    </div>
+  </div>
+</header>
+
+<nav class="toc">
+  <div class="container">
+    <div class="toc-inner">
+      <a href="#about">01 · Qué es</a>
+      <a href="#parent">02 · Krujens</a>
+      <a href="#positioning">03 · Posicionamiento</a>
+      <a href="#voice">04 · Voz</a>
+      <a href="#visual">05 · Visual</a>
+      <a href="#audience">06 · Audiencias</a>
+      <a href="#story">07 · Historia</a>
+      <a href="#marketing">08 · Marketing</a>
+      <a href="#pitches">09 · Pitches</a>
+      <a href="#checklist">10 · Checklist</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ============================================================ -->
+<section id="about">
+  <div class="container">
+    <span class="kicker">01 / Qué es FutbolBase</span>
+    <h2>La PWA que le faltaba al fútbol base</h2>
+    <div class="grid g-2">
+      <div>
+        <p>
+          <strong>FutbolBase</strong> es la primera plataforma digital integral del fútbol base español. Conecta a los cuatro actores del ecosistema que hoy operan en silos — <strong>jugadores federados, clubes, familias y federaciones autonómicas</strong> — en una única PWA mobile-first.
+        </p>
+        <p>
+          Donde hoy hay grupos de WhatsApp caóticos, hojas de Excel con control de asistencia, pagos por Bizum sin trazabilidad y scouting por boca-oreja, FutbolBase aporta: <strong>perfil deportivo digital</strong>, <strong>pagos recurrentes automáticos</strong>, <strong>análisis de vídeo con IA</strong>, <strong>red social filtrada por scouts verificados</strong> y <strong>comunicación padre-club sin ruido</strong>.
+        </p>
+        <p>
+          <strong>Tagline corto:</strong> <em>El fútbol base, por fin conectado.</em>
+        </p>
+        <p>
+          <strong>Tagline largo:</strong> <em>Una app para el jugador, el club, la familia y la federación. Todos en el mismo terreno.</em>
+        </p>
+      </div>
+      <div class="card accent-green">
+        <h3>🎯 Misión</h3>
+        <p>Dar a los 1,1 millones de jugadores federados españoles — y a las 23.000 organizaciones que los rodean — la misma calidad de herramientas digitales que hoy sólo tienen los profesionales de LaLiga.</p>
+        <h3 style="margin-top:24px">👁️ Visión (5 años)</h3>
+        <p>Convertirse en el estándar de facto para clubes, familias y federaciones de fútbol base en España y ser el puente natural hacia LATAM (México, Argentina, Colombia) como segundo mercado.</p>
+      </div>
+    </div>
+
+    <div class="kpi-row" style="margin-top:36px">
+      <div class="kpi"><div class="v">1,1M</div><div class="l">Jugadores federados</div></div>
+      <div class="kpi"><div class="v">23K</div><div class="l">Clubes amateur</div></div>
+      <div class="kpi"><div class="v">17</div><div class="l">Federaciones autonómicas</div></div>
+      <div class="kpi"><div class="v">0</div><div class="l">Competidores reales</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="parent">
+  <div class="container">
+    <span class="kicker">02 / Relación con la matriz</span>
+    <h2>FutbolBase es una solución Krujens</h2>
+    <p>
+      FutbolBase no es una empresa independiente: es el <strong>primer vertical operativo del holding Krujens</strong>. Comparte con Krujens el stack técnico, los valores fundacionales, el equipo y la infraestructura legal/financiera. Pero tiene su propia marca, su propia comunidad y su propio go-to-market — porque así lo exige el sector.
+    </p>
+
+    <div class="hierarchy">
+      <div class="parent-node">KRUJENS · matriz</div>
+      <div class="connector"></div>
+      <div class="children">
+        <div class="child active">⚽ FutbolBase</div>
+        <div class="child">📊 VITAS</div>
+        <div class="child">🥅 Elite 380</div>
+        <div class="child">🌿 Essence Bloom</div>
+        <div class="child">+ futuros verticales</div>
+      </div>
+    </div>
+
+    <div class="grid g-2" style="margin-top:30px">
+      <div class="card accent-cyan">
+        <h3>🔗 Qué hereda de Krujens</h3>
+        <ul>
+          <li><strong>Stack técnico:</strong> React 19 + Vite + Supabase + PWA + Tailwind</li>
+          <li><strong>Filosofía producto:</strong> mobile-first, IA útil, precio accesible</li>
+          <li><strong>Cumplimiento RGPD</strong> por defecto + DPO compartido</li>
+          <li><strong>Infraestructura legal:</strong> Krujens Tech SL es el titular</li>
+          <li><strong>Equipo core</strong> (CEO, CTO, admin) es Krujens</li>
+        </ul>
+      </div>
+      <div class="card accent-orange">
+        <h3>🎨 Qué tiene propio FutbolBase</h3>
+        <ul>
+          <li><strong>Logo e identidad visual</strong> específicos del sector fútbol</li>
+          <li><strong>Paleta neón</strong> (verde + naranja deportivo) sobre el navy Krujens</li>
+          <li><strong>Tono comunicación</strong> emocional, "deportivo", cercano a familias</li>
+          <li><strong>Comunidad</strong> (redes sociales, newsletter, Discord) propia</li>
+          <li><strong>Pricing</strong> adaptado al bolsillo de una familia (5-8€/mes)</li>
+        </ul>
+      </div>
+    </div>
+
+    <blockquote style="margin-top:30px">
+      FutbolBase es lo que pasa cuando Krujens aplica su playbook a un sector concreto: elegimos un ecosistema sub-digitalizado, construimos una PWA en 12 semanas, validamos con 100 usuarios reales, monetizamos a precio justo y escalamos por comunidad. Fútbol base es sólo el primer vertical — pero es el que abre el camino.
+      <span class="author">— Filosofía Krujens aplicada</span>
+    </blockquote>
+
+    <h3 style="margin-top:36px">📝 Regla de co-branding</h3>
+    <div class="grid g-2" style="margin-top:14px">
+      <div class="card">
+        <h4>✅ Dónde SÍ aparece "Krujens"</h4>
+        <ul>
+          <li>Footer de la app y la web</li>
+          <li>Páginas legales (términos, privacidad)</li>
+          <li>Pitch deck a inversores</li>
+          <li>Press releases corporativos</li>
+          <li>About / Quiénes somos</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>❌ Dónde NO aparece "Krujens"</h4>
+        <ul>
+          <li>Header / splash de la app</li>
+          <li>Stores de apps (solo "FutbolBase")</li>
+          <li>Anuncios dirigidos al usuario final</li>
+          <li>Redes sociales de producto</li>
+          <li>Landing pages comerciales por vertical</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="positioning">
+  <div class="container">
+    <span class="kicker">03 / Posicionamiento</span>
+    <h2>Dónde juega FutbolBase</h2>
+    <p>
+      FutbolBase ocupa un espacio <strong>prácticamente vacío</strong> en España: el sector del fútbol base federado mueve a 1,1M jugadores + 23k clubes + ~2,5M familiares, con gasto medio anual por jugador de 350-800€. A pesar de ese volumen, la digitalización es casi nula — clubes usan software de escritorio de los 2000, grupos de WhatsApp y pagos por transferencia manual.
+    </p>
+
+    <div class="grid g-3" style="margin-top:24px">
+      <div class="card accent-green">
+        <h3>🟢 VS. WhatsApp + Excel</h3>
+        <p><strong>Lo que hay hoy:</strong> cero estructura, mensajes perdidos, pagos sin trazabilidad.</p>
+        <p><strong>FutbolBase:</strong> comunicación estructurada por rol, pagos automáticos, histórico completo.</p>
+      </div>
+      <div class="card accent-cyan">
+        <h3>🔵 VS. software legacy (Sportmember, etc.)</h3>
+        <p><strong>Lo que hay hoy:</strong> 15 años de atraso UX, sin móvil real, sin IA.</p>
+        <p><strong>FutbolBase:</strong> PWA mobile-first, IA para análisis vídeo, instalable sin stores.</p>
+      </div>
+      <div class="card accent-orange">
+        <h3>🟠 VS. apps de LaLiga / clubes pro</h3>
+        <p><strong>Lo que hay hoy:</strong> herramientas carísimas, solo para élite profesional.</p>
+        <p><strong>FutbolBase:</strong> misma tecnología, precio accesible (5-15€/mes) para el club del barrio.</p>
+      </div>
+    </div>
+
+    <h3 style="margin-top:40px">Los 5 diferenciadores de FutbolBase</h3>
+    <div class="grid g-2" style="margin-top:14px">
+      <div class="card">
+        <p><span class="tag tag-green">#1</span> <strong>PWA real, no otra app nativa más</strong> — se instala sin store, funciona offline en el campo sin cobertura, pesa menos de 2MB.</p>
+      </div>
+      <div class="card">
+        <p><span class="tag tag-cyan">#2</span> <strong>IA aplicada útil</strong> — análisis automático de vídeo (goles, acciones clave), generación de informes post-partido, matching scout↔jugador.</p>
+      </div>
+      <div class="card">
+        <p><span class="tag tag-orange">#3</span> <strong>Red social filtrada</strong> — solo scouts verificados pueden ver perfiles de jugadores menores. Zero grooming risk, RGPD max.</p>
+      </div>
+      <div class="card">
+        <p><span class="tag tag-purple">#4</span> <strong>Alineada con las federaciones</strong> — no competimos con FFCV/RFEF, las complementamos. Revenue share y piloto oficial.</p>
+      </div>
+      <div class="card accent-gold" style="grid-column:1/-1">
+        <p><span class="tag tag-gold">#5</span> <strong>Pricing al bolsillo de una familia española</strong> — Pro jugador 4,99€/mes, Plan Familia 7,99€/mes, Club Pro 9€/mes. Mientras los competidores piden 50-200€/mes, nosotros cobramos lo que el usuario final puede pagar sin pensar.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="voice">
+  <div class="container">
+    <span class="kicker">04 / Voz de marca</span>
+    <h2>Cómo habla FutbolBase</h2>
+    <p>FutbolBase tiene una voz <strong>deportiva, cercana y directa</strong>. Habla el idioma del padre en el polideportivo un sábado a las 10am, del jugador de 15 años que sueña con fichar por el Valencia CF, y del director deportivo del club comarcal que no tiene tiempo para software complicado.</p>
+
+    <div class="grid g-3" style="margin-top:24px">
+      <div class="card accent-green">
+        <h3>⚽ Emocional pero con datos</h3>
+        <p>"Tu hijo jugó 67 minutos, tocó 43 balones y corrió 5,8km. Y lo celebraste desde la grada."</p>
+      </div>
+      <div class="card accent-cyan">
+        <h3>🎯 Directa, sin postureo</h3>
+        <p>"9€/mes. Sin letra pequeña. Sin compromisos. Si no te sirve, te vas."</p>
+      </div>
+      <div class="card accent-orange">
+        <h3>🏆 Deportiva en las metáforas</h3>
+        <p>"Jugamos en equipo con tu club, no contra él." / "Primera plantilla: tú. Banquillo: nosotros."</p>
+      </div>
+    </div>
+
+    <div class="do-dont">
+      <div class="do">
+        <h4>✅ Qué SÍ decimos</h4>
+        <ul>
+          <li>"Para el jugador, el club y la familia."</li>
+          <li>"El fútbol base, por fin conectado."</li>
+          <li>"Tu hijo entrena. Tú sigues todo desde el móvil."</li>
+          <li>"Por 5€/mes. Menos que un bocadillo post-entreno."</li>
+          <li>"Hecho en Valencia, pensado para toda España."</li>
+          <li>"Los scouts llegan a ti, no al revés."</li>
+        </ul>
+      </div>
+      <div class="dont">
+        <h4>❌ Qué NO decimos</h4>
+        <ul>
+          <li>"Revolucionamos el fútbol" (vacío, cliché)</li>
+          <li>"Plataforma 360° de gestión deportiva" (lenguaje enterprise)</li>
+          <li>"Tu próxima superestrella" (promesa imposible)</li>
+          <li>"Powered by AI" (sin explicar qué hace la IA)</li>
+          <li>"El Instagram del fútbol" (somos más, no menos)</li>
+          <li>"Exclusivo para élite" (lo contrario es nuestra marca)</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 style="margin-top:40px">Tono según audiencia</h3>
+    <table>
+      <thead><tr><th>Audiencia</th><th>Tono</th><th>Ejemplo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Jugador 12-18</strong></td><td>Gamer, motivacional, directo</td><td>"Tu perfil. Tus goles. Los scouts te ven."</td></tr>
+        <tr><td><strong>Padre/madre</strong></td><td>Cercano, tranquilizador, práctico</td><td>"Sigue todo sin estar en el campo. Sin grupos de WhatsApp."</td></tr>
+        <tr><td><strong>Club / DT</strong></td><td>Profesional, con datos, ROI-céntrico</td><td>"80 jugadores gestionados en 15min/semana. 5.450€/año ahorrados."</td></tr>
+        <tr><td><strong>Federación</strong></td><td>Institucional, respetuoso, alineado</td><td>"Complementamos vuestro trabajo. No lo sustituimos."</td></tr>
+        <tr><td><strong>Inversor</strong></td><td>Riguroso, numérico, ambicioso</td><td>"TAM 1,1M usuarios · MoIC 12× · break-even Y3."</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="visual">
+  <div class="container">
+    <span class="kicker">05 / Identidad visual</span>
+    <h2>Sistema visual FutbolBase</h2>
+
+    <h3>🎨 Paleta principal</h3>
+    <p>Base navy Krujens + acentos neón que transmiten <strong>velocidad, energía deportiva y modernidad</strong>. El verde es el color del césped, del LED del marcador, del "gol".</p>
+
+    <div class="palette">
+      <div class="swatch"><div class="col" style="background:#050D1A"></div><div class="info"><b>Deep Navy</b>#050D1A · fondo principal</div></div>
+      <div class="swatch"><div class="col" style="background:#0A1628"></div><div class="info"><b>Mid Navy</b>#0A1628 · fondo cards</div></div>
+      <div class="swatch"><div class="col" style="background:#00FF87"></div><div class="info"><b>Neon Green</b>#00FF87 · CTA, acentos</div></div>
+      <div class="swatch"><div class="col" style="background:#00D4FF"></div><div class="info"><b>Electric Cyan</b>#00D4FF · tech, info</div></div>
+      <div class="swatch"><div class="col" style="background:#FF6B00"></div><div class="info"><b>Sport Orange</b>#FF6B00 · acción, goles</div></div>
+      <div class="swatch"><div class="col" style="background:#B347FF"></div><div class="info"><b>Deep Purple</b>#B347FF · premium</div></div>
+      <div class="swatch"><div class="col" style="background:#FFB800"></div><div class="info"><b>Trophy Gold</b>#FFB800 · logros</div></div>
+      <div class="swatch"><div class="col" style="background:#FFFFFF"></div><div class="info"><b>Pure White</b>#FFFFFF · texto principal</div></div>
+    </div>
+
+    <h3 style="margin-top:40px">🔤 Tipografía</h3>
+    <div class="grid g-3" style="margin-top:14px">
+      <div class="card">
+        <h4 style="font-family:'Barlow Condensed';font-size:28px;font-weight:900">BARLOW CONDENSED</h4>
+        <p>Títulos gigantes, números de fichas, estadísticas. Estilo "stadium scoreboard".</p>
+        <p style="font-family:'JetBrains Mono';font-size:11px;color:var(--slate-dim)">Weights: 700, 800, 900 · uppercase</p>
+      </div>
+      <div class="card">
+        <h4 style="font-family:'Inter';font-size:22px;font-weight:600">Inter</h4>
+        <p>Cuerpo de texto, UI, formularios. Legible en móvil sin excepción.</p>
+        <p style="font-family:'JetBrains Mono';font-size:11px;color:var(--slate-dim)">Weights: 400, 500, 600, 700</p>
+      </div>
+      <div class="card">
+        <h4 style="font-family:'JetBrains Mono';font-size:18px;font-weight:700">JetBrains Mono</h4>
+        <p>Datos numéricos, timestamps, códigos, badges técnicos.</p>
+        <p style="font-family:'JetBrains Mono';font-size:11px;color:var(--slate-dim)">Weights: 500, 700 · tracked</p>
+      </div>
+    </div>
+
+    <h3 style="margin-top:40px">✨ Efectos visuales firma</h3>
+    <ul>
+      <li><strong>Glassmorphism</strong> — cards translúcidas con <code>backdrop-blur(10px)</code> sobre fondo navy.</li>
+      <li><strong>Neon glow</strong> — <code>box-shadow</code> con color neon a 20-40% opacity para CTA y elementos activos.</li>
+      <li><strong>Partículas animadas</strong> — canvas con 60-80 estrellas sutiles moviéndose en onboarding/splash.</li>
+      <li><strong>Gradient text</strong> — títulos hero con <code>linear-gradient(120deg, #fff, #00FF87, #00D4FF, #B347FF)</code> aplicado vía <code>-webkit-background-clip</code>.</li>
+      <li><strong>Grid geométrico</strong> — líneas SVG opacity 0.07 en backgrounds para sensación tech.</li>
+      <li><strong>Anillo neón</strong> — avatares con <code>ring-2</code> coloreado: verde=activo, naranja=inactivo, cyan=destacado.</li>
+    </ul>
+
+    <h3 style="margin-top:40px">📸 Dirección fotográfica</h3>
+    <div class="do-dont">
+      <div class="do">
+        <h4>✅ Usar</h4>
+        <ul>
+          <li>Fotos de campos municipales reales, césped con tierra</li>
+          <li>Jugadores de 10-17 años con equipaciones del club base</li>
+          <li>Padres y madres en la grada reales (no actores)</li>
+          <li>Plano desaturado + acento de color neón (verde/naranja)</li>
+          <li>Composición vertical pensada para móvil 9:16</li>
+        </ul>
+      </div>
+      <div class="dont">
+        <h4>❌ Evitar</h4>
+        <ul>
+          <li>Stock photos genéricos de bancos de imagen</li>
+          <li>Estadios profesionales o equipaciones de clubes pro</li>
+          <li>Niños modelo sonriendo forzadamente a cámara</li>
+          <li>Efectos HDR saturados tipo Instagram 2015</li>
+          <li>Composiciones horizontales no adaptadas a móvil</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="audience">
+  <div class="container">
+    <span class="kicker">06 / Audiencias</span>
+    <h2>A quién le habla FutbolBase</h2>
+
+    <div class="grid g-2">
+      <div class="card accent-cyan">
+        <span class="tag tag-cyan">B2C · Jugador</span>
+        <h3 style="margin-top:12px">⚽ El jugador federado</h3>
+        <p><strong>Perfil:</strong> 12-22 años · juega en club de 3ª/2ª regional · entrena 2-3 veces/semana · sueña con llegar a algo.</p>
+        <p><strong>Dolor:</strong> "Nadie ve mis partidos. No sé si progreso. Los scouts van solo a los clubes grandes."</p>
+        <p><strong>Mensaje:</strong> <em>"Tu fútbol merece ser visto. Construye tu perfil, graba tus goles, deja que los scouts te encuentren."</em></p>
+        <p><strong>Canales:</strong> TikTok/Instagram Reels, colaboraciones con influencers fútbol base, sponsoring torneos juveniles.</p>
+      </div>
+
+      <div class="card accent-orange">
+        <span class="tag tag-orange">B2C · Familia</span>
+        <h3 style="margin-top:12px">👨‍👩‍👦 El padre/la madre</h3>
+        <p><strong>Perfil:</strong> 35-50 años · tiene 1-2 hijos en fútbol base · paga 350-700€/año por cada uno · trabaja y no puede ir a todos los partidos.</p>
+        <p><strong>Dolor:</strong> "Soy la última en enterarme de todo. Pago por Bizum sin comprobantes. No sé si mi hijo está realmente progresando."</p>
+        <p><strong>Mensaje:</strong> <em>"Sigue a tu hijo desde el móvil: entrenos, partidos, pagos, progreso. Sin grupos de WhatsApp."</em></p>
+        <p><strong>Canales:</strong> Facebook Ads segmentadas por código postal, charlas en escuelas, partnerships con AMPAs.</p>
+      </div>
+
+      <div class="card accent-green">
+        <span class="tag tag-green">B2B · Club</span>
+        <h3 style="margin-top:12px">🏟️ El director deportivo / coordinador</h3>
+        <p><strong>Perfil:</strong> 40-60 años · gestiona 60-300 jugadores · pluriempleado · su herramienta son 15 hojas de Excel.</p>
+        <p><strong>Dolor:</strong> "Paso 10h/semana haciendo tareas que una app haría en 20min. Cobrar las cuotas es un infierno."</p>
+        <p><strong>Mensaje:</strong> <em>"Tu club, en orden. Pagos automáticos, asistencias, comunicación con familias. 9€/mes, desde primer día."</em></p>
+        <p><strong>Canales:</strong> Venta directa + demos 1-a-1, partnerships con federaciones, boca-oreja entre clubes.</p>
+      </div>
+
+      <div class="card accent-purple">
+        <span class="tag tag-purple">B2B · Federación</span>
+        <h3 style="margin-top:12px">🏛️ La federación autonómica (FFCV, FCF, FMF…)</h3>
+        <p><strong>Perfil:</strong> institución pública/semipública · gestiona 20k-200k federados · objetivo de digitalización pero sin presupuesto enterprise.</p>
+        <p><strong>Dolor:</strong> "Sabemos que hay que modernizar, pero no tenemos 500k€ para un ERP ni equipo técnico interno."</p>
+        <p><strong>Mensaje:</strong> <em>"Complementamos vuestra licencia federativa. Revenue share desde el día uno. Piloto 6 meses sin riesgo."</em></p>
+        <p><strong>Canales:</strong> Reuniones institucionales, presencia en congresos sectoriales (AFE, RFEF), referencias cruzadas.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="story">
+  <div class="container">
+    <span class="kicker">07 / Historia y hitos</span>
+    <h2>La historia de FutbolBase</h2>
+
+    <blockquote>
+      Un sábado por la mañana, viendo un partido de alevines en un polideportivo municipal, vi cómo el delegado del club pasaba lista con un bolígrafo en una hoja impresa. Los padres pagaban la cuota por Bizum sin comprobante. Un chaval hizo un golazo que nadie grabó. Y pensé: esto se puede arreglar con una semana de código bien pensado. FutbolBase nace de ahí.
+      <span class="author">— Pedro Paredes, fundador</span>
+    </blockquote>
+
+    <h3 style="margin-top:30px">Hitos roadmap</h3>
+    <table>
+      <thead><tr><th>Fecha</th><th>Hito</th><th>KPI</th></tr></thead>
+      <tbody>
+        <tr><td><strong>2026 Q1</strong></td><td>MVP funcional + validación con 3 clubes Valencia</td><td>100 usuarios beta</td></tr>
+        <tr><td><strong>2026 Q2</strong></td><td>Lanzamiento oficial + ronda seed 250k€</td><td>1.200 usuarios registrados</td></tr>
+        <tr><td><strong>2026 Q3</strong></td><td>Acuerdo piloto FFCV (Com. Valenciana)</td><td>5 clubes FFCV piloto · NPS 65+</td></tr>
+        <tr><td><strong>2027</strong></td><td>Expansión a Murcia + Baleares + Aragón</td><td>3.800 usuarios · 40 clubes</td></tr>
+        <tr><td><strong>2028</strong></td><td>Piloto con RFEF nacional</td><td>8.400 usuarios · 120 clubes</td></tr>
+        <tr><td><strong>2029</strong></td><td>Expansión LATAM (México) · piloto</td><td>14.280 usuarios · 3 países</td></tr>
+        <tr><td><strong>2030</strong></td><td>Break-even operativo confirmado · 21k MAU</td><td>ARR 554k€ · margen EBITDA 27%</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="marketing">
+  <div class="container">
+    <span class="kicker">08 / Guidelines de marketing</span>
+    <h2>Cómo hacer crecer FutbolBase</h2>
+
+    <h3>📊 Canales por fase</h3>
+    <table>
+      <thead><tr><th>Fase</th><th>Canal primario</th><th>Secundario</th><th>Evitar</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Pre-lanzamiento</strong></td><td>Lista de espera + clubes amigos</td><td>Newsletter quincenal</td><td>Ads pagados</td></tr>
+        <tr><td><strong>Lanzamiento</strong></td><td>TikTok orgánico + PR deportivo</td><td>Partnership FFCV</td><td>Influencers fuera de nicho</td></tr>
+        <tr><td><strong>Tracción (0-1k MAU)</strong></td><td>Venta directa a clubes + boca-oreja</td><td>SEO long-tail "horario entrenos X"</td><td>Google Ads genéricos</td></tr>
+        <tr><td><strong>Growth (1k-10k)</strong></td><td>Meta Ads geo-segmentado CCAA</td><td>Referrals familia→familia</td><td>TV, radio nacional</td></tr>
+        <tr><td><strong>Escala (10k+)</strong></td><td>Partnerships federativos + PR</td><td>Branded content con creadores</td><td>Growth hacks cuestionables</td></tr>
+      </tbody>
+    </table>
+
+    <h3 style="margin-top:40px">🎯 Métricas norte verdadero</h3>
+    <div class="grid g-3">
+      <div class="card">
+        <h4>MAU / WAU real</h4>
+        <p>Usuarios que abren la app al menos 1× al mes. No cuentan registros, no cuentan descargas.</p>
+      </div>
+      <div class="card">
+        <h4>Retención D30</h4>
+        <p>% de usuarios que siguen activos 30 días después del primer uso. Target: 45%+ jugador, 60%+ club.</p>
+      </div>
+      <div class="card">
+        <h4>NPS por vertical</h4>
+        <p>Separado: jugador / familia / club / federación. Target: &gt;65 en los 4.</p>
+      </div>
+      <div class="card">
+        <h4>CAC payback</h4>
+        <p>Meses hasta recuperar el coste de adquisición. B2C &lt;12 meses, B2B &lt;6 meses.</p>
+      </div>
+      <div class="card">
+        <h4>Gross Margin</h4>
+        <p>Revenue menos costes variables (infra, IA, Stripe). Target: &gt;90%.</p>
+      </div>
+      <div class="card">
+        <h4>Churn cohorte M6</h4>
+        <p>Abandonos acumulados a 6 meses. Target: &lt;25% jugador, &lt;15% club.</p>
+      </div>
+    </div>
+
+    <h3 style="margin-top:40px">🚫 Reglas anti-hype FutbolBase</h3>
+    <ul>
+      <li>Nunca decimos "X usuarios" sin aclarar si son registrados, activos o MAU.</li>
+      <li>Nunca prometemos que un scout fichará a un jugador concreto — creamos la oportunidad, no la garantía.</li>
+      <li>Nunca hablamos de "la próxima gran promesa del fútbol" en comunicación de producto.</li>
+      <li>Nunca copiamos features de LaLiga sin adaptarlas al contexto base.</li>
+      <li>Siempre explicamos qué hace la IA cuando la mencionamos (análisis vídeo, clustering scouts, etc.).</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="pitches">
+  <div class="container">
+    <span class="kicker">09 / Prompt cards</span>
+    <h2>Pitches listos para usar</h2>
+
+    <div class="pitch-card">
+      <div class="pitch-label">🎯 Elevator pitch 30s · inversor</div>
+      <div class="pitch-text">
+        "FutbolBase es la primera PWA integral del fútbol base español — el primer vertical del holding Krujens. Hay 1,1 millones de jugadores federados, 23.000 clubes y cero competencia real. Lo que hoy se gestiona con Excel y WhatsApp, nosotros lo resolvemos con una app de 2MB, IA aplicada y pricing de 5-9€/mes. Buscamos 250k€ seed para llegar a 3 comunidades autónomas en 18 meses. Break-even operativo Y3, MoIC esperado 12× al exit Y5."
+      </div>
+    </div>
+
+    <div class="pitch-card">
+      <div class="pitch-label">⚽ Pitch 60s · director deportivo de club</div>
+      <div class="pitch-text">
+        "Tu club gestiona 80 jugadores con Excel y grupos de WhatsApp. Pierdes 10 horas a la semana cobrando cuotas, pasando asistencias y mandando comunicados. FutbolBase te da una PWA que tus familias ya se instalan en el móvil, con pagos automáticos SEPA, control de asistencia por QR, comunicación estructurada y scouting integrado. El plan Starter es 0€ para siempre. Club Pro son 9€/mes — menos de lo que pagas por el césped en media jornada. Los 10 primeros clubes entran con 6 meses gratis y precio bloqueado de por vida. ¿Hacemos una demo de 15 minutos la semana que viene?"
+      </div>
+    </div>
+
+    <div class="pitch-card">
+      <div class="pitch-label">👨‍👩‍👦 Pitch 45s · padre/madre</div>
+      <div class="pitch-text">
+        "Tu hijo entrena tres días a la semana, juega los sábados, y tú estás en el trabajo la mitad de esos entrenos. Hoy te enteras de todo tarde: por el grupo de WhatsApp, por la entrenadora cuando te la encuentras, por Bizum sin comprobante. FutbolBase te pone en el móvil todo lo que le pasa a tu hijo en el fútbol: entrenos, partidos, sus minutos jugados, sus goles grabados en vídeo, y los pagos claros y automáticos. Son 7,99€ al mes, menos que un bocadillo post-entreno. Y si no te sirve, te vas cuando quieras."
+      </div>
+    </div>
+
+    <div class="pitch-card">
+      <div class="pitch-label">🏛️ Pitch institucional · federación</div>
+      <div class="pitch-text">
+        "Vuestra federación gestiona miles de licencias pero no tiene forma de ofrecer valor digital recurrente a sus federados. FutbolBase es una solución Krujens que se integra como complemento: vuestra licencia de 3€/temporada se mantiene intacta, y ofrecemos a los federados una PWA Pro por 4,99€/mes con análisis de vídeo, perfil deportivo, red social de scouts y pagos federativos automáticos. Nosotros asumimos el coste de desarrollo, infraestructura y soporte. Vosotros recibís un revenue share del 15-20% sobre los ingresos generados en vuestro territorio. Piloto de 6 meses sin compromiso. ¿Cuándo podemos presentaros el dossier detallado?"
+      </div>
+    </div>
+
+    <div class="pitch-card">
+      <div class="pitch-label">📱 One-liner · redes sociales / app store</div>
+      <div class="pitch-text">
+        "<strong>FutbolBase · El fútbol base, por fin conectado.</strong><br>
+        Una app para el jugador, el club, la familia y la federación."
+      </div>
+    </div>
+
+    <div class="pitch-card">
+      <div class="pitch-label">📰 Press release · bio corta</div>
+      <div class="pitch-text">
+        FutbolBase es la primera plataforma digital integral para el ecosistema del fútbol base español, desarrollada por Krujens en 2026. Conecta a jugadores federados, clubes amateur, familias y federaciones autonómicas en una única PWA mobile-first, con funcionalidades que hoy solo están al alcance del fútbol profesional: análisis de vídeo con IA, perfil deportivo digital, pagos automáticos y red social de scouts verificados. A precios accesibles a cualquier familia (5-9€/mes), FutbolBase nace con la misión de democratizar la tecnología deportiva en los 1,1 millones de jugadores federados y 23.000 clubes que existen en España.
+      </div>
+    </div>
+
+    <div class="pitch-card">
+      <div class="pitch-label">📄 Bio larga · web "Quiénes somos"</div>
+      <div class="pitch-text">
+        FutbolBase nace en 2026 en Valencia como el primer vertical operativo de <strong>Krujens</strong>, un holding español dedicado a construir soluciones digitales para sectores sub-digitalizados. Su fundador, Pedro Paredes, detectó durante años cómo el fútbol base — uno de los ecosistemas deportivos más grandes de Europa — seguía operando con herramientas de hace dos décadas: hojas de cálculo, pagos por Bizum sin trazabilidad, comunicación por grupos de WhatsApp caóticos y scouting por boca-oreja.<br><br>
+        FutbolBase aplica el playbook Krujens a este sector: una PWA mobile-first construida en 12 semanas, validada con 100 usuarios reales antes de escalar, monetizada a precios al alcance de cualquier familia (5-9€/mes) y diseñada para crecer por comunidad, no por ads. En 2026 cierra acuerdo piloto con la Federación de Fútbol de la Comunidad Valenciana. Para 2030, el objetivo es alcanzar 21.000 usuarios activos mensuales con presencia en 6 comunidades autónomas y pilotos en LATAM.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="checklist">
+  <div class="container">
+    <span class="kicker">10 / Checklist pre-publicación</span>
+    <h2>Antes de publicar cualquier pieza FutbolBase</h2>
+    <p>Todo output (post social, email, landing, deck, copy) debe pasar este filtro antes de salir.</p>
+
+    <ul class="checklist">
+      <li>¿Está en español claro, adaptado al tono de la audiencia (familia ≠ club ≠ federación)?</li>
+      <li>¿Contiene al menos un dato concreto (número, %, tiempo) en vez de adjetivos vacíos?</li>
+      <li>¿Se explica qué hace la IA cuando se menciona (análisis vídeo, informes, etc.)?</li>
+      <li>¿La CTA principal es una sola, clara y accionable?</li>
+      <li>¿Aparece la firma "una solución Krujens" en footer/legal pero NO en header?</li>
+      <li>¿Paleta visual respeta el sistema (navy + neón verde/cyan/orange)?</li>
+      <li>¿Las imágenes son reales (no stock genérico) y verticales/cuadradas para móvil?</li>
+      <li>¿Las promesas son verificables (no "los mejores", sí "500 clubes activos")?</li>
+      <li>¿Se menciona RGPD / protección de datos si se habla de menores?</li>
+      <li>¿Se respeta a las federaciones (somos complemento, no sustituto)?</li>
+      <li>¿Se evita hacer promesas de éxito deportivo individual (scouts, fichajes)?</li>
+      <li>¿Los precios mostrados coinciden con la política vigente de grandfather pricing?</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<footer>
+  <div class="container">
+    <div class="krujens-mark">FUTBOLBASE · UNA SOLUCIÓN KRUJENS</div>
+    <p>Brand &amp; Marketing Context v1.0 · Abril 2026 · Documento vivo, iterar trimestralmente</p>
+    <p style="margin-top:10px">© 2026 Krujens Tech SL · pedro.paredes@kenmei.ai</p>
+  </div>
+</footer>
+
+</body>
+</html>

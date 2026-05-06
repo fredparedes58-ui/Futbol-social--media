@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>FutbolBase · Visión, proyección, pricing, FFCV y blindaje legal</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<style>
+  :root{
+    --bg:#050D1A; --bg2:#0A1628; --card:rgba(255,255,255,0.04);
+    --green:#00FF87; --cyan:#00D4FF; --orange:#FF6B00; --purple:#B347FF; --yellow:#FFB800; --red:#FF5B3A;
+    --text:#fff; --muted:#94A3B8; --border:rgba(255,255,255,0.08);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;line-height:1.6}
+  body{
+    background:
+      radial-gradient(1200px 600px at 10% -10%, rgba(0,255,135,0.10), transparent 60%),
+      radial-gradient(1200px 600px at 90% 10%, rgba(179,71,255,0.08), transparent 60%),
+      radial-gradient(900px 500px at 50% 120%, rgba(0,212,255,0.08), transparent 60%),
+      var(--bg);
+    min-height:100vh; padding:32px 20px;
+  }
+  .wrap{max-width:1280px;margin:0 auto}
+
+  header{margin-bottom:40px;text-align:center}
+  .eyebrow{color:var(--green);font-family:'Barlow Condensed',Inter,sans-serif;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;font-size:13px}
+  h1{font-family:'Barlow Condensed',Inter,sans-serif;font-weight:800;font-size:72px;line-height:0.95;margin:12px 0 16px;letter-spacing:-0.02em}
+  h1 .accent{background:linear-gradient(90deg,var(--green),var(--cyan),var(--purple));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{color:var(--muted);font-size:19px;max-width:760px;margin:0 auto}
+  @media(max-width:600px){h1{font-size:44px}.sub{font-size:15px}}
+
+  h2{font-family:'Barlow Condensed',Inter,sans-serif;font-weight:800;font-size:42px;letter-spacing:-0.01em;margin:64px 0 8px;display:flex;align-items:center;gap:14px}
+  h2::before{content:'';width:10px;height:32px;background:var(--green);border-radius:3px;box-shadow:0 0 24px var(--green)}
+  h2.orange::before{background:var(--orange);box-shadow:0 0 24px var(--orange)}
+  h2.purple::before{background:var(--purple);box-shadow:0 0 24px var(--purple)}
+  h2.cyan::before{background:var(--cyan);box-shadow:0 0 24px var(--cyan)}
+  h2.yellow::before{background:var(--yellow);box-shadow:0 0 24px var(--yellow)}
+  h3{font-size:22px;margin:20px 0 12px}
+  .section-lead{color:var(--muted);font-size:16px;margin:0 0 24px;max-width:720px}
+  p{color:#cbd5e1}
+
+  .grid{display:grid;gap:18px}
+  .grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  @media(max-width:900px){.grid-4,.grid-3{grid-template-columns:1fr 1fr}.grid-2{grid-template-columns:1fr}}
+  @media(max-width:600px){.grid-4,.grid-3,.grid-2{grid-template-columns:1fr}}
+
+  .card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+  .card.green{border-color:rgba(0,255,135,0.3);box-shadow:0 0 40px rgba(0,255,135,0.08)}
+  .card.cyan{border-color:rgba(0,212,255,0.3);box-shadow:0 0 40px rgba(0,212,255,0.08)}
+  .card.orange{border-color:rgba(255,107,0,0.3);box-shadow:0 0 40px rgba(255,107,0,0.08)}
+  .card.purple{border-color:rgba(179,71,255,0.3);box-shadow:0 0 40px rgba(179,71,255,0.08)}
+  .card.yellow{border-color:rgba(255,184,0,0.3);box-shadow:0 0 40px rgba(255,184,0,0.08)}
+
+  .kpi{padding:24px}
+  .kpi .label{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:0.14em;font-weight:600}
+  .kpi .value{font-family:'Barlow Condensed',Inter,sans-serif;font-size:52px;font-weight:800;margin:6px 0 2px;line-height:1}
+  .kpi .meta{color:var(--muted);font-size:13px}
+  .kpi .value.green{color:var(--green)}
+  .kpi .value.cyan{color:var(--cyan)}
+  .kpi .value.orange{color:var(--orange)}
+  .kpi .value.purple{color:var(--purple)}
+  .kpi .value.yellow{color:var(--yellow)}
+
+  .big-number{font-family:'Barlow Condensed',Inter,sans-serif;font-size:96px;font-weight:800;line-height:1;letter-spacing:-0.03em}
+  .chart-container{position:relative;background:rgba(0,0,0,0.3);border:1px solid var(--border);border-radius:16px;padding:22px;margin-top:16px}
+  .chart-container canvas{max-height:360px}
+
+  table{width:100%;border-collapse:collapse;font-size:14px;margin-top:10px}
+  th,td{padding:12px;text-align:left;border-bottom:1px solid var(--border)}
+  th{color:var(--muted);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:0.1em}
+  td{color:#e2e8f0}
+  .num{text-align:right;font-variant-numeric:tabular-nums}
+
+  .tag{display:inline-block;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase}
+  .tag.green{background:rgba(0,255,135,0.12);color:var(--green);border:1px solid rgba(0,255,135,0.3)}
+  .tag.cyan{background:rgba(0,212,255,0.12);color:var(--cyan);border:1px solid rgba(0,212,255,0.3)}
+  .tag.orange{background:rgba(255,107,0,0.12);color:var(--orange);border:1px solid rgba(255,107,0,0.3)}
+  .tag.purple{background:rgba(179,71,255,0.12);color:var(--purple);border:1px solid rgba(179,71,255,0.3)}
+  .tag.red{background:rgba(255,91,58,0.12);color:var(--red);border:1px solid rgba(255,91,58,0.3)}
+  .tag.yellow{background:rgba(255,184,0,0.12);color:var(--yellow);border:1px solid rgba(255,184,0,0.3)}
+
+  .pill-row{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
+
+  /* Concept section */
+  .concept-flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:14px;align-items:center;margin-top:20px}
+  @media(max-width:900px){.concept-flow{grid-template-columns:1fr}}
+  .flow-box{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:16px;padding:18px;text-align:center}
+  .flow-box .icon{font-size:36px;margin-bottom:8px}
+  .flow-box h4{font-family:'Barlow Condensed';font-weight:700;font-size:20px;margin-bottom:4px}
+  .flow-box p{font-size:13px;color:var(--muted)}
+  .flow-arrow{font-size:24px;color:var(--green);text-align:center}
+  @media(max-width:900px){.flow-arrow{transform:rotate(90deg);margin:4px 0}}
+
+  /* Pricing timeline */
+  .price-timeline{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:20px 0;position:relative}
+  @media(max-width:900px){.price-timeline{grid-template-columns:1fr 1fr}}
+  @media(max-width:600px){.price-timeline{grid-template-columns:1fr}}
+  .price-step{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;text-align:center;position:relative}
+  .price-step .year{font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .price-step .price{font-family:'Barlow Condensed';font-size:40px;font-weight:800;line-height:1;margin:8px 0 4px}
+  .price-step .unit{font-size:12px;color:var(--muted)}
+  .price-step .reason{font-size:12px;color:#cbd5e1;margin-top:10px;min-height:42px}
+  .price-step.active{border-color:var(--green);box-shadow:0 0 30px rgba(0,255,135,0.2);background:rgba(0,255,135,0.04)}
+  .price-step .price.green{color:var(--green)}
+  .price-step .price.cyan{color:var(--cyan)}
+  .price-step .price.orange{color:var(--orange)}
+  .price-step .price.purple{color:var(--purple)}
+  .price-step .price.yellow{color:var(--yellow)}
+
+  /* Steps / roadmap */
+  .steps{display:flex;flex-direction:column;gap:12px;margin-top:16px}
+  .step{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 22px;display:grid;grid-template-columns:56px 1fr;gap:18px;align-items:start}
+  .step-num{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed';font-weight:800;font-size:22px;background:rgba(0,255,135,0.1);color:var(--green);border:1px solid rgba(0,255,135,0.3)}
+  .step.cyan .step-num{background:rgba(0,212,255,0.1);color:var(--cyan);border-color:rgba(0,212,255,0.3)}
+  .step.orange .step-num{background:rgba(255,107,0,0.1);color:var(--orange);border-color:rgba(255,107,0,0.3)}
+  .step.purple .step-num{background:rgba(179,71,255,0.1);color:var(--purple);border-color:rgba(179,71,255,0.3)}
+  .step.yellow .step-num{background:rgba(255,184,0,0.1);color:var(--yellow);border-color:rgba(255,184,0,0.3)}
+  .step h4{font-family:'Barlow Condensed';font-weight:700;font-size:20px;margin-bottom:4px}
+  .step p{font-size:14px;color:#cbd5e1}
+  .step .sub-meta{color:var(--muted);font-size:12px;margin-top:6px}
+
+  /* Legal shields */
+  .shield-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:16px}
+  @media(max-width:900px){.shield-grid{grid-template-columns:1fr 1fr}}
+  @media(max-width:600px){.shield-grid{grid-template-columns:1fr}}
+  .shield{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;position:relative;overflow:hidden}
+  .shield::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--green),var(--cyan))}
+  .shield.orange::before{background:linear-gradient(90deg,var(--orange),var(--yellow))}
+  .shield.purple::before{background:linear-gradient(90deg,var(--purple),var(--cyan))}
+  .shield h4{font-family:'Barlow Condensed';font-weight:700;font-size:18px;color:var(--green);margin-bottom:6px;display:flex;align-items:center;gap:8px}
+  .shield.orange h4{color:var(--orange)}
+  .shield.purple h4{color:var(--purple)}
+  .shield p{font-size:13px;color:#cbd5e1}
+  .shield .cost{font-size:12px;color:var(--muted);margin-top:10px;font-weight:600}
+
+  .callout{background:linear-gradient(135deg,rgba(0,255,135,0.08),rgba(0,212,255,0.06));border:1px solid rgba(0,255,135,0.3);border-radius:16px;padding:22px 26px;margin:20px 0}
+  .callout strong{color:var(--green)}
+  .callout.orange{background:linear-gradient(135deg,rgba(255,107,0,0.08),rgba(255,184,0,0.06));border-color:rgba(255,107,0,0.3)}
+  .callout.orange strong{color:var(--orange)}
+  .callout.purple{background:linear-gradient(135deg,rgba(179,71,255,0.08),rgba(0,212,255,0.06));border-color:rgba(179,71,255,0.3)}
+  .callout.purple strong{color:var(--purple)}
+
+  footer{margin-top:80px;padding-top:28px;border-top:1px solid var(--border);color:var(--muted);font-size:13px;text-align:center}
+  footer a{color:var(--cyan);text-decoration:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <span class="eyebrow">FutbolBase · Plan de negocio visual</span>
+  <h1>El fútbol amateur <span class="accent">tiene su app.<br>Y es nuestra.</span></h1>
+  <p class="sub">Proyección completa con gráficas interactivas, estrategia de pricing evolutivo, plan para cerrar con la FFCV y blindaje legal contra copias. Todo lo que necesitas saber para entender (y defender) el negocio.</p>
+</header>
+
+<!-- =============================================================
+     1 · CONCEPTO EN 30 SEGUNDOS
+============================================================= -->
+<section>
+<h2>1 · El concepto en 30 segundos</h2>
+<p class="section-lead">Una frase: <strong style="color:var(--green)">FutbolBase convierte a cada jugador amateur federado en el protagonista de su propia carrera</strong> — con IA que lo entrena, red social que lo conecta, y gamificación estilo FIFA que lo engancha.</p>
+
+<div class="concept-flow">
+  <div class="flow-box">
+    <div class="icon">⚽</div>
+    <h4>El jugador</h4>
+    <p>Federado en la FFCV. Quiere jugar, compartir, mejorar.</p>
+  </div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-box" style="border-color:rgba(0,255,135,0.3);box-shadow:0 0 30px rgba(0,255,135,0.1)">
+    <div class="icon">🧠</div>
+    <h4>FutbolBase</h4>
+    <p>Coach AI + highlights + perfil FIFA + comunidad.</p>
+  </div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-box">
+    <div class="icon">🏆</div>
+    <h4>Su carrera</h4>
+    <p>Stats, logros, replays, ligas, rivales, fichajes.</p>
+  </div>
+</div>
+
+<div class="grid grid-4" style="margin-top:28px">
+  <div class="card kpi green"><div class="label">Mercado CV</div><div class="value green">135.980</div><div class="meta">licencias FFCV 2024/25</div></div>
+  <div class="card kpi cyan"><div class="label">Mercado España</div><div class="value cyan">1,15 M</div><div class="meta">licencias fútbol RFEF</div></div>
+  <div class="card kpi orange"><div class="label">Crecimiento</div><div class="value orange">+8,4%</div><div class="meta">CAGR post-COVID (2021-24)</div></div>
+  <div class="card kpi purple"><div class="label">Competencia directa</div><div class="value purple">0</div><div class="meta">nadie combina social+IA+FIFA</div></div>
+</div>
+</section>
+
+<!-- =============================================================
+     2 · GRÁFICAS DE PROYECCIÓN
+============================================================= -->
+<section>
+<h2 class="cyan">2 · Proyección visual a 5 años</h2>
+<p class="section-lead">Tres escenarios, una misma curva. Los números reflejan penetración progresiva sobre el SAM (~84.000 jugadores direccionables en CV + familias activas).</p>
+
+<div class="grid grid-2">
+  <div class="card">
+    <h3>📈 Usuarios activos</h3>
+    <div class="chart-container"><canvas id="chartUsers"></canvas></div>
+  </div>
+  <div class="card">
+    <h3>💰 Ingresos anuales (ARR)</h3>
+    <div class="chart-container"><canvas id="chartARR"></canvas></div>
+  </div>
+</div>
+
+<div class="grid grid-2" style="margin-top:18px">
+  <div class="card">
+    <h3>🔥 Cuenta de resultados (base)</h3>
+    <div class="chart-container"><canvas id="chartPnL"></canvas></div>
+  </div>
+  <div class="card">
+    <h3>🧩 Mix de usuarios</h3>
+    <div class="chart-container"><canvas id="chartMix"></canvas></div>
+  </div>
+</div>
+
+<div class="callout"><strong>📍 Break-even operativo:</strong> mediados Y4-Y5 en base (554k€ ARR) · Y3 en optimista (988k€) · Y5 tardío en conservador (333k€). Con seed de 250k€ hay runway cómodo hasta Y3.</div>
+</section>
+
+<!-- =============================================================
+     3 · PRICING: CÓMO EMPEZAMOS Y CÓMO SUBIMOS
+============================================================= -->
+<section>
+<h2 class="orange">3 · Pricing — a qué precio empezamos y cómo lo subimos</h2>
+<p class="section-lead">La regla: <strong style="color:var(--orange)">precio bajo al principio para pulverizar fricción y acumular usuarios</strong>, subidas graduales y justificadas (nuevas features), nunca más de 1€ por escalón para evitar fuga.</p>
+
+<h3>Evolución del plan Pro — 5 años</h3>
+<div class="price-timeline">
+  <div class="price-step active">
+    <div class="year">Y1 · LANZAMIENTO</div>
+    <div class="price green">2,99€</div>
+    <div class="unit">/mes</div>
+    <div class="reason"><strong>Precio gancho.</strong> Penetración máxima, ~3€/mes es el psicológicamente indoloro del jóvenes español.</div>
+  </div>
+  <div class="price-step">
+    <div class="year">Y2 · VALIDACIÓN</div>
+    <div class="price cyan">3,99€</div>
+    <div class="unit">/mes</div>
+    <div class="reason">+1€ al añadir Replay IA + Coach voz. Grandfather a usuarios Y1 (mantienen 2,99€ mientras no cancelen).</div>
+  </div>
+  <div class="price-step">
+    <div class="year">Y3 · ACUERDO FFCV</div>
+    <div class="price yellow">4,99€</div>
+    <div class="unit">/mes</div>
+    <div class="reason">+1€ al integrar datos oficiales FFCV (licencias, actas, rivales reales). <strong>Punto óptimo LTV/CAC.</strong></div>
+  </div>
+  <div class="price-step">
+    <div class="year">Y4 · EXPANSIÓN</div>
+    <div class="price orange">4,99€</div>
+    <div class="unit">/mes + Pro+ 7,99€</div>
+    <div class="reason">Pro se congela. Se introduce <strong>Pro+</strong> (scout pro, video analysis, coach personal humano) para upsell.</div>
+  </div>
+  <div class="price-step">
+    <div class="year">Y5+ · CONSOLIDACIÓN</div>
+    <div class="price purple">5,99€</div>
+    <div class="unit">/mes + Pro+ 9,99€</div>
+    <div class="reason">Subida final cuando la red es el activo dominante. Retención &gt;75% esperada.</div>
+  </div>
+</div>
+
+<h3 style="margin-top:32px">Las 3 reglas del pricing escalonado</h3>
+<div class="grid grid-3">
+  <div class="card green">
+    <div class="tag green">REGLA 1</div>
+    <h4 style="font-family:'Barlow Condensed';font-weight:700;font-size:22px;margin:10px 0 8px">Grandfather pricing</h4>
+    <p style="font-size:14px">Los usuarios que entran a 2,99€ <strong>mantienen 2,99€</strong> mientras no cancelen. Reduce churn en subidas y crea evangelistas ("entré barato").</p>
+  </div>
+  <div class="card cyan">
+    <div class="tag cyan">REGLA 2</div>
+    <h4 style="font-family:'Barlow Condensed';font-weight:700;font-size:22px;margin:10px 0 8px">Feature-gated</h4>
+    <p style="font-size:14px">Cada subida viene con features nuevas claramente comunicadas: "Subimos 1€ porque acabamos de lanzar X". La subida se siente como upgrade, no castigo.</p>
+  </div>
+  <div class="card orange">
+    <div class="tag orange">REGLA 3</div>
+    <h4 style="font-family:'Barlow Condensed';font-weight:700;font-size:22px;margin:10px 0 8px">Anual siempre descuento</h4>
+    <p style="font-size:14px">Plan anual al <strong>−35% vs mensual</strong> (Y1: 23€/año vs 35,88€ mensual). Locks in LTV, reduce churn operativo y mejora cash flow.</p>
+  </div>
+</div>
+
+<h3 style="margin-top:32px">Gráfica: evolución precio vs churn esperado</h3>
+<div class="card">
+  <div class="chart-container"><canvas id="chartPricing"></canvas></div>
+</div>
+<p style="color:var(--muted);font-size:13px;margin-top:8px">La clave: cada subida coincide con un hito de valor (FFCV integrada, Pro+ lanzado). El churn temporal sube 1-2% pero se compensa con usuarios Pro+ que pagan más.</p>
+</section>
+
+<!-- =============================================================
+     4 · ESTRATEGIA FFCV
+============================================================= -->
+<section>
+<h2 class="purple">4 · Cómo cerrar un acuerdo con la FFCV</h2>
+<p class="section-lead">La FFCV es tanto <strong>la puerta al mercado</strong> (135k jugadores) como <strong>la defensa estructural</strong> (si la FFCV es partner oficial, ningún competidor entra). Plan en 5 fases:</p>
+
+<div class="steps">
+  <div class="step">
+    <div class="step-num">0</div>
+    <div>
+      <h4>Preparar el dossier antes de tocar la puerta</h4>
+      <p><strong>Objetivo:</strong> llegar con tracción visible. Mínimo: <span class="tag green">3 clubs piloto firmados</span> <span class="tag cyan">500 usuarios reales</span> <span class="tag orange">app en producción</span> <span class="tag purple">deck de 10 slides</span></p>
+      <p class="sub-meta">⏱️ Mes 1-6 antes del primer contacto · Inversión: 0€ (tracción orgánica)</p>
+    </div>
+  </div>
+
+  <div class="step cyan">
+    <div class="step-num">1</div>
+    <div>
+      <h4>Contacto por la puerta de clubs, no por la presidencial</h4>
+      <p>Los presidentes de federación no responden a desconocidos. <strong>Entras por abajo:</strong> 3-5 clubs de renombre CV (ej: CF Torre Levante, CD Paterna) ya firmados y públicos pidiendo a la FFCV que los integre. Cuando 10 clubs lo piden, la FFCV llama.</p>
+      <p class="sub-meta">⏱️ Mes 6-9 · Inversión: 0€ · Target: 10 clubs públicamente alineados</p>
+    </div>
+  </div>
+
+  <div class="step orange">
+    <div class="step-num">2</div>
+    <div>
+      <h4>Propuesta de valor a la FFCV — 3 beneficios concretos</h4>
+      <p><strong>1. Dashboard de engagement</strong>: la FFCV recibe datos anonimizados del crecimiento del fútbol base por comarca, edad, categoría. Hoy no los tiene. Valor político.</p>
+      <p><strong>2. Revenue share 12-15%</strong>: la FFCV se lleva un % de cada suscripción Pro de jugador federado. Potencial: <strong>90-120k€/año en Y5</strong> sin mover un dedo.</p>
+      <p><strong>3. Co-branding oficial</strong>: FutbolBase lleva el sello "App oficial FFCV" y la FFCV promociona en sus canales. Win-win.</p>
+      <p class="sub-meta">⏱️ Mes 9-12 · Prep reunión con gerencia (no presidencia todavía)</p>
+    </div>
+  </div>
+
+  <div class="step purple">
+    <div class="step-num">3</div>
+    <div>
+      <h4>Pilotaje institucional — 6 meses gratis</h4>
+      <p>La FFCV no firma cheques. <strong>Firma pilotos.</strong> Ofrecer 6 meses gratis integración con su sistema Fénix (API de licencias/actas) a cambio de promoción en su web oficial + boletín a los 900+ clubs afiliados.</p>
+      <p>Al final del piloto, métricas claras: X usuarios, Y retención, Z revenue generado. Si la FFCV ve 3k+ usuarios activos y >100€/mes de revenue share potencial, firma.</p>
+      <p class="sub-meta">⏱️ Mes 12-18 · Coste: ~15k€ en integración API Fénix</p>
+    </div>
+  </div>
+
+  <div class="step yellow">
+    <div class="step-num">4</div>
+    <div>
+      <h4>Acuerdo oficial + cláusula de exclusividad territorial</h4>
+      <p>El contrato final debe incluir:</p>
+      <p>· <strong>Exclusividad territorial CV 3 años</strong>: la FFCV no firma acuerdos similares con competidores durante 36 meses. <strong>Esta es la cláusula que nos blinda.</strong></p>
+      <p>· <strong>Licencia de uso de datos federativos</strong>: acceso exclusivo a actas, licencias, clasificaciones vía API. Si otro competidor quiere datos, debe ir a cada club uno por uno (imposible).</p>
+      <p>· <strong>Revenue share 12% sobre Pro</strong> de usuarios federados CV.</p>
+      <p>· <strong>Derecho de primer rechazo</strong>: si la FFCV quiere hacer app propia, primero tiene que ofrecernos comprarlos.</p>
+      <p class="sub-meta">⏱️ Mes 18-24 · Contrato blindado por abogado especialista en derecho deportivo</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">5</div>
+    <div>
+      <h4>Expansión federativa — modelo replicable</h4>
+      <p>Con la FFCV como caso de éxito público, replicar con federaciones adyacentes: <strong>Murcia (FFRM), Baleares (FFIB), Aragón (FAF)</strong>. Cada una tarda 3-6 meses. En Y4-Y5 tenemos 4-6 acuerdos = 300-400k licencias cubiertas en exclusiva.</p>
+      <p class="sub-meta">⏱️ Año 4+ · Una federación por cuatrimestre</p>
+    </div>
+  </div>
+</div>
+
+<div class="callout purple">
+  <strong>🎯 ¿Por qué la FFCV va a decir que sí?</strong> Porque la alternativa es que venga Clupik, BeSoccer o una startup americana en 2-3 años y se lleve el mercado sin pagar nada a la federación. Nosotros llegamos primero, con revenue share y respeto institucional. Es la opción racional para ellos.
+</div>
+</section>
+
+<!-- =============================================================
+     5 · BLINDAJE LEGAL
+============================================================= -->
+<section>
+<h2 class="yellow">5 · Blindaje legal — que no nos copien</h2>
+<p class="section-lead">En software puro es imposible impedir que otro construya algo "parecido". Pero sí podemos hacer que <strong>copiarnos salga muy caro, muy lento, y legalmente peligroso</strong>. Siete capas:</p>
+
+<div class="shield-grid">
+  <div class="shield">
+    <h4>🛡️ 1. Marca registrada</h4>
+    <p>Registro "FutbolBase" en <strong>OEPM</strong> (España) + <strong>EUIPO</strong> (UE) clases 9 (software), 38 (telecom), 41 (servicios deporte). El nombre, logo y eslogan quedan protegidos 10 años renovables.</p>
+    <div class="cost">💰 Coste: 240€ OEPM + 900€ EUIPO · Duración: 10 años</div>
+  </div>
+
+  <div class="shield orange">
+    <h4>🏅 2. Diseños industriales</h4>
+    <p>Registro del <strong>diseño de la tarjeta FIFA-style</strong>, el leaderboard neón y la UI del Coach AI en EUIPO. Protege la expresión visual — imposible que un clon copie la estética sin infringir.</p>
+    <div class="cost">💰 Coste: 350€ × 5 diseños = 1.750€ · Duración: 25 años</div>
+  </div>
+
+  <div class="shield purple">
+    <h4>📜 3. Copyright + depósito notarial</h4>
+    <p>El código fuente es <strong>automáticamente copyright</strong> al escribirlo, pero necesitas prueba de fecha. Depósito trimestral del repo en notaría (hash SHA256 notariado) o en servicios tipo <a href="https://safecreative.org" style="color:var(--cyan)">SafeCreative</a>. Prueba judicial irrefutable.</p>
+    <div class="cost">💰 Coste: ~60€/año SafeCreative · Pruebas timestamp en cadena</div>
+  </div>
+
+  <div class="shield">
+    <h4>⚙️ 4. Patente de invención técnica</h4>
+    <p>En Europa el software puro no se patenta, PERO invenciones técnicas sí. Candidatos: <strong>"Sistema de detección determinista de highlights en vídeo de fútbol amateur"</strong> y <strong>"Método de cálculo de overall FIFA adaptado a ligas regionales"</strong>. Patente europea = 20 años de exclusiva.</p>
+    <div class="cost">💰 Coste: 6-10k€ por patente + abogado. Tramitar Y2 con inversión.</div>
+  </div>
+
+  <div class="shield orange">
+    <h4>🤐 5. Secretos comerciales + NDA</h4>
+    <p>Todo empleado, freelancer, colaborador o inversor firma <strong>NDA robusto</strong> (5 años post-relación) + cláusula de no competencia (2 años, territorialmente limitada para ser ejecutable en España). El stack IA, los prompts del Coach y los pesos de scoring son <strong>secretos comerciales</strong>.</p>
+    <div class="cost">💰 Coste: 400€ plantillas legales iniciales (abogado) · Uso ilimitado</div>
+  </div>
+
+  <div class="shield purple">
+    <h4>🌐 6. Dominios + redes blindadas</h4>
+    <p>Registrar variantes: <code>.es .com .app .io .social</code> + defensas típo-squatting (futvolbase, futbolvase, etc). Redes sociales oficiales reservadas en todas las plataformas. Un clon no puede aprovecharse del naming.</p>
+    <div class="cost">💰 Coste: ~120€/año en dominios · Redes sociales: 0€</div>
+  </div>
+
+  <div class="shield">
+    <h4>📄 7. Licencia SaaS propietaria</h4>
+    <p>Código <strong>cerrado</strong> (no open-source). Términos de servicio + licencia de uso restrictiva: el usuario accede al servicio, no tiene derecho al código ni puede hacer ingeniería inversa. Cualquier scraping masivo de datos públicos o reverse engineering es causa de demanda.</p>
+    <div class="cost">💰 Coste: 600€ redacción Terms + 200€ Privacy Policy (abogado)</div>
+  </div>
+
+  <div class="shield orange">
+    <h4>🤝 8. Exclusiva con FFCV (ver sección 4)</h4>
+    <p>La defensa <strong>más importante</strong> no es legal técnica — es comercial. Con la FFCV como partner exclusivo 3 años, los datos federativos (licencias, actas) son inaccesibles para competidores. Sin esos datos, un clon no puede funcionar.</p>
+    <div class="cost">💰 Coste: parte del deal con FFCV (revenue share 12%)</div>
+  </div>
+
+  <div class="shield purple">
+    <h4>🧬 9. Network effect (defensa real)</h4>
+    <p>Al final la defensa más duradera no es legal — es el <strong>network effect</strong>: si tus 21 compañeros, tu liga regional y tu rival histórico están en FutbolBase, una app nueva arranca vacía. Tiempo estimado para que un clon alcance masa crítica: imposible si la FFCV es nuestra.</p>
+    <div class="cost">💰 Coste: 0€ técnico · Acumulación del activo con tiempo</div>
+  </div>
+</div>
+
+<div class="callout orange">
+  <strong>⚡ Inversión legal total Y1-Y2:</strong> ~15.000€ (patente + marca + diseños + contratos). Ronda seed cubre sobradamente. Desde Y1 con marca + diseño registrado + NDA, un imitador tiene que rehacer nombre, estética y código desde cero — mínimo 12-18 meses de desventaja mientras nosotros aceleramos con el acuerdo FFCV en paralelo.
+</div>
+</section>
+
+<!-- =============================================================
+     6 · ROADMAP VISUAL
+============================================================= -->
+<section>
+<h2>6 · Roadmap consolidado</h2>
+<p class="section-lead">Todo junto en una línea temporal: producto, pricing, FFCV, legal, financiero.</p>
+
+<div class="card" style="margin-top:20px;overflow-x:auto">
+<table>
+  <thead>
+  <tr><th>Hito</th><th>Y1 (26/27)</th><th>Y2 (27/28)</th><th>Y3 (28/29)</th><th>Y4 (29/30)</th><th>Y5 (30/31)</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Producto</strong></td><td>MVP en prod</td><td>Replay IA, Coach voz</td><td>Integración FFCV</td><td>Pro+ (scout, video)</td><td>Expansión CCAA</td></tr>
+    <tr><td><strong>Precio Pro</strong></td><td class="num" style="color:var(--green)">2,99€</td><td class="num" style="color:var(--cyan)">3,99€</td><td class="num" style="color:var(--yellow)">4,99€</td><td class="num" style="color:var(--orange)">4,99€ + Pro+ 7,99€</td><td class="num" style="color:var(--purple)">5,99€ + Pro+ 9,99€</td></tr>
+    <tr><td><strong>FFCV</strong></td><td>Contacto + 3 clubs</td><td>Propuesta formal</td><td>Firma acuerdo</td><td>Exclusividad activa</td><td>Expansión federativa</td></tr>
+    <tr><td><strong>Legal</strong></td><td>Marca + NDAs</td><td>Diseños + patente</td><td>Contrato FFCV</td><td>Exclusividad territorial</td><td>Patentes adicionales</td></tr>
+    <tr><td><strong>Financiero</strong></td><td>Seed 250k€</td><td>Bridge opcional</td><td>Series A 500k€</td><td>Escalado</td><td>Break-even</td></tr>
+    <tr><td><strong>Usuarios</strong></td><td class="num" style="color:var(--green)">1.260</td><td class="num" style="color:var(--cyan)">3.780</td><td class="num" style="color:var(--yellow)">8.400</td><td class="num" style="color:var(--orange)">14.280</td><td class="num" style="color:var(--purple)">21.000</td></tr>
+    <tr style="background:rgba(0,255,135,0.06)"><td><strong>ARR</strong></td><td class="num" style="color:var(--green)">25k€</td><td class="num" style="color:var(--cyan)">82k€</td><td class="num" style="color:var(--yellow)">202k€</td><td class="num" style="color:var(--orange)">360k€</td><td class="num" style="color:var(--purple)"><strong>554k€</strong></td></tr>
+  </tbody>
+</table>
+</div>
+</section>
+
+<footer>
+  <p style="font-size:16px;color:var(--green);margin-bottom:8px">⚡ Todo es ejecutable. Todo está documentado. Todo se defiende.</p>
+  <p>© 2026 FutbolBase · Plan visual para conversaciones con inversores, FFCV y equipo fundador</p>
+  <p style="margin-top:10px">
+    <a href="./market-study.html">Estudio mercado + competencia</a> ·
+    <a href="./financial-projection.html">Proyección financiera detallada</a> ·
+    <a href="./market-study.md">Notas en Markdown</a>
+  </p>
+</footer>
+
+</div>
+
+<script>
+// Chart.js global defaults
+Chart.defaults.color = '#94A3B8'
+Chart.defaults.font.family = 'Inter, system-ui, sans-serif'
+Chart.defaults.borderColor = 'rgba(255,255,255,0.08)'
+
+const years = ['Y1', 'Y2', 'Y3', 'Y4', 'Y5']
+
+// 1. Usuarios
+new Chart(document.getElementById('chartUsers'), {
+  type: 'line',
+  data: {
+    labels: years,
+    datasets: [
+      { label: 'Conservador', data: [756, 2268, 5040, 8568, 12600], borderColor: '#FF5B3A', backgroundColor: 'rgba(255,91,58,0.1)', tension: 0.35, fill: true, pointBackgroundColor:'#FF5B3A', pointRadius:5 },
+      { label: 'Base',        data: [1260, 3780, 8400, 14280, 21000], borderColor: '#00FF87', backgroundColor: 'rgba(0,255,135,0.14)', tension: 0.35, fill: true, pointBackgroundColor:'#00FF87', pointRadius:6, borderWidth:3 },
+      { label: 'Optimista',   data: [1764, 5292, 11760, 19992, 29400], borderColor: '#FFB800', backgroundColor: 'rgba(255,184,0,0.08)', tension: 0.35, fill: false, pointBackgroundColor:'#FFB800', pointRadius:5, borderDash:[6,4] },
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio:false,
+    plugins: { legend: { position: 'bottom' } },
+    scales: {
+      y: { ticks: { callback: v => v.toLocaleString('es-ES') + ' usuarios' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+      x: { grid: { color: 'rgba(255,255,255,0.05)' } }
+    }
+  }
+})
+
+// 2. ARR
+new Chart(document.getElementById('chartARR'), {
+  type: 'bar',
+  data: {
+    labels: years,
+    datasets: [
+      { label: 'Conservador (€)', data: [15150, 49000, 121000, 216000, 333000], backgroundColor: 'rgba(255,91,58,0.7)', borderRadius: 8 },
+      { label: 'Base (€)',        data: [25250, 81648, 201600, 359856, 554400], backgroundColor: 'rgba(0,255,135,0.85)', borderRadius: 8 },
+      { label: 'Optimista (€)',   data: [35350, 114000, 395000, 706000, 988000], backgroundColor: 'rgba(255,184,0,0.7)', borderRadius: 8 },
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio:false,
+    plugins: { legend: { position: 'bottom' }, tooltip: { callbacks: { label: c => c.dataset.label + ': ' + c.parsed.y.toLocaleString('es-ES') + ' €' } } },
+    scales: {
+      y: { ticks: { callback: v => (v/1000) + 'k €' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+      x: { grid: { display: false } }
+    }
+  }
+})
+
+// 3. P&L
+new Chart(document.getElementById('chartPnL'), {
+  type: 'bar',
+  data: {
+    labels: years,
+    datasets: [
+      { label: 'Ingresos',  data: [25250, 81648, 201600, 359856, 554400], backgroundColor: 'rgba(0,255,135,0.8)', borderRadius: 6 },
+      { label: 'OPEX',      data: [-85176, -161280, -265650, -377370, -514920], backgroundColor: 'rgba(255,91,58,0.75)', borderRadius: 6 },
+      { label: 'EBITDA',    data: [-59926, -79632, -64050, -17514, 39480], type: 'line', borderColor: '#FFB800', backgroundColor: 'rgba(255,184,0,0.15)', tension: 0.3, borderWidth: 3, pointRadius: 6, pointBackgroundColor:'#FFB800', fill:true },
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio:false,
+    plugins: { legend: { position: 'bottom' }, tooltip: { callbacks: { label: c => c.dataset.label + ': ' + c.parsed.y.toLocaleString('es-ES') + ' €' } } },
+    scales: {
+      y: { ticks: { callback: v => (v/1000).toFixed(0) + 'k €' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+      x: { grid: { display: false } }
+    }
+  }
+})
+
+// 4. Mix
+new Chart(document.getElementById('chartMix'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Free (ads)', 'Pro (4,99€)', 'Club (29€/equipo)'],
+    datasets: [{
+      data: [55, 38, 7],
+      backgroundColor: ['rgba(148,163,184,0.6)', 'rgba(0,255,135,0.85)', 'rgba(0,212,255,0.85)'],
+      borderColor: '#050D1A', borderWidth: 4,
+    }]
+  },
+  options: {
+    responsive:true, maintainAspectRatio:false, cutout:'65%',
+    plugins: {
+      legend: { position: 'bottom' },
+      tooltip: { callbacks: { label: c => c.label + ': ' + c.parsed + '%' } }
+    }
+  }
+})
+
+// 5. Pricing journey
+new Chart(document.getElementById('chartPricing'), {
+  type: 'line',
+  data: {
+    labels: years,
+    datasets: [
+      { label: 'Precio Pro (€/mes)', data: [2.99, 3.99, 4.99, 4.99, 5.99], borderColor: '#00FF87', backgroundColor: 'rgba(0,255,135,0.15)', tension: 0.25, fill: true, yAxisID: 'y', pointRadius: 7, pointBackgroundColor: '#00FF87', borderWidth: 3 },
+      { label: 'Churn mensual (%)',  data: [5.5, 5.0, 4.5, 4.2, 4.0], borderColor: '#FF5B3A', backgroundColor: 'rgba(255,91,58,0.08)', tension: 0.35, yAxisID: 'y1', borderDash: [6,4], pointRadius: 5, pointBackgroundColor: '#FF5B3A' },
+      { label: 'LTV (€)',            data: [54, 72, 84, 95, 125], borderColor: '#FFB800', backgroundColor: 'rgba(255,184,0,0.08)', tension: 0.25, yAxisID: 'y2', pointRadius: 5, pointBackgroundColor: '#FFB800' },
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio:false,
+    plugins: { legend: { position: 'bottom' } },
+    scales: {
+      y: { position:'left', title:{display:true,text:'Precio (€)',color:'#00FF87'}, ticks:{color:'#00FF87',callback:v=>v.toFixed(2)+' €'}, grid:{color:'rgba(255,255,255,0.05)'} },
+      y1: { position:'right', title:{display:true,text:'Churn (%)',color:'#FF5B3A'}, ticks:{color:'#FF5B3A',callback:v=>v+'%'}, grid:{display:false} },
+      y2: { position:'right', display:false },
+      x:  { grid:{display:false} }
+    }
+  }
+})
+</script>
+</body>
+</html>

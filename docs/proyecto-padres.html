@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FutbolBase · Folleto para familias</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FFF7ED; --card:#FFFFFF; --border:#FED7AA;
+  --text:#431407; --slate:#7C2D12; --muted:#9A6544;
+  --orange:#EA580C; --orange-dark:#C2410C; --orange-soft:#FFEDD5;
+  --green:#059669; --green-soft:#D1FAE5;
+  --cream:#FFFBEB;
+  --red:#DC2626;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+.wrap{max-width:1120px;margin:0 auto;padding:36px 28px 80px}
+.nav{display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:14px 20px;background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:26px;position:sticky;top:12px;z-index:50}
+.nav .brand{font-family:'Barlow Condensed';font-weight:900;font-size:18px;margin-right:auto;color:var(--orange)}
+.nav a{color:var(--slate);text-decoration:none;font-size:12px;font-weight:600}
+.nav a:hover{color:var(--orange)}
+
+.cover{background:linear-gradient(135deg,var(--orange) 0%,#F59E0B 100%);color:#fff;border-radius:20px;padding:60px 40px;margin-bottom:40px;position:relative;overflow:hidden}
+.cover::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 75% 30%,rgba(255,255,255,0.18),transparent 50%);pointer-events:none}
+.cover .mark{display:inline-block;padding:6px 12px;background:rgba(255,255,255,0.18);border-radius:100px;font-family:'JetBrains Mono';font-size:10px;letter-spacing:0.22em;font-weight:700;margin-bottom:20px;position:relative}
+.cover h1{font-family:'Barlow Condensed';font-weight:900;font-size:clamp(44px,6.5vw,80px);line-height:0.95;margin-bottom:14px;position:relative}
+.cover .sub{font-size:19px;opacity:0.94;max-width:680px;position:relative;line-height:1.6}
+.cover .tag-row{display:flex;gap:10px;margin-top:26px;flex-wrap:wrap;position:relative}
+.cover .tag{background:rgba(255,255,255,0.22);padding:8px 14px;border-radius:100px;font-size:13px;font-weight:600;backdrop-filter:blur(10px)}
+
+h2{font-family:'Barlow Condensed';font-weight:800;font-size:clamp(28px,3.4vw,40px);line-height:1.1;margin-bottom:14px;color:var(--orange-dark);letter-spacing:-0.01em}
+h3{font-family:'Barlow Condensed';font-weight:700;font-size:22px;margin:20px 0 10px;color:var(--orange)}
+.kicker{font-family:'JetBrains Mono';font-size:11px;letter-spacing:0.22em;color:var(--orange);text-transform:uppercase;font-weight:700;margin-bottom:6px}
+
+section{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:32px 36px;margin-bottom:24px;box-shadow:0 2px 10px rgba(234,88,12,0.05)}
+
+p{color:var(--slate);margin-bottom:12px;font-size:15px}
+ul,ol{margin:10px 0 14px 22px;color:var(--slate)}
+ul li,ol li{margin-bottom:6px;font-size:14.5px}
+strong{color:var(--orange-dark)}
+
+.grid{display:grid;gap:16px;margin:16px 0}
+.g-2{grid-template-columns:repeat(2,1fr)}
+.g-3{grid-template-columns:repeat(3,1fr)}
+.g-4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:800px){.g-2,.g-3,.g-4{grid-template-columns:1fr}}
+
+.card-item{padding:20px;background:var(--cream);border:1px solid var(--border);border-radius:12px}
+.card-item .ico{font-size:34px;margin-bottom:8px}
+.card-item h4{font-family:'Barlow Condensed';font-weight:700;font-size:19px;color:var(--orange-dark);margin-bottom:6px}
+.card-item p{font-size:14px;color:var(--slate);margin-bottom:0;line-height:1.6}
+
+.quote{background:linear-gradient(135deg,var(--orange-soft) 0%,var(--cream) 100%);border-left:4px solid var(--orange);padding:20px 24px;border-radius:0 14px 14px 0;margin:18px 0;font-style:italic;color:var(--slate);font-size:15px;line-height:1.7}
+.quote .author{display:block;margin-top:10px;font-style:normal;font-size:12px;color:var(--muted);font-family:'JetBrains Mono';letter-spacing:0.1em;text-transform:uppercase;font-weight:700}
+
+.faq{border-bottom:1px solid var(--border);padding:16px 0}
+.faq:last-child{border-bottom:none}
+.faq h4{font-family:'Barlow Condensed';font-weight:700;font-size:18px;color:var(--orange-dark);margin-bottom:6px}
+.faq p{font-size:14px;margin-bottom:0;color:var(--slate);line-height:1.7}
+
+.price-card{background:linear-gradient(135deg,var(--orange) 0%,#F59E0B 100%);color:#fff;border-radius:14px;padding:28px;text-align:center}
+.price-card .p{font-family:'Barlow Condensed';font-weight:900;font-size:72px;line-height:1;margin:8px 0}
+.price-card ul{list-style:none;margin:16px auto 0;padding:0;max-width:340px;text-align:left}
+.price-card ul li{padding:6px 0;font-size:14px;opacity:0.95;border-bottom:1px dashed rgba(255,255,255,0.3)}
+.price-card ul li::before{content:'✓ ';font-weight:700}
+
+.feature-row{display:flex;gap:14px;align-items:flex-start;padding:16px 0;border-bottom:1px solid var(--border)}
+.feature-row:last-child{border-bottom:none}
+.feature-row .num-big{font-family:'Barlow Condensed';font-weight:900;font-size:44px;color:var(--orange-soft);line-height:1;flex-shrink:0;min-width:48px}
+.feature-row h4{font-family:'Barlow Condensed';font-weight:700;font-size:19px;color:var(--orange-dark);margin-bottom:4px}
+.feature-row p{font-size:14px;margin-bottom:0;line-height:1.65}
+
+.cta{margin-top:40px;padding:36px;background:linear-gradient(135deg,var(--orange) 0%,#F59E0B 100%);color:#fff;border-radius:18px;text-align:center}
+.cta h3{color:#fff;font-size:28px;margin-bottom:10px}
+.cta p{color:rgba(255,255,255,0.95);max-width:600px;margin:0 auto 18px;font-size:15px}
+.cta .btn{display:inline-block;padding:14px 28px;background:#fff;color:var(--orange);border-radius:12px;text-decoration:none;font-family:'JetBrains Mono';font-size:13px;font-weight:700;letter-spacing:0.1em;margin:0 6px}
+
+footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--border);text-align:center;color:var(--muted);font-size:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="nav">
+  <span class="brand">👨‍👩‍👦 FUTBOLBASE · PARA FAMILIAS</span>
+  <a href="./proyecto-master.html">← Índice</a>
+  <a href="#porque">Por qué</a>
+  <a href="#que-incluye">Qué incluye</a>
+  <a href="#seguridad">Seguridad</a>
+  <a href="#pricing">Precio familiar</a>
+  <a href="#faq">FAQ</a>
+</nav>
+
+<div class="cover">
+  <span class="mark">● FOLLETO PARA FAMILIAS</span>
+  <h1>Acompaña a tu hijo<br>en cada partido</h1>
+  <p class="sub">FutbolBase es la app que da tranquilidad a los padres y oportunidades reales a los jugadores. Seguimiento, seguridad y visibilidad en una sola plataforma.</p>
+  <div class="tag-row">
+    <span class="tag">🛡️ Entorno verificado</span>
+    <span class="tag">📊 Seguimiento real</span>
+    <span class="tag">🎯 Visibilidad para scouts</span>
+    <span class="tag">💬 Comunicación oficial</span>
+    <span class="tag">💰 Desde 7,99€/mes familia</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<section id="intro">
+  <div class="kicker">Capítulo 1 / Una carta abierta a las familias</div>
+  <h2>Tu hijo se dedica en serio al fútbol. Y tú también.</h2>
+  <p>Cada temporada pasas cientos de horas llevándolo a entrenamientos, acompañando partidos los sábados a las ocho de la mañana, hablando con entrenadores por WhatsApp y preguntándote si todo ese esfuerzo le va a abrir alguna puerta.</p>
+  <p>El problema es que ese esfuerzo hoy <strong>no queda registrado en ningún sitio</strong>. Los partidos terminan, los goles se olvidan, los entrenadores cambian y cada temporada parece empezar de cero. La visibilidad depende del boca a boca. La comunicación con el club se reparte en catorce grupos de WhatsApp distintos.</p>
+  <p>FutbolBase nació para resolver exactamente eso: <strong>convertir el esfuerzo de tu hijo en una carrera deportiva real</strong>, con datos, con histórico y con visibilidad. Y darte a ti la tranquilidad de saber qué pasa, con quién habla y cómo progresa — en un entorno 100% seguro y pensado para menores.</p>
+</section>
+
+<!-- ============================================================ -->
+<section id="porque">
+  <div class="kicker">Capítulo 2 / Por qué esta app es para tu familia</div>
+  <h2>8 razones para usar FutbolBase</h2>
+
+  <div class="feature-row">
+    <div class="num-big">01</div>
+    <div>
+      <h4>Ves el progreso real de tu hijo</h4>
+      <p>Goles, asistencias, minutos jugados, tarjetas, partidos ganados. Histórico completo desde alevín hasta juvenil. No es tu memoria — son datos reales registrados por el club.</p>
+    </div>
+  </div>
+  <div class="feature-row">
+    <div class="num-big">02</div>
+    <div>
+      <h4>Comunicación oficial con el club</h4>
+      <p>Se acabaron los 14 grupos de WhatsApp. Un canal oficial por equipo, verificado, con horarios de silencio y separación total entre vida personal y deportiva.</p>
+    </div>
+  </div>
+  <div class="feature-row">
+    <div class="num-big">03</div>
+    <div>
+      <h4>Visibilidad ante scouts y ojeadores</h4>
+      <p>Más de 240 scouts activos (LaLiga, Segunda B, académicos) usan FutbolBase para buscar talento. Si tu hijo destaca, lo van a encontrar — sin depender de contactos personales.</p>
+    </div>
+  </div>
+  <div class="feature-row">
+    <div class="num-big">04</div>
+    <div>
+      <h4>Video highlights sin pagar equipos profesionales</h4>
+      <p>Graba con el móvil, la app edita los mejores momentos automáticamente. Tu hijo construye su CV deportivo visual sin que gastes 80€/mes en servicios tipo Veo.</p>
+    </div>
+  </div>
+  <div class="feature-row">
+    <div class="num-big">05</div>
+    <div>
+      <h4>Entorno 100% seguro para menores</h4>
+      <p>Modo menor obligatorio para -18. Sin mensajes privados de adultos desconocidos. Sin redes sociales abiertas. Supervisión parental activa.</p>
+    </div>
+  </div>
+  <div class="feature-row">
+    <div class="num-big">06</div>
+    <div>
+      <h4>Control parental real</h4>
+      <p>Recibes las mismas notificaciones que tu hijo (convocatorias, partidos, mensajes del club). Puedes activar "revisión previa" de cualquier mensaje enviado al perfil del menor.</p>
+    </div>
+  </div>
+  <div class="feature-row">
+    <div class="num-big">07</div>
+    <div>
+      <h4>Tarjeta deportiva digital tipo FIFA</h4>
+      <p>Tu hijo tiene su tarjeta propia con sus stats, su foto y su equipo. La comparte, la guarda, la imprime. Motivación real — sentirse jugador profesional desde alevín.</p>
+    </div>
+  </div>
+  <div class="feature-row">
+    <div class="num-big">08</div>
+    <div>
+      <h4>Una app para toda la familia</h4>
+      <p>Si tienes dos o tres hijos en el club, todos en la misma cuenta familiar. Un solo precio, visibilidad completa de todos sus equipos.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="que-incluye">
+  <div class="kicker">Capítulo 3 / Qué incluye tu plan familiar</div>
+  <h2>Todo lo que vas a poder hacer</h2>
+  <div class="grid g-3">
+    <div class="card-item"><div class="ico">📊</div><h4>Ficha del jugador</h4><p>Foto, equipo, posición, histórico de stats, trayectoria por temporadas.</p></div>
+    <div class="card-item"><div class="ico">📅</div><h4>Calendario y convocatorias</h4><p>Todos los partidos y entrenamientos sincronizados en el calendario del móvil.</p></div>
+    <div class="card-item"><div class="ico">🎥</div><h4>Video highlights</h4><p>10 vídeos al mes editados automáticamente con los mejores momentos.</p></div>
+    <div class="card-item"><div class="ico">💬</div><h4>Chat oficial del club</h4><p>Canales por equipo y por coordinación. Historial archivado.</p></div>
+    <div class="card-item"><div class="ico">🔔</div><h4>Notificaciones inteligentes</h4><p>Solo lo importante: convocatorias, partidos, lesiones. Sin spam.</p></div>
+    <div class="card-item"><div class="ico">🏆</div><h4>Tarjeta FIFA del jugador</h4><p>Tarjeta deportiva digital con stats y evolución del jugador.</p></div>
+    <div class="card-item"><div class="ico">🛡️</div><h4>Control parental</h4><p>Modo menor + supervisión familiar + auditoría de mensajes.</p></div>
+    <div class="card-item"><div class="ico">🔍</div><h4>Buscador de clubes</h4><p>Si tu hijo quiere cambiar de equipo, buscador con filtros y contacto directo.</p></div>
+    <div class="card-item"><div class="ico">💰</div><h4>Pago de cuotas digital</h4><p>Paga la cuota mensual desde la app. Sin tickets, sin transferencias manuales.</p></div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="seguridad">
+  <div class="kicker">Capítulo 4 / Seguridad y privacidad</div>
+  <h2>Tu hijo, protegido al 100%</h2>
+  <p>La seguridad de los menores es nuestra prioridad. FutbolBase cumple con RGPD, LOPDGDD y la nueva normativa de protección del menor en entornos digitales (2025).</p>
+
+  <div class="grid g-2">
+    <div class="card-item"><h4>🛡️ Modo menor obligatorio</h4><p>Todos los perfiles de menos de 18 años entran automáticamente en modo menor — sin acceso a mensajes privados con adultos no verificados.</p></div>
+    <div class="card-item"><h4>✅ Verificación de identidad</h4><p>Los scouts y entrenadores están verificados con DNI, licencia federativa y registro oficial. Sin perfiles falsos.</p></div>
+    <div class="card-item"><h4>👀 Supervisión parental</h4><p>Recibes copia de cada mensaje enviado al perfil de tu hijo. Puedes bloquear contactos con un click.</p></div>
+    <div class="card-item"><h4>🚫 Sin redes sociales abiertas</h4><p>No hay feed público donde cualquiera pueda comentar. Solo interacciones controladas y verificadas.</p></div>
+    <div class="card-item"><h4>🔐 Datos cifrados</h4><p>Toda la información se guarda cifrada en servidores europeos. Cumplimiento total de RGPD.</p></div>
+    <div class="card-item"><h4>📞 Línea de ayuda</h4><p>Canal de contacto directo con nuestro equipo de protección del menor, disponible 24/7.</p></div>
+  </div>
+
+  <div class="quote">
+    "Lo que más me tranquiliza es que no hay adultos desconocidos escribiendo a mi hija. En WhatsApp del equipo, cualquier padre la podía contactar. Aquí, solo entrenador y compañeras verificadas."
+    <span class="author">— Carmen, madre de Lucía (alevín) · Valencia</span>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="pricing">
+  <div class="kicker">Capítulo 5 / Precio familiar</div>
+  <h2>Un precio justo para toda la familia</h2>
+
+  <div class="grid g-2">
+    <div class="price-card">
+      <div style="font-family:'JetBrains Mono';font-size:11px;letter-spacing:0.2em;opacity:0.85;font-weight:700">PLAN FAMILIA · Y1 LAUNCH</div>
+      <div class="p">7,99€<span style="font-size:18px;font-weight:600">/mes</span></div>
+      <div style="opacity:0.9;font-size:14px">o 69€/año · 2 meses gratis</div>
+      <ul>
+        <li>Hasta 4 miembros (padres + hijos)</li>
+        <li>Todos los hijos con Pro completo</li>
+        <li>Stats, video, visibilidad, heatmaps</li>
+        <li>Canal oficial del club incluido</li>
+        <li>Control parental avanzado</li>
+        <li>Soporte prioritario</li>
+        <li>Precio Y5 target: 14,99€/mes</li>
+      </ul>
+    </div>
+    <div class="price-card" style="background:#fff;color:var(--orange-dark);border:2px solid var(--orange)">
+      <div style="font-family:'JetBrains Mono';font-size:11px;letter-spacing:0.2em;font-weight:700">FAMILY FREE</div>
+      <div class="p" style="color:var(--orange)">0€</div>
+      <div style="font-size:14px;color:var(--slate)">Para siempre · funciones básicas</div>
+      <ul style="color:var(--slate)">
+        <li style="border-color:var(--border)">Perfil de tu hijo</li>
+        <li style="border-color:var(--border)">Calendario de partidos</li>
+        <li style="border-color:var(--border)">Notificaciones del club</li>
+        <li style="border-color:var(--border)">Chat oficial equipo</li>
+        <li style="border-color:var(--border)">Modo menor y seguridad</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="quote">
+    Un plan familiar cuesta menos que una merienda al mes. Comparado con lo que ya gastáis en cuotas del club, equipación y desplazamientos, son céntimos. Y desbloquea lo que hace que todo el esfuerzo <strong>sirva para algo más que el presente</strong>.
+  </div>
+
+  <h3>Oferta early adopter</h3>
+  <p>Las <strong>1.000 primeras familias</strong> que se den de alta en Y1 mantienen el precio de <strong>7,99€/mes de por vida</strong> (grandfather). En Y5, cuando el precio normal sea 14,99€, vosotros seguiréis pagando 7,99€.</p>
+</section>
+
+<!-- ============================================================ -->
+<section id="testimonios">
+  <div class="kicker">Capítulo 6 / Lo que dicen otras familias</div>
+  <h2>Testimonios</h2>
+
+  <div class="quote">
+    "Mi hijo llegó a un club nuevo el verano pasado. Con FutbolBase, el nuevo entrenador ya sabía sus stats del año anterior: minutos, goles, posición real. Le dio confianza desde el primer día."
+    <span class="author">— Javier, padre de Raúl (juvenil) · Castellón</span>
+  </div>
+  <div class="quote">
+    "Yo antes no sabía si mi hija entrenaba o no. Ahora me llega la convocatoria al móvil cada miércoles y viernes. Ella confirma. Yo confirmo. Fin del caos."
+    <span class="author">— Ana, madre de Paula (cadete) · Alicante</span>
+  </div>
+  <div class="quote">
+    "Pagué 79€ al año. Un scout del Villarreal C contactó al club porque mi hijo apareció en su buscador de FutbolBase. Eso sólo ya justifica toda la suscripción."
+    <span class="author">— Miguel, padre de Adrián (juvenil) · Sagunto</span>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="faq">
+  <div class="kicker">Capítulo 7 / Preguntas frecuentes</div>
+  <h2>FAQ · lo que más preguntáis</h2>
+
+  <div class="faq"><h4>¿Mi hijo necesita la licencia FFCV para usarlo?</h4><p>No, pero es mejor con ella. FutbolBase funciona sin licencia, aunque los perfiles con licencia federativa reciben el sello "Verificado" que da más credibilidad ante scouts.</p></div>
+  <div class="faq"><h4>¿Qué diferencia hay con WhatsApp?</h4><p>WhatsApp es mensajería. FutbolBase es perfil deportivo + mensajería + stats + video + visibilidad. Además, separa la vida personal del club y protege a los menores.</p></div>
+  <div class="faq"><h4>¿Qué pasa si mi hijo deja de jugar?</h4><p>Puedes pausar la suscripción sin coste hasta 6 meses. El perfil y las stats se mantienen intactos. Si no vuelve, exportamos sus datos en PDF de recuerdo.</p></div>
+  <div class="faq"><h4>¿Los datos de mi hijo son seguros?</h4><p>Sí. Cumplimos RGPD al 100%. Servidores en Europa. Los datos de menores están cifrados y requieren consentimiento parental para compartirse con scouts.</p></div>
+  <div class="faq"><h4>¿Puedo bloquear a un scout específico?</h4><p>Sí. Tienes control total sobre quién puede contactar a tu hijo. Los scouts solicitan contacto — tú apruebas o no.</p></div>
+  <div class="faq"><h4>¿Cuánto cuestan servicios similares?</h4><p>Veo (profesional) cuesta 80-120€/mes. Hudl (semi-profesional) 40-60€/mes. FutbolBase familia son 7,99€/mes por toda la familia.</p></div>
+  <div class="faq"><h4>¿Hay permanencia?</h4><p>No. Puedes cancelar cuando quieras. Si pagas el plan anual, 2 meses gratis de regalo.</p></div>
+  <div class="faq"><h4>¿Qué pasa si mi club no está en FutbolBase?</h4><p>Puedes invitar a tu club a que se una. Hasta que se una, usas la versión familiar con funciones limitadas a la parte del jugador.</p></div>
+</section>
+
+<!-- ============================================================ -->
+<section id="proximos-pasos">
+  <div class="kicker">Capítulo 8 / Cómo empezar</div>
+  <h2>4 pasos para usar FutbolBase en familia</h2>
+  <div class="grid g-4">
+    <div class="card-item"><div class="ico">1️⃣</div><h4>Descargar</h4><p>App Store o Google Play. Gratis. Instalas en el móvil tuyo y el de tu hijo.</p></div>
+    <div class="card-item"><div class="ico">2️⃣</div><h4>Crear cuenta familiar</h4><p>Registra a los padres y añade a los hijos. 3 minutos.</p></div>
+    <div class="card-item"><div class="ico">3️⃣</div><h4>Vincular al club</h4><p>Si el club está en FutbolBase, lo buscas. Si no, invitas al entrenador.</p></div>
+    <div class="card-item"><div class="ico">4️⃣</div><h4>Activar Pro familia</h4><p>7,99€/mes. Cancelas cuando quieras. 30 días de prueba sin tarjeta.</p></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta">
+  <h3>🧡 Tu hijo se lo merece.</h3>
+  <p>Cada temporada de fútbol es única. Con FutbolBase no se pierde ningún detalle — y abres puertas que hoy están cerradas.</p>
+  <a class="btn" href="mailto:familias@futbolbase.es">EMPEZAR PRUEBA GRATIS</a>
+  <a class="btn" style="background:rgba(255,255,255,0.2);color:#fff;border:2px solid #fff" href="./proyecto-master.html">OTROS DOCUMENTOS</a>
+</div>
+
+<footer>
+  <p>FutbolBase · Folleto para familias · v1.0 · 2026</p>
+</footer>
+
+</div>
+</body>
+</html>
