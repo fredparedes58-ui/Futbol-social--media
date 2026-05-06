@@ -1,4 +1,4 @@
-"""Genera futbolbase-brand-guidelines.pdf — manual de marca completo."""
+"""Genera grada-brand-guidelines.pdf — manual de marca completo."""
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import cm, mm
@@ -23,7 +23,7 @@ MUTED = HexColor('#94A3B8')
 CARD = HexColor('#0F1B2E')
 GREY_LIGHT = HexColor('#E2E8F0')
 
-OUT = 'futbolbase-brand-guidelines.pdf'
+OUT = 'grada-brand-guidelines.pdf'
 
 # ---------- Estilos ----------
 styles = getSampleStyleSheet()
@@ -57,7 +57,7 @@ def draw_cover(c):
     c.circle(w/2, h-9*cm, 4*cm, stroke=1, fill=0)
     # Logotipo simulado
     c.setFillColor(NEON_GREEN); c.setFont('Helvetica-Bold', 38)
-    c.drawCentredString(w/2, h-13*cm, 'FutbolBase')
+    c.drawCentredString(w/2, h-13*cm, 'GRADA')
     c.setFillColor(TEXT); c.setFont('Helvetica', 11)
     c.drawCentredString(w/2, h-14*cm, 'Manual de marca · Brand Guidelines v1.0')
     c.setFillColor(MUTED); c.setFont('Helvetica', 9)
@@ -82,11 +82,11 @@ def on_pages(canv, doc):
     w, h = A4
     canv.setFillColor(NAVY); canv.rect(0, h-1*cm, w, 1*cm, fill=1, stroke=0)
     canv.setFillColor(NEON_GREEN); canv.setFont('Helvetica-Bold', 9)
-    canv.drawString(2*cm, h-0.65*cm, 'FutbolBase · Brand Guidelines')
+    canv.drawString(2*cm, h-0.65*cm, 'GRADA · Brand Guidelines')
     canv.setFillColor(TEXT); canv.setFont('Helvetica', 8)
     canv.drawRightString(w-2*cm, h-0.65*cm, f'Página {doc.page}')
     canv.setFillColor(MUTED); canv.setFont('Helvetica', 7)
-    canv.drawCentredString(w/2, 1*cm, 'krujens.com/futbolbase · brand@krujens.com')
+    canv.drawCentredString(w/2, 1*cm, 'krujens.com/grada · brand@krujens.com')
     canv.restoreState()
 
 
@@ -134,7 +134,7 @@ class LogoBlock(Flowable):
         c.setFillColor(fg); c.circle(cx, cy, 0.25*cm, stroke=0, fill=1)
         # Wordmark
         c.setFillColor(fg); c.setFont('Helvetica-Bold', 22)
-        c.drawString(cx+1.8*cm, cy-0.15*cm, 'FutbolBase')
+        c.drawString(cx+1.8*cm, cy-0.15*cm, 'GRADA')
         # Etiqueta inferior modo
         c.setFillColor(MUTED); c.setFont('Helvetica', 7)
         c.drawString(0.2*cm, 0.2*cm, self.mode.upper())
@@ -144,7 +144,7 @@ class LogoBlock(Flowable):
 doc = SimpleDocTemplate(OUT, pagesize=A4,
                         leftMargin=2*cm, rightMargin=2*cm,
                         topMargin=1.6*cm, bottomMargin=1.6*cm,
-                        title='FutbolBase Brand Guidelines',
+                        title='GRADA Brand Guidelines',
                         author='Krujens Holding')
 
 story = []
@@ -209,7 +209,7 @@ story.append(HRFlowable(width='100%', color=NEON_GREEN, thickness=1, spaceAfter=
 story.append(Paragraph('Versión principal', H2))
 story.append(Paragraph(
     'El logo combina un símbolo (círculos concéntricos que evocan el balón, la órbita y el target) con el '
-    'wordmark "FutbolBase". Se usa siempre sobre fondo navy <b>#050D1A</b> con el símbolo y wordmark en verde '
+    'wordmark "GRADA". Se usa siempre sobre fondo navy <b>#050D1A</b> con el símbolo y wordmark en verde '
     'neón <b>#00FF87</b>.', BODY))
 story.append(Spacer(1, 6))
 story.append(LogoBlock(mode='primary'))
@@ -467,8 +467,8 @@ story.append(t)
 story.append(Paragraph('Co-branding con Krujens', H2))
 story.append(Paragraph(
     'Cuando aparezca junto al logo de Krujens (parent brand), usar el formato "endorsed":<br/>'
-    '<b>FutbolBase</b> + línea vertical neón + <i>by Krujens</i> en muted 9 px.<br/>'
-    'Krujens nunca debe dominar visualmente sobre FutbolBase en piezas dirigidas a clubes/familias.', BODY))
+    '<b>GRADA</b> + línea vertical neón + <i>by Krujens</i> en muted 9 px.<br/>'
+    'Krujens nunca debe dominar visualmente sobre GRADA en piezas dirigidas a clubes/familias.', BODY))
 
 story.append(PageBreak())
 
@@ -478,10 +478,10 @@ story.append(HRFlowable(width='100%', color=NEON_GREEN, thickness=1, spaceAfter=
 
 naming = [
     ['Forma correcta', 'Forma incorrecta'],
-    ['FutbolBase', 'Futbol Base / Fútbol Base / FUTBOLBASE / Futbolbase'],
-    ['FutbolBase Pro / Elite / Starter', 'FutbolBase PRO / Pro de FutbolBase'],
+    ['GRADA', 'Futbol Base / Fútbol Base / FutbolBase / Futbolbase'],
+    ['GRADA Pro / Elite / Starter', 'GRADA PRO / Pro de GRADA'],
     ['una vertical de Krujens', 'subsidiaria de Krujens / brand de Krujens'],
-    ['app FutbolBase', 'aplicación FutbolBase móvil PWA'],
+    ['app GRADA', 'aplicación GRADA móvil PWA'],
 ]
 t = Table(naming, colWidths=[8.5*cm, 8.5*cm])
 t.setStyle(TableStyle([
@@ -502,9 +502,9 @@ story.append(t)
 
 story.append(Paragraph('Hashtags y handles', H2))
 story.append(Paragraph(
-    '• Handle oficial: <b>@futbolbase.app</b> (IG, TikTok, X, LinkedIn).<br/>'
-    '• Hashtags: #FutbolBase #ElFuturoDelFutbolBase #MenosWhatsAppMasFutbol<br/>'
-    '• Dominio: <b>futbolbase.app</b> · email: <b>hola@futbolbase.app</b>', BODY))
+    '• Handle oficial: <b>@grada.app</b> (IG, TikTok, X, LinkedIn).<br/>'
+    '• Hashtags: #GRADA #ElFuturoDelGRADA #MenosWhatsAppMasFutbol<br/>'
+    '• Dominio: <b>grada.app</b> · email: <b>hola@grada.app</b>', BODY))
 
 story.append(PageBreak())
 
@@ -537,9 +537,9 @@ story.append(Paragraph(f'<font face="Courier" size="8">{tokens.replace(chr(10),"
 
 story.append(Paragraph('Assets entregables', H2))
 assets = [
-    '/brand/logo/futbolbase-primary.svg',
-    '/brand/logo/futbolbase-mono-light.svg',
-    '/brand/logo/futbolbase-mono-dark.svg',
+    '/brand/logo/grada-primary.svg',
+    '/brand/logo/grada-mono-light.svg',
+    '/brand/logo/grada-mono-dark.svg',
     '/brand/logo/symbol-only.svg',
     '/brand/icons/app-icon-512.png',
     '/brand/icons/app-icon-192.png',
@@ -563,7 +563,7 @@ story.append(Spacer(1, 12))
 story.append(HRFlowable(width='100%', color=CYAN, thickness=0.6))
 story.append(Spacer(1, 6))
 story.append(Paragraph(
-    'Manual de marca FutbolBase v1.0 · 2026 · © Krujens Holding · Todos los derechos reservados.',
+    'Manual de marca GRADA v1.0 · 2026 · © Krujens Holding · Todos los derechos reservados.',
     SMALL))
 
 

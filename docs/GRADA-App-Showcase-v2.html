@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>FutbolBase — Product Showcase v2</title>
+<title>GRADA — Product Showcase v2</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -283,7 +283,7 @@
 <!-- NAV -->
 <header class="nav">
   <div class="container nav-inner">
-    <div class="logo clickable"><span class="logo-mark">FB</span><span>FutbolBase</span></div>
+    <div class="logo clickable"><span class="logo-mark">FB</span><span>GRADA</span></div>
     <nav class="nav-links">
       <a href="#producto" class="clickable">Producto</a>
       <a href="#pantallas" class="clickable">Pantallas</a>
@@ -356,12 +356,12 @@
     <div class="video-frame reveal clickable">
       <div class="video-bar">
         <div class="vb-dot r"></div><div class="vb-dot y"></div><div class="vb-dot g"></div>
-        <div class="vb-url">futbolbase.app — demo</div>
+        <div class="vb-url">grada.app — demo</div>
       </div>
       <div class="video-stage" id="videoStage" onclick="playDemo()">
         <div class="play-btn clickable" id="playBtn">▶</div>
         <video id="demoVid" muted playsinline controls preload="none">
-          <source src="assets/futbolbase-demo.mp4" type="video/mp4">
+          <source src="assets/grada-demo.mp4" type="video/mp4">
         </video>
       </div>
     </div>
@@ -374,7 +374,7 @@
     <div class="section-head reveal" style="text-align:center">
       <div class="section-eyebrow">Las pantallas reales</div>
       <h2 class="section-title">5 vistas, <span class="grad">1 app nativa.</span></h2>
-      <p class="section-lead" style="margin:0 auto">Capturas reales del build actual de FutbolBase. Haz click en cada pestaña para explorar.</p>
+      <p class="section-lead" style="margin:0 auto">Capturas reales del build actual de GRADA. Haz click en cada pestaña para explorar.</p>
     </div>
     <div class="screens-tabs reveal">
       <button class="screens-tab clickable active" data-tab="0">🚀 Onboarding</button>
@@ -633,12 +633,12 @@
       <h2 class="section-title">FAQ</h2>
     </div>
     <div class="faq">
-      <details class="faq-item reveal clickable"><summary>¿Funciona offline?</summary><p>Sí. FutbolBase es una app nativa con almacenamiento local en SQLite. Las pantallas principales funcionan sin red y la sincronización con el servidor se reanuda automáticamente al reconectar.</p></details>
+      <details class="faq-item reveal clickable"><summary>¿Funciona offline?</summary><p>Sí. GRADA es una app nativa con almacenamiento local en SQLite. Las pantallas principales funcionan sin red y la sincronización con el servidor se reanuda automáticamente al reconectar.</p></details>
       <details class="faq-item reveal clickable"><summary>¿Qué stack usa por dentro?</summary><p>React Native + TypeScript + Expo + Supabase (auth, Postgres, Realtime, Storage) + TanStack Query v5 + React Navigation + Reanimated + Push notifications nativas (APNs / FCM).</p></details>
       <details class="faq-item reveal clickable"><summary>¿Cómo es la seguridad de los datos?</summary><p>Row-Level Security en Supabase para todas las tablas, JWT por usuario, roles `coach`/`player`/`parent` con permisos granulares y backups diarios automáticos.</p></details>
       <details class="faq-item reveal clickable"><summary>¿Qué es la liga FFCV?</summary><p>Federación de Fútbol de la Comunidad Valenciana. La app trae cargada la temporada juvenil con 13 equipos reales y permite seguir clasificación, jornadas y goleadores en vivo.</p></details>
       <details class="faq-item reveal clickable"><summary>¿Los agentes IA son deterministas?</summary><p>Sí. Cada agente (Coach, Scouting, Predictor, Tactic) tiene un prompt versionado, temperature controlada y RAG sobre el corpus del equipo para reproducibilidad y trazabilidad.</p></details>
-      <details class="faq-item reveal clickable"><summary>¿Cómo se descarga?</summary><p>FutbolBase es una app nativa. Se descarga directamente desde la App Store (iOS) y Google Play (Android). Icono propio, splash screen, push notificaciones, biometría y acceso a cámara como cualquier app nativa.</p></details>
+      <details class="faq-item reveal clickable"><summary>¿Cómo se descarga?</summary><p>GRADA es una app nativa. Se descarga directamente desde la App Store (iOS) y Google Play (Android). Icono propio, splash screen, push notificaciones, biometría y acceso a cámara como cualquier app nativa.</p></details>
       <details class="faq-item reveal clickable"><summary>¿Hay app para padres?</summary><p>Sí. El rol `parent` accede a feed, avisos urgentes, calendario de partidos, asistencia y notificaciones push. Sin permisos de edición.</p></details>
       <details class="faq-item reveal clickable"><summary>¿Puedo migrar mis datos actuales?</summary><p>Sí. Importador CSV para plantilla, calendario y stats históricas. Soporte dedicado en plan Pro y Elite para la migración inicial.</p></details>
     </div>
@@ -661,8 +661,8 @@
 
 <footer>
   <div class="container footer-inner">
-    <div class="logo clickable"><span class="logo-mark">FB</span><span>FutbolBase</span></div>
-    <div>© 2026 FutbolBase · React 19 + Supabase · Build 1.0.0</div>
+    <div class="logo clickable"><span class="logo-mark">FB</span><span>GRADA</span></div>
+    <div>© 2026 GRADA · React 19 + Supabase · Build 1.0.0</div>
     <div style="display:flex;gap:18px"><a href="#" class="clickable">Privacidad</a><a href="#" class="clickable">Términos</a><a href="#" class="clickable">Contacto</a></div>
   </div>
 </footer>
@@ -741,8 +741,8 @@
     const src = v.querySelector('source').src;
     fetch(src,{method:'HEAD'}).then(r=>{
       if(r.ok){ v.style.display='block'; btn.style.display='none'; v.play(); }
-      else alert('Coloca el archivo de video en docs/assets/futbolbase-demo.mp4 para activar la reproducción.');
-    }).catch(()=>alert('Coloca el archivo de video en docs/assets/futbolbase-demo.mp4 para activar la reproducción.'));
+      else alert('Coloca el archivo de video en docs/assets/grada-demo.mp4 para activar la reproducción.');
+    }).catch(()=>alert('Coloca el archivo de video en docs/assets/grada-demo.mp4 para activar la reproducción.'));
   }
   window.playDemo = playDemo;
 

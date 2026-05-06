@@ -6,7 +6,7 @@ Pasos (hay que hacerlos en el dashboard de Vercel — no los puedo automatizar p
 Cualquier registrar (Namecheap, Google Domains, Cloudflare, etc.).
 
 ## 2. Agregarlo en Vercel
-1. Abrir https://vercel.com/fred-paredes-projects/futbolbase/settings/domains
+1. Abrir https://vercel.com/fred-paredes-projects/grada/settings/domains
 2. Click **Add Domain** → escribir `tudominio.com`
 3. Vercel te muestra los registros DNS que hay que configurar.
 

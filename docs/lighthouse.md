@@ -10,8 +10,8 @@ npx lighthouse http://localhost:4173 --view --preset=perf --only-categories=perf
 
 ## Prod
 ```bash
-npx lighthouse https://futbolbase.vercel.app --view --preset=desktop
-npx lighthouse https://futbolbase.vercel.app --view --form-factor=mobile
+npx lighthouse https://grada.vercel.app --view --preset=desktop
+npx lighthouse https://grada.vercel.app --view --form-factor=mobile
 ```
 
 ## Targets esperados (mobile)

@@ -20,16 +20,16 @@ Tamaño: **1200×630** (estándar OG).
 
 En `index.html`:
 ```html
-<meta property="og:image" content="https://futbolbase.vercel.app/api/og?type=team&name=FutbolBase&wins=0&draws=0&losses=0" />
+<meta property="og:image" content="https://grada.vercel.app/api/og?type=team&name=GRADA&wins=0&draws=0&losses=0" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:image" content="https://futbolbase.vercel.app/api/og?..." />
+<meta name="twitter:image" content="https://grada.vercel.app/api/og?..." />
 ```
 
 ## Compartir dinámicamente desde la app
 ```ts
-const url = `https://futbolbase.vercel.app/api/og?type=player&name=${encodeURIComponent(name)}&rating=${rating}&team=${encodeURIComponent(team)}`
+const url = `https://grada.vercel.app/api/og?type=player&name=${encodeURIComponent(name)}&rating=${rating}&team=${encodeURIComponent(team)}`
 navigator.share({ url, title: `${name} · ${rating} OVR` })
 ```
 

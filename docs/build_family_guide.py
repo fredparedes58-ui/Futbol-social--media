@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Genera el dossier orientado a FAMILIAS, TUTORES y JUGADORES.
-Salida: futbolbase-guia-familias.pdf
+Salida: grada-guia-familias.pdf
 """
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
@@ -33,7 +33,7 @@ GREY_LT   = HexColor("#F1F5F9")
 LINE      = HexColor("#CBD5E1")
 RED       = HexColor("#C0392B")
 
-OUT = "futbolbase-guia-familias.pdf"
+OUT = "grada-guia-familias.pdf"
 
 ss = getSampleStyleSheet()
 H1 = ParagraphStyle("H1", parent=ss["Heading1"],
@@ -121,7 +121,7 @@ def draw_cover(c):
     # Título
     c.setFillColor(colors.white)
     c.setFont("Helvetica-Bold", 50)
-    c.drawCentredString(w/2, h-6*cm, "FutbolBase")
+    c.drawCentredString(w/2, h-6*cm, "GRADA")
     c.setFont("Helvetica", 18)
     c.setFillColor(HexColor("#CBD5E1"))
     c.drawCentredString(w/2, h-7*cm, "La app del club de tu hijo o hija")
@@ -170,7 +170,7 @@ def draw_cover(c):
     c.setFillColor(HexColor("#94A3B8"))
     c.setFont("Helvetica", 8.5)
     c.drawCentredString(w/2, 2.0*cm,
-        "futbolbase.app  -  hola@futbolbase.app  -  +34 600 000 000")
+        "grada.app  -  hola@grada.app  -  +34 600 000 000")
     c.drawCentredString(w/2, 1.5*cm, "Guia para familias  -  Edicion 2026")
     c.drawCentredString(w/2, 1.0*cm, "Documento gratuito  -  Compartelo con quien quieras")
 
@@ -186,7 +186,7 @@ def on_page(canv, doc):
     canv.rect(0, h-1.15*cm, w, 0.05*cm, fill=1, stroke=0)
     canv.setFillColor(colors.white)
     canv.setFont("Helvetica-Bold", 9)
-    canv.drawString(1.5*cm, h-0.75*cm, "FutbolBase  -  Guia para familias 2026")
+    canv.drawString(1.5*cm, h-0.75*cm, "GRADA  -  Guia para familias 2026")
     canv.setFillColor(HexColor("#94A3B8"))
     canv.setFont("Helvetica", 8)
     canv.drawRightString(w-1.5*cm, h-0.75*cm, "Una solucion Krujens")
@@ -194,7 +194,7 @@ def on_page(canv, doc):
     canv.setStrokeColor(LINE); canv.setLineWidth(0.4)
     canv.line(1.5*cm, 1.2*cm, w-1.5*cm, 1.2*cm)
     canv.setFillColor(GREY); canv.setFont("Helvetica", 7.8)
-    canv.drawString(1.5*cm, 0.7*cm, "futbolbase.app  -  hola@futbolbase.app")
+    canv.drawString(1.5*cm, 0.7*cm, "grada.app  -  hola@grada.app")
     canv.drawCentredString(w/2, 0.7*cm, "Guia gratuita  -  Compartela libremente")
     canv.drawRightString(w-1.5*cm, 0.7*cm, f"Pagina {doc.page}")
     canv.restoreState()
@@ -208,7 +208,7 @@ story.append(PageBreak())
 story += section_header("00", "Lo que vas a encontrar en esta guía", GREEN)
 toc = [
     ["1.",  "Carta abierta a las familias",                          "3"],
-    ["2.",  "Qué es FutbolBase en 90 segundos",                      "4"],
+    ["2.",  "Qué es GRADA en 90 segundos",                      "4"],
     ["3.",  "Cómo cambia tu día a día (antes / después)",            "5"],
     ["4.",  "Para PADRES y MADRES — tu vista en la app",             "6"],
     ["5.",  "Para TUTORES LEGALES y representantes",                 "8"],
@@ -219,7 +219,7 @@ toc = [
     ["10.", "Cuotas, recibos y pagos — sin sorpresas",               "14"],
     ["11.", "Fotos y vídeos — privacidad ante todo",                 "15"],
     ["12.", "Tus datos y los del menor — explicado claro",           "16"],
-    ["13.", "Lo que FutbolBase NO hace (y por qué)",                 "17"],
+    ["13.", "Lo que GRADA NO hace (y por qué)",                 "17"],
     ["14.", "Preguntas frecuentes de las familias",                  "18"],
     ["15.", "Cómo empezar paso a paso",                              "20"],
     ["16.", "Soporte, contacto y ayuda",                             "21"],
@@ -244,7 +244,7 @@ story += section_header("01", "Carta abierta a las familias", GREEN)
 story.append(Paragraph("Hola,", BODY))
 story.append(Paragraph(
     "Si estás leyendo esta guía es porque el club o academia de tu hijo o hija "
-    "está usando — o va a empezar a usar — <b>FutbolBase</b>. No te vamos a vender "
+    "está usando — o va a empezar a usar — <b>GRADA</b>. No te vamos a vender "
     "nada: la cuota la paga el club, no tú. Para ti, esta app es completamente "
     "gratuita.",
     BODY))
@@ -256,7 +256,7 @@ story.append(Paragraph(
     "fotos del partido no acaben en un sitio que no toca.",
     BODY))
 story.append(Paragraph(
-    "<b>FutbolBase está pensada para que ese caos desaparezca.</b> Una sola app, "
+    "<b>GRADA está pensada para que ese caos desaparezca.</b> Una sola app, "
     "una sola pantalla. El calendario filtrado solo a lo de tu hijo. Los recibos "
     "siempre disponibles. Las fotos del partido con consentimiento que tú "
     "controlas. Y, si tu hijo es ya un poco mayor, una tarjeta tipo videojuego "
@@ -271,14 +271,14 @@ story.append(Paragraph(
     "Bienvenida, bienvenido. Gracias por confiar tu tiempo en leernos.",
     BODY))
 story.append(Spacer(1, 14))
-story.append(Paragraph("<b>El equipo de FutbolBase</b>", BODY))
+story.append(Paragraph("<b>El equipo de GRADA</b>", BODY))
 story.append(Paragraph("Una solución Krujens · Hecha en España", SMALL))
 story.append(PageBreak())
 
 # 2. QUÉ ES EN 90 SEGUNDOS
-story += section_header("02", "Qué es FutbolBase en 90 segundos", CYAN)
+story += section_header("02", "Qué es GRADA en 90 segundos", CYAN)
 story.append(info_box("La idea, en una frase",
-    "FutbolBase es <b>una sola app</b> que reúne todo lo que afecta a tu hijo o "
+    "GRADA es <b>una sola app</b> que reúne todo lo que afecta a tu hijo o "
     "hija en su club de fútbol: calendario, mensajes, recibos, fotos del "
     "partido, evolución como jugador y comunicación con el entrenador.",
     GREEN, GREEN_LT))
@@ -316,7 +316,7 @@ story.append(Spacer(1, 8))
 
 story.append(Paragraph("Cómo se instala (spoiler: no se instala)", H3))
 story.append(Paragraph(
-    "FutbolBase es una <b>aplicación web instalable</b>. Eso significa que "
+    "GRADA es una <b>aplicación web instalable</b>. Eso significa que "
     "<b>no tienes que entrar a la App Store ni a Google Play</b>. Cuando "
     "el club te dé acceso, recibirás un enlace por email o SMS. Lo abres, "
     "le das a ‘Añadir a la pantalla de inicio’ y ya tienes el icono en "
@@ -324,7 +324,7 @@ story.append(Paragraph(
     "Android (desde Android 8).",
     BODY))
 story.append(Paragraph(
-    "Si prefieres no instalar nada, puedes usar FutbolBase desde el "
+    "Si prefieres no instalar nada, puedes usar GRADA desde el "
     "navegador del ordenador. Funciona igual. Tus datos están en la nube "
     "y los ves desde cualquier dispositivo.",
     BODY))
@@ -334,13 +334,13 @@ story.append(PageBreak())
 story += section_header("03", "Cómo cambia tu día a día", ORANGE)
 story.append(Paragraph(
     "Comparativa honesta de cómo es la vida de una familia <b>antes</b> de "
-    "FutbolBase y <b>después</b>. No exageramos: es lo que nos cuentan las "
+    "GRADA y <b>después</b>. No exageramos: es lo que nos cuentan las "
     "familias que ya lo usan en clubes piloto.",
     BODY))
 story.append(Spacer(1, 6))
 
 ad = [
-    ["Situación", "ANTES (lo que conoces)", "DESPUÉS (con FutbolBase)"],
+    ["Situación", "ANTES (lo que conoces)", "DESPUÉS (con GRADA)"],
     ["Hora del partido del sábado",
      "Pregunto a 3 padres distintos en el WhatsApp del equipo. Alguien dice las 10, otro las 10:15. Llego sin saber.",
      "Notificación 24 h y 1 h antes con hora, dirección y mapa. Cero dudas."],
@@ -386,7 +386,7 @@ story.append(PageBreak())
 # 4. PADRES Y MADRES (2 páginas)
 story += section_header("04", "Para PADRES y MADRES", PURPLE)
 story.append(Paragraph(
-    "Aquí está, pantalla por pantalla, lo que vas a ver al entrar en FutbolBase "
+    "Aquí está, pantalla por pantalla, lo que vas a ver al entrar en GRADA "
     "siendo padre o madre de un jugador del club.",
     BODY))
 
@@ -469,7 +469,7 @@ story.append(PageBreak())
 story += section_header("05", "Para TUTORES LEGALES y representantes", CYAN)
 story.append(Paragraph(
     "Si eres el tutor o tutora legal de un menor, o un representante autorizado "
-    "(abuelo, tío, custodio compartido), FutbolBase reconoce tu rol con "
+    "(abuelo, tío, custodio compartido), GRADA reconoce tu rol con "
     "permisos específicos. Esta página explica cómo funciona en los casos "
     "menos típicos.",
     BODY))
@@ -512,7 +512,7 @@ story.append(PageBreak())
 # 6. JUGADOR (2 páginas)
 story += section_header("06", "Para tu HIJO o HIJA — su mundo dentro", GOLD)
 story.append(Paragraph(
-    "Esta es la parte que más le va a gustar. FutbolBase tiene una experiencia "
+    "Esta es la parte que más le va a gustar. GRADA tiene una experiencia "
     "pensada como un videojuego ligero: el chaval entra a verse a sí mismo "
     "como protagonista, no a hacer trámites.",
     BODY))
@@ -590,7 +590,7 @@ story.append(t)
 story.append(Spacer(1, 8))
 
 story.append(info_box("Diseñada para no ser adictiva",
-    "A diferencia de las redes sociales, FutbolBase <b>no tiene scroll "
+    "A diferencia de las redes sociales, GRADA <b>no tiene scroll "
     "infinito, no tiene likes públicos, no tiene comentarios libres entre "
     "menores</b>. Los badges son finitos, el ranking está anonimizado y "
     "solo se chatea con personas autorizadas del club. Queremos engancharle "
@@ -671,7 +671,7 @@ story.append(PageBreak())
 story += section_header("08", "Calendario, avisos y notificaciones", GREEN)
 story.append(Paragraph(
     "Es la sección más usada con diferencia. Aquí explicamos qué te avisa "
-    "FutbolBase, cuándo y cómo puedes silenciarlo si necesitas un respiro.",
+    "GRADA, cuándo y cómo puedes silenciarlo si necesitas un respiro.",
     BODY))
 
 story.append(Paragraph("Tipos de eventos que verás", H3))
@@ -715,7 +715,7 @@ for f in notif:
 
 story.append(Spacer(1, 6))
 story.append(info_box("Sincronización con tu calendario personal",
-    "Puedes suscribir el calendario de FutbolBase a Google Calendar, Apple "
+    "Puedes suscribir el calendario de GRADA a Google Calendar, Apple "
     "Calendar u Outlook con un solo enlace. Los eventos del club aparecen "
     "junto a tu agenda personal, con el color que tú elijas. Si el club "
     "cambia algo, se actualiza automáticamente.",
@@ -732,7 +732,7 @@ story.append(Paragraph(
     "y los grupos crecen hasta volverse inhabitables.",
     BODY))
 
-story.append(Paragraph("Qué hace FutbolBase distinto", H3))
+story.append(Paragraph("Qué hace GRADA distinto", H3))
 diff = [
     ("Anuncios oficiales separados",
      "Lo que dice la junta o el coordinador va en una pestaña diferente. "
@@ -750,7 +750,7 @@ diff = [
      "abusar (spam, contenido inapropiado), la moderación lo bloquea."),
     ("Búsqueda real",
      "Buscas ‘equipación’ y aparecen los 3 mensajes que mencionan el "
-     "tema. En WhatsApp, suerte. En FutbolBase, búsqueda completa."),
+     "tema. En WhatsApp, suerte. En GRADA, búsqueda completa."),
 ]
 for ti, body in diff:
     story.append(info_box(ti, body, CYAN, CYAN_LT))
@@ -758,7 +758,7 @@ for ti, body in diff:
 
 story.append(Spacer(1, 6))
 story.append(info_box("¿Y si quiero seguir usando WhatsApp para hablar con otros padres?",
-    "Sigue usándolo, sin problema. Lo personal es personal. FutbolBase no "
+    "Sigue usándolo, sin problema. Lo personal es personal. GRADA no "
     "intenta sustituir tu vida social con los padres del equipo. Solo "
     "sustituye el caos institucional del club.",
     GREEN, GREEN_LT))
@@ -798,7 +798,7 @@ for d in clb:
 story.append(Spacer(1, 6))
 story.append(info_box("Si tienes un problema económico puntual",
     "Esto es importante. Si una temporada se te complica y no puedes pagar la "
-    "cuota a tiempo, FutbolBase incluye una opción <b>‘Hablar con el club’</b> "
+    "cuota a tiempo, GRADA incluye una opción <b>‘Hablar con el club’</b> "
     "discreta y privada. El tesorero o presidente recibe el mensaje sin que "
     "el resto del club lo sepa, y puede ofrecerte un plan personalizado, una "
     "beca social o un fraccionamiento. Cero estigma, cero papeleos delante de "
@@ -809,7 +809,7 @@ story.append(Spacer(1, 6))
 story.append(info_box("Lo que NUNCA verás",
     "Cobros sorpresa sin aviso previo. Comisiones ocultas. Recibos sin "
     "concepto claro. Si ves algo que no encaja, escríbenos a "
-    "<b>familias@futbolbase.app</b> y lo resolvemos en menos de 24 h.",
+    "<b>familias@grada.app</b> y lo resolvemos en menos de 24 h.",
     RED, HexColor("#FAEEEE")))
 
 story.append(PageBreak())
@@ -817,7 +817,7 @@ story.append(PageBreak())
 # 11. FOTOS Y VIDEOS
 story += section_header("11", "Fotos y vídeos — privacidad ante todo", PURPLE)
 story.append(Paragraph(
-    "Las fotos de tu hijo o hija son <b>tuyas y suyas</b>. FutbolBase está "
+    "Las fotos de tu hijo o hija son <b>tuyas y suyas</b>. GRADA está "
     "diseñada con esa premisa. Aquí te explicamos exactamente cómo funciona "
     "el consentimiento de imagen y qué decides tú en cada momento.",
     BODY))
@@ -885,7 +885,7 @@ story.append(Paragraph(
 
 rgpd = [
     ("¿Quién es dueño de los datos?",
-     "Tú y el club. <b>FutbolBase no es dueño de nada</b>. Somos solo el "
+     "Tú y el club. <b>GRADA no es dueño de nada</b>. Somos solo el "
      "‘encargado del tratamiento’: cuidamos los datos, pero el club los "
      "controla y tú tienes derechos sobre los del menor."),
     ("¿Dónde están guardados?",
@@ -913,7 +913,7 @@ rgpd = [
     ("¿Cómo ejerzo mis derechos?",
      "Acceso, rectificación, borrado, portabilidad, oposición. Todo "
      "desde ‘Mi cuenta · Privacidad’ con un botón por cada derecho. O "
-     "escribiendo a <b>dpo@futbolbase.app</b>. Respuesta en menos de "
+     "escribiendo a <b>dpo@grada.app</b>. Respuesta en menos de "
      "30 días, normalmente en 2-3."),
 ]
 for ti, body in rgpd:
@@ -923,7 +923,7 @@ for ti, body in rgpd:
 story.append(PageBreak())
 
 # 13. LO QUE NO HACE
-story += section_header("13", "Lo que FutbolBase NO hace (y por qué)", ORANGE)
+story += section_header("13", "Lo que GRADA NO hace (y por qué)", ORANGE)
 story.append(Paragraph(
     "Honestidad ante todo. Hay cosas que <b>deliberadamente</b> no hacemos. "
     "No es que se nos olviden — es que pensamos que no deberían hacerse.",
@@ -951,7 +951,7 @@ nono = [
      "sean estrictamente necesarios. Las fotos las suben los adultos del "
      "club desde sus dispositivos, no la app desde el tuyo."),
     ("No reemplazamos a los profesionales",
-     "Si tu hijo está triste, ansioso o tiene problemas, FutbolBase "
+     "Si tu hijo está triste, ansioso o tiene problemas, GRADA "
      "puede ayudar a detectarlo, pero <b>no es psicólogo, ni médico, ni "
      "trabajador social</b>. Damos señales; los humanos toman decisiones."),
 ]
@@ -964,10 +964,10 @@ story.append(PageBreak())
 # 14. FAQ - 2 páginas
 story += section_header("14", "Preguntas frecuentes de las familias", CYAN)
 faqs = [
-    ("¿Tengo que pagar yo algo por usar FutbolBase?",
+    ("¿Tengo que pagar yo algo por usar GRADA?",
      "No. La app es gratuita para las familias y los jugadores. La cuota mensual la paga el club al fabricante. Tú no pagas un céntimo extra."),
     ("¿Puedo seguir hablando por WhatsApp con otros padres?",
-     "Por supuesto. FutbolBase no quita tu vida social. Solo sustituye los grupos institucionales del club. Lo personal sigue donde tú quieras."),
+     "Por supuesto. GRADA no quita tu vida social. Solo sustituye los grupos institucionales del club. Lo personal sigue donde tú quieras."),
     ("¿Qué pasa si no quiero usar la app?",
      "Habla con el club. La mayoría puede ofrecerte una vía alternativa (email, papel) para lo esencial. No deberías ser obligado a usar tecnología que no te gusta. Eso sí, perderás funcionalidades como el calendario filtrado, las fotos y la tarjeta del jugador."),
     ("¿Funciona en móviles antiguos?",
@@ -981,13 +981,13 @@ faqs = [
     ("¿Puedo dar acceso a la abuela?",
      "Sí. ‘Mi cuenta · Familiares’ → añadir email o teléfono → eliges ‘modo abuelo’ (vista simplificada). La abuela recibe un enlace, lo instala y ya está."),
     ("¿La app me espía? ¿Lee mis mensajes de WhatsApp?",
-     "No. FutbolBase solo ve lo que pasa <b>dentro de FutbolBase</b>. No tiene acceso a tus contactos, mensajes, fotos personales, ubicación, micrófono ni cámara. Cuando la instalas, no te pedimos esos permisos."),
+     "No. GRADA solo ve lo que pasa <b>dentro de GRADA</b>. No tiene acceso a tus contactos, mensajes, fotos personales, ubicación, micrófono ni cámara. Cuando la instalas, no te pedimos esos permisos."),
     ("¿Puedo borrar todos los datos de mi hijo si me voy del club?",
      "Sí. ‘Mi cuenta · Privacidad · Borrado de datos’. Te avisamos de qué se conserva por ley (facturas: 6 años) y qué se borra inmediatamente. Te enviamos un certificado de borrado por email."),
     ("¿Y si la empresa cierra? ¿Mis datos desaparecen?",
-     "Tenemos un acuerdo legal de continuidad: si FutbolBase deja de operar, el club recibe todos los datos en CSV abierto y dispone de 3 meses para migrar a otra plataforma con tus datos intactos."),
+     "Tenemos un acuerdo legal de continuidad: si GRADA deja de operar, el club recibe todos los datos en CSV abierto y dispone de 3 meses para migrar a otra plataforma con tus datos intactos."),
     ("Mi hijo está en una academia privada, no en un club federado. ¿Funciona igual?",
-     "Sí, exactamente igual. FutbolBase está pensada tanto para clubes federados como para academias privadas, escuelas municipales y campus de verano."),
+     "Sí, exactamente igual. GRADA está pensada tanto para clubes federados como para academias privadas, escuelas municipales y campus de verano."),
 ]
 for q, a in faqs:
     story.append(Paragraph(f"<b>· {q}</b>",
@@ -998,7 +998,7 @@ story.append(PageBreak())
 # 15. CÓMO EMPEZAR
 story += section_header("15", "Cómo empezar — paso a paso", GREEN)
 story.append(Paragraph(
-    "Si tu club ya está usando FutbolBase, sigue estos pasos. Tardarás unos "
+    "Si tu club ya está usando GRADA, sigue estos pasos. Tardarás unos "
     "10 minutos. Si tu club no la usa todavía, al final de esta sección tienes "
     "qué hacer.",
     BODY))
@@ -1006,7 +1006,7 @@ story.append(Paragraph(
 steps = [
     ("Paso 1 — Recibe el enlace de tu club",
      "El club te envía un email o SMS con un enlace personalizado. Asunto "
-     "tipo: ‘Bienvenida a FutbolBase, [nombre del club]’. Si no lo encuentras, "
+     "tipo: ‘Bienvenida a GRADA, [nombre del club]’. Si no lo encuentras, "
      "revisa la carpeta de Spam o Promociones.", GREEN),
     ("Paso 2 — Abre el enlace en tu móvil",
      "Le das al enlace. Se abre en el navegador. NO descargas nada. Lo que "
@@ -1016,7 +1016,7 @@ steps = [
      "ya están precargados por el club (no tienes que volver a teclearlos).", ORANGE),
     ("Paso 4 — Instala el icono en tu móvil",
      "El navegador te pregunta si quieres ‘Añadir a la pantalla de inicio’. "
-     "Le dices que sí. Aparece el icono verde de FutbolBase en tu móvil "
+     "Le dices que sí. Aparece el icono verde de GRADA en tu móvil "
      "como una app más.", PURPLE),
     ("Paso 5 — Configura tus consentimientos",
      "La primera vez te pregunta qué consientes (uso de imagen del menor, "
@@ -1050,13 +1050,13 @@ for ti, body, c in steps:
     story.append(Spacer(1, 4))
 
 story.append(Spacer(1, 8))
-story.append(info_box("Si tu club no usa FutbolBase todavía",
+story.append(info_box("Si tu club no usa GRADA todavía",
     "Habla con el coordinador o con la junta y proponles que lo prueben. "
     "Tienen 30 días gratis para evaluarla, sin compromiso, y se les "
     "devuelven los datos en CSV abierto si no quieren continuar. Si te "
     "preguntan por dónde empezar, diles que escriban a "
-    "<b>clubes@futbolbase.app</b> o que reserven una demo en "
-    "<b>futbolbase.app/demo</b>.",
+    "<b>clubes@grada.app</b> o que reserven una demo en "
+    "<b>grada.app/demo</b>.",
     GOLD, GOLD_LT))
 
 story.append(PageBreak())
@@ -1070,7 +1070,7 @@ story.append(Paragraph(
 
 cont = [
     ("📧", "Email general",
-     "<b>familias@futbolbase.app</b><br/>Respuesta en menos de 24 h "
+     "<b>familias@grada.app</b><br/>Respuesta en menos de 24 h "
      "(habitualmente en 2-3 horas durante días hábiles).", GREEN, GREEN_LT),
     ("📱", "WhatsApp soporte",
      "<b>+34 600 000 000</b><br/>Lunes a viernes 9-19h. Sábado 10-14h. "
@@ -1080,7 +1080,7 @@ cont = [
      "siempre es más rápido escribir directamente al tesorero o "
      "coordinador desde la app.", ORANGE, ORANGE_LT),
     ("🛡️", "Privacidad y datos",
-     "<b>dpo@futbolbase.app</b><br/>Para ejercer tus derechos RGPD, "
+     "<b>dpo@grada.app</b><br/>Para ejercer tus derechos RGPD, "
      "pedir borrado de datos, o cualquier duda sobre privacidad. "
      "Respuesta en menos de 30 días por ley, normalmente en 2-3.", PURPLE, PURPLE_LT),
 ]
@@ -1093,7 +1093,7 @@ story.append(Spacer(1, 8))
 story.append(Paragraph("Centro de ayuda online", H3))
 story.append(Paragraph(
     "Si prefieres buscar tú la respuesta, tenemos guías en vídeo y artículos "
-    "explicativos en <b>ayuda.futbolbase.app</b>. Búsqueda completa y temas "
+    "explicativos en <b>ayuda.grada.app</b>. Búsqueda completa y temas "
     "ordenados por situación: primer acceso, cambiar contraseña, gestionar "
     "consentimientos, descargar recibos, etc.",
     BODY))
@@ -1101,7 +1101,7 @@ story.append(Paragraph(
 story.append(Spacer(1, 8))
 story.append(Paragraph("Sugerencias y mejoras", H3))
 story.append(Paragraph(
-    "FutbolBase mejora porque las familias nos cuentan qué les falta. Si "
+    "GRADA mejora porque las familias nos cuentan qué les falta. Si "
     "echas algo en falta, escríbenos. Tres veces al año publicamos las "
     "mejoras del trimestre con un ‘gracias a [tu nombre o tu club]’ cuando "
     "la idea ha sido tuya.",
@@ -1119,17 +1119,17 @@ story.append(Paragraph(
                    fontName="Helvetica-Bold", textColor=GREEN)))
 story.append(Spacer(1, 8))
 story.append(Paragraph(
-    "<b>El equipo de FutbolBase · Una solución Krujens</b>",
+    "<b>El equipo de GRADA · Una solución Krujens</b>",
     BODY_C))
 
 # BUILD
 doc = SimpleDocTemplate(OUT, pagesize=A4,
     leftMargin=1.5*cm, rightMargin=1.5*cm,
     topMargin=1.6*cm, bottomMargin=1.6*cm,
-    title="FutbolBase · Guia para familias y jugadores",
+    title="GRADA · Guia para familias y jugadores",
     author="Krujens Holding",
     subject="Guia de uso para familias, tutores y jugadores",
-    keywords="futbolbase, familia, jugador, padres, tutor, app club futbol")
+    keywords="grada, familia, jugador, padres, tutor, app club futbol")
 
 doc.build(story, onFirstPage=on_cover, onLaterPages=on_page)
 print(f"OK · generado {OUT}")

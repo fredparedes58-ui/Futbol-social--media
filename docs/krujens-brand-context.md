@@ -32,7 +32,7 @@
                              │
    ┌─────────────┬───────────┼───────────┬──────────────┐
    ▼             ▼           ▼           ▼              ▼
-FutbolBase    VITAS      Elite 380   Essence Bloom   [futuro]
+GRADA    VITAS      Elite 380   Essence Bloom   [futuro]
 (fútbol      (análisis   (academia   (bienestar /    (próximo
  base)       deportivo)   fútbol)     rituales)       vertical)
 ```
@@ -43,7 +43,7 @@ Cada solución es una **marca hija** (sub-brand) con su propia identidad visual,
 - Compromiso RGPD / accesibilidad
 - Filosofía de producto (mobile-first, IA útil, pricing accesible)
 
-**Producto insignia 2026:** **FutbolBase** — PWA para el ecosistema del fútbol base español (jugadores federados, clubes, familias, federaciones autonómicas). Primera vertical en ir a mercado con go-to-market, ronda seed y modelo SaaS recurrente.
+**Producto insignia 2026:** **GRADA** — PWA para el ecosistema del fútbol base español (jugadores federados, clubes, familias, federaciones autonómicas). Primera vertical en ir a mercado con go-to-market, ronda seed y modelo SaaS recurrente.
 
 ---
 
@@ -87,7 +87,7 @@ Pure White      #FFFFFF   (espacio, legibilidad)
 Secundarios (se mezclan según vertical)
 ─────────────────────────────────
 Electric Cyan   #00D4FF   (tech, confianza — usado en VITAS)
-Neon Orange     #FF6B00   (acción, deporte — usado en FutbolBase y Elite 380)
+Neon Orange     #FF6B00   (acción, deporte — usado en GRADA y Elite 380)
 Deep Purple     #B347FF   (bienestar, premium — usado en Essence Bloom)
 Sunrise Gold    #FFB800   (premios, conversión)
 
@@ -123,12 +123,12 @@ Cada vertical tiene su marca propia, pero siempre aparece firmada por Krujens ("
 
 Ejemplo de firma en footer:
 ```
-FutbolBase es una solución de Krujens · © 2026 Krujens Tech SL
+GRADA es una solución de Krujens · © 2026 Krujens Tech SL
 ```
 
 ### Relación visual entre marca matriz y verticales
 
-| Elemento | Krujens (matriz) | Vertical (ej. FutbolBase) |
+| Elemento | Krujens (matriz) | Vertical (ej. GRADA) |
 |---|---|---|
 | Logo | Wordmark "Krujens" + iso K | Logo propio independiente |
 | Color primario | Obsidian Navy + Krujens Green | Libre (mantiene Navy como base) |
@@ -209,9 +209,9 @@ Krujens nace de una frustración concreta: Pedro Paredes (fundador) observa cóm
 ### Hitos a comunicar
 - **2025 Q4**: Primer MVP (Elite 380) en producción.
 - **2026 Q1**: Krujens se registra legalmente como entidad matriz.
-- **2026 Q2**: Lanzamiento **FutbolBase** + ronda seed 250k€.
+- **2026 Q2**: Lanzamiento **GRADA** + ronda seed 250k€.
 - **2026 Q3**: Acuerdo piloto con FFCV (Federación Fútbol Com. Valenciana).
-- **2027**: Expansión FutbolBase a 3 CCAA. Lanzamiento 2º vertical.
+- **2027**: Expansión GRADA a 3 CCAA. Lanzamiento 2º vertical.
 - **2030**: 3-5 verticales activas, 150k usuarios, ARR 1,5M€+.
 
 ---
@@ -247,24 +247,24 @@ Krujens nace de una frustración concreta: Pedro Paredes (fundador) observa cóm
 ## 10. Prompt cards — assets listos para copiar
 
 ### Elevator pitch 30s (inversor)
-> *"Krujens es un holding de SaaS verticales mobile-first. Construimos productos donde hoy solo hay hojas de Excel y WhatsApp — empezando por FutbolBase, la app del ecosistema del fútbol base español: 1,1M jugadores federados, 23k clubes, cero competencia real. Modelo SaaS freemium, Pro 4,99€/mes. Buscamos 250k€ seed para escalar a 3 CCAA en 18 meses. MoIC esperado 12× en 5 años."*
+> *"Krujens es un holding de SaaS verticales mobile-first. Construimos productos donde hoy solo hay hojas de Excel y WhatsApp — empezando por GRADA, la app del ecosistema del fútbol base español: 1,1M jugadores federados, 23k clubes, cero competencia real. Modelo SaaS freemium, Pro 4,99€/mes. Buscamos 250k€ seed para escalar a 3 CCAA en 18 meses. MoIC esperado 12× en 5 años."*
 
 ### Pitch B2B 60s (club deportivo)
-> *"Vuestro club gestiona 80 jugadores con WhatsApp y Excel. FutbolBase — de Krujens — os da una PWA que vuestras familias ya instalan en su móvil, con pagos automáticos, control de asistencia, y scouting. 0€ el plan básico, 9€/mes el Pro. 10 primeros clubes entran con 6 meses gratis y precio bloqueado de por vida. ¿Hacemos una demo de 15 min la semana que viene?"*
+> *"Vuestro club gestiona 80 jugadores con WhatsApp y Excel. GRADA — de Krujens — os da una PWA que vuestras familias ya instalan en su móvil, con pagos automáticos, control de asistencia, y scouting. 0€ el plan básico, 9€/mes el Pro. 10 primeros clubes entran con 6 meses gratis y precio bloqueado de por vida. ¿Hacemos una demo de 15 min la semana que viene?"*
 
 ### One-liner para web / LinkedIn
 > **Krujens · Tecnología que entiende tu mundo.**
 > *Construimos apps verticales mobile-first donde hoy sólo hay Excel.*
 
 ### Bio corporativa corta (press kit)
-> Krujens es una empresa española que desarrolla soluciones digitales verticales para sectores sub-digitalizados. Fundada en 2026 por Pedro Paredes, su producto insignia es FutbolBase, la primera PWA integral para el ecosistema del fútbol base español. Krujens combina stack moderno (React, PWA, IA aplicada) con precios accesibles al usuario final, con una filosofía clara: la tecnología que tienen las grandes empresas debe llegar también al club de barrio, a la familia, al autónomo.
+> Krujens es una empresa española que desarrolla soluciones digitales verticales para sectores sub-digitalizados. Fundada en 2026 por Pedro Paredes, su producto insignia es GRADA, la primera PWA integral para el ecosistema del fútbol base español. Krujens combina stack moderno (React, PWA, IA aplicada) con precios accesibles al usuario final, con una filosofía clara: la tecnología que tienen las grandes empresas debe llegar también al club de barrio, a la familia, al autónomo.
 
 ### Bio corporativa larga (investor deck / web "Quiénes somos")
 > Krujens nace en 2026 en Valencia (España) con una misión concreta: democratizar el acceso a tecnología de nivel enterprise en sectores que llevan décadas olvidados por el software moderno — deporte base, salud familiar, educación extraescolar, comunidad local.
 >
 > Su fundador, Pedro Paredes, detectó durante años cómo estos ecosistemas — enormes en volumen pero fragmentados — seguían operando con hojas de cálculo, grupos de WhatsApp y software de escritorio de los años 2000. Mientras empresas Fortune 500 invierten millones en infraestructura digital, el club de fútbol de barrio, la clínica familiar o la academia extraescolar siguen perdiendo horas cada semana en tareas que la tecnología podría resolver en segundos.
 >
-> El playbook de Krujens es claro: elegir un vertical con dolor real, construir un MVP PWA en 8-12 semanas, validarlo con 100 usuarios reales, monetizarlo a precio accesible (5-15€/mes), escalar por comunidad y reinvertir el cash en la siguiente vertical. Producto insignia en 2026: **FutbolBase**, la primera PWA integral para los 1,1M jugadores federados y 23k clubes del fútbol base español.
+> El playbook de Krujens es claro: elegir un vertical con dolor real, construir un MVP PWA en 8-12 semanas, validarlo con 100 usuarios reales, monetizarlo a precio accesible (5-15€/mes), escalar por comunidad y reinvertir el cash en la siguiente vertical. Producto insignia en 2026: **GRADA**, la primera PWA integral para los 1,1M jugadores federados y 23k clubes del fútbol base español.
 >
 > Objetivo 2030: 3-5 verticales activas, 150.000 usuarios y ARR > 1,5M€, manteniendo los valores fundacionales — mobile-first real, IA útil, precios justos, datos del usuario protegidos.
 
@@ -289,7 +289,7 @@ Antes de publicar cualquier cosa (post, email, deck, landing, copy), pasar por e
 ## 12. Contactos internos y recursos
 
 - **Fundador / CEO**: Pedro Paredes · pedro.paredes@kenmei.ai
-- **Repositorio de producto**: `C:\Users\pparedes\Downloads\FutbolBase\` (FutbolBase)
+- **Repositorio de producto**: `C:\Users\pparedes\Downloads\GRADA\` (GRADA)
 - **Decks financieros**: `docs/projection-premium*.html`
 - **Dossiers comerciales**: `docs/proyecto-*.html` (FFCV, clubes, padres, jugadores)
 - **Dominio corporativo**: *(por registrar)* `krujens.com` / `krujens.es`

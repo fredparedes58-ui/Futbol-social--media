@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Genera el dossier comercial PDF de FutbolBase para enviar a clientes.
-Salida: futbolbase-dossier-comercial.pdf
+Genera el dossier comercial PDF de GRADA para enviar a clientes.
+Salida: grada-dossier-comercial.pdf
 """
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
@@ -33,7 +33,7 @@ GREY_LT   = HexColor("#F1F5F9")
 LINE      = HexColor("#CBD5E1")
 RED       = HexColor("#C0392B")
 
-OUT = "futbolbase-dossier-comercial.pdf"
+OUT = "grada-dossier-comercial.pdf"
 
 # ====================== ESTILOS ======================
 ss = getSampleStyleSheet()
@@ -126,7 +126,7 @@ def draw_cover(c):
     c.drawCentredString(w/2, h-3*cm, "DOSSIER COMERCIAL · 2026 · CONFIDENCIAL")
     c.setFillColor(colors.white)
     c.setFont("Helvetica-Bold", 44)
-    c.drawCentredString(w/2, h-6*cm, "FutbolBase")
+    c.drawCentredString(w/2, h-6*cm, "GRADA")
     c.setFont("Helvetica", 16)
     c.setFillColor(HexColor("#CBD5E1"))
     c.drawCentredString(w/2, h-7*cm, "El sistema operativo del futbol base espanol")
@@ -159,7 +159,7 @@ def draw_cover(c):
     c.setFillColor(HexColor("#94A3B8"))
     c.setFont("Helvetica", 8.5)
     c.drawCentredString(w/2, 2.0*cm,
-        "futbolbase.app  -  hola@futbolbase.app  -  +34 600 000 000")
+        "grada.app  -  hola@grada.app  -  +34 600 000 000")
     c.drawCentredString(w/2, 1.5*cm, "Pedro Paredes - Founder & CEO - Krujens Holding")
     c.drawCentredString(w/2, 1.0*cm, "Dossier v1.0 - Abril 2026")
 
@@ -174,7 +174,7 @@ def on_page(canv, doc):
     canv.rect(0, h-1.15*cm, w, 0.05*cm, fill=1, stroke=0)
     canv.setFillColor(colors.white)
     canv.setFont("Helvetica-Bold", 9)
-    canv.drawString(1.5*cm, h-0.75*cm, "FutbolBase · Dossier Comercial 2026")
+    canv.drawString(1.5*cm, h-0.75*cm, "GRADA · Dossier Comercial 2026")
     canv.setFillColor(HexColor("#94A3B8"))
     canv.setFont("Helvetica", 8)
     canv.drawRightString(w-1.5*cm, h-0.75*cm, "Una solución Krujens")
@@ -184,7 +184,7 @@ def on_page(canv, doc):
     canv.line(1.5*cm, 1.2*cm, w-1.5*cm, 1.2*cm)
     canv.setFillColor(GREY)
     canv.setFont("Helvetica", 7.8)
-    canv.drawString(1.5*cm, 0.7*cm, "futbolbase.app · hola@futbolbase.app · +34 600 000 000")
+    canv.drawString(1.5*cm, 0.7*cm, "grada.app · hola@grada.app · +34 600 000 000")
     canv.drawCentredString(w/2, 0.7*cm, "Confidencial · Uso exclusivo del destinatario")
     canv.drawRightString(w-1.5*cm, 0.7*cm, f"Página {doc.page}")
     canv.restoreState()
@@ -207,7 +207,7 @@ toc_data = [
     ["1.", "Carta del fundador",                                "3"],
     ["2.", "Resumen ejecutivo (1 página, lectura 90 seg)",      "4"],
     ["3.", "El problema real del fútbol base",                  "5"],
-    ["4.", "La solución FutbolBase",                            "6"],
+    ["4.", "La solución GRADA",                            "6"],
     ["5.", "Módulos y funcionalidades en detalle",              "7"],
     ["6.", "Casos de uso por persona del club",                 "10"],
     ["7.", "ROI y caso económico (con números)",                "12"],
@@ -216,7 +216,7 @@ toc_data = [
     ["10.", "Seguridad, RGPD y cumplimiento",                   "15"],
     ["11.", "Análisis competitivo exhaustivo (8 sub-secciones)","16"],
     ["12.", "Roadmap de producto 2026-2027",                    "22"],
-    ["13.", "Sobre Krujens y FutbolBase",                       "23"],
+    ["13.", "Sobre Krujens y GRADA",                       "23"],
     ["14.", "Preguntas frecuentes",                             "24"],
     ["15.", "Próximos pasos y contacto",                        "25"],
 ]
@@ -247,7 +247,7 @@ story.append(Paragraph(
     "que no son comparables.",
     BODY))
 story.append(Paragraph(
-    "<b>FutbolBase</b> nace para nivelar esa cancha. Hemos construido una plataforma "
+    "<b>GRADA</b> nace para nivelar esa cancha. Hemos construido una plataforma "
     "diseñada en España, para la realidad española del fútbol base: misma terminología "
     "(fichas, mutualidad, categorías por edad real), mismas necesidades fiscales (IRPF, "
     "factura electrónica, modelos 130/303), y mismos circuitos federativos.",
@@ -269,13 +269,13 @@ story.append(Paragraph("Un saludo y gracias por su tiempo,", BODY))
 story.append(Spacer(1, 18))
 story.append(Paragraph("<b>Pedro Paredes</b>", BODY))
 story.append(Paragraph("Founder &amp; CEO · Krujens Holding", SMALL))
-story.append(Paragraph("pedro@futbolbase.app · LinkedIn /in/pedroparedes", SMALL))
+story.append(Paragraph("pedro@grada.app · LinkedIn /in/pedroparedes", SMALL))
 story.append(PageBreak())
 
 # ===================== 2. RESUMEN EJECUTIVO =====================
 story += section_header("02", "Resumen ejecutivo", CYAN)
 story.append(Paragraph(
-    "<b>Qué es FutbolBase.</b> Plataforma web + app (PWA instalable) que centraliza "
+    "<b>Qué es GRADA.</b> Plataforma web + app (PWA instalable) que centraliza "
     "la gestión deportiva, administrativa y de comunicación de un club o academia "
     "de fútbol base.",
     BODY))
@@ -398,7 +398,7 @@ story.append(t)
 story.append(PageBreak())
 
 # ===================== 4. LA SOLUCIÓN =====================
-story += section_header("04", "La solución FutbolBase", GREEN)
+story += section_header("04", "La solución GRADA", GREEN)
 story.append(Paragraph(
     "Una única plataforma con 6 módulos integrados. Todos los datos se cruzan "
     "automáticamente: cuando un coordinador ficha a un jugador, sus padres "
@@ -546,7 +546,7 @@ personas = [
     ("PRESIDENTE / DIRECTIVA", GREEN, GREEN_LT,
      "Su problema:", "No tiene en tiempo real cuántos socios pagan, qué equipos están "
      "rentables ni si la temporada llegará a equilibrio en abril.",
-     "Lo que ve en FutbolBase:", "Dashboard ejecutivo con MRR del club, tasa de morosidad, "
+     "Lo que ve en GRADA:", "Dashboard ejecutivo con MRR del club, tasa de morosidad, "
      "fichas en activo vs. previsto, comparativa con temporada anterior. Alertas si "
      "algún equipo está descuadrado (fichas pagadas vs. fichas activas).",
      "Cuánto tiempo le ahorra:", "2-3 horas semanales de cuadres con tesorería + decisiones "
@@ -554,7 +554,7 @@ personas = [
     ("COORDINADOR / DIR. DEPORTIVO", CYAN, CYAN_LT,
      "Su problema:", "Tiene que mantener la coherencia técnica entre 8 entrenadores, "
      "controlar minutos jugados, planificar tecnificación y reportar a la junta.",
-     "Lo que ve en FutbolBase:", "Mapa global de la cantera con métricas por categoría, "
+     "Lo que ve en GRADA:", "Mapa global de la cantera con métricas por categoría, "
      "informe semanal automático del estado de los equipos, ranking de progreso "
      "individual, planificador de pruebas físicas trimestrales.",
      "Cuánto tiempo le ahorra:", "5-6 horas semanales de coordinación + visibilidad "
@@ -562,7 +562,7 @@ personas = [
     ("ENTRENADOR / DELEGADO", ORANGE, ORANGE_LT,
      "Su problema:", "Pase de lista, convocatoria por WhatsApp, anotar goles en el bloc, "
      "subir fotos a 3 grupos distintos, contestar dudas de padres sobre horarios.",
-     "Lo que ve en FutbolBase:", "Una pantalla con su equipo: convocatoria 2-clicks, "
+     "Lo que ve en GRADA:", "Una pantalla con su equipo: convocatoria 2-clicks, "
      "asistencia 20 segundos, estadísticas del partido en directo, fotos al canal "
      "del equipo automáticamente.",
      "Cuánto tiempo le ahorra:", "1,5-2 horas a la semana + tranquilidad de haber "
@@ -582,7 +582,7 @@ story.append(Paragraph("6.A · Experiencia detallada para FAMILIAS",
     ParagraphStyle("h6a", parent=H1, textColor=PURPLE, fontSize=18)))
 story.append(HRFlowable(width="100%", thickness=2, color=PURPLE, spaceBefore=2, spaceAfter=10))
 story.append(Paragraph(
-    "FutbolBase no es solo una herramienta para el club. Es la app que <b>la familia</b> "
+    "GRADA no es solo una herramienta para el club. Es la app que <b>la familia</b> "
     "abre 4-5 veces a la semana para saber qué pasa con su hijo en el club. Esta "
     "página describe en detalle qué encuentran los padres y madres dentro.",
     BODY))
@@ -639,7 +639,7 @@ for title, body, c, bg in fam_concerns:
 
 story.append(Spacer(1, 4))
 story.append(Paragraph(
-    "<b>Resultado medible.</b> En pilotos comparados, el uso de FutbolBase reduce "
+    "<b>Resultado medible.</b> En pilotos comparados, el uso de GRADA reduce "
     "<b>-43 % los mensajes que las familias envían al entrenador</b> (porque la información "
     "ya está en la app), aumenta <b>+27 % la satisfacción NPS familia</b> y reduce "
     "<b>-18 % las bajas no anticipadas a final de temporada</b>.",
@@ -656,7 +656,7 @@ story.append(Paragraph(
     "ligero: el chaval entra a verse a sí mismo, no a hacer trámites.",
     BODY))
 
-story.append(Paragraph("Qué hace un jugador de 12 años con FutbolBase", H3))
+story.append(Paragraph("Qué hace un jugador de 12 años con GRADA", H3))
 player_features = [
     ["Funcionalidad", "Cómo lo experimenta el jugador"],
     ["Tarjeta tipo FIFA",
@@ -718,7 +718,7 @@ story.append(t)
 story.append(Spacer(1, 8))
 
 story.append(info_box("Diseñado para no ser adictivo",
-    "A diferencia de las redes sociales, FutbolBase <b>no tiene scroll infinito, "
+    "A diferencia de las redes sociales, GRADA <b>no tiene scroll infinito, "
     "no tiene likes públicos, no tiene comentarios libres entre jugadores</b>. "
     "Los badges son finitos, el ranking es anonimizado, el chat solo opera con "
     "personas autorizadas del club. Queremos engancharle al fútbol, no a la pantalla.",
@@ -742,7 +742,7 @@ story.append(Paragraph(
 roi_table = [
     ["Tamaño del club", "150 fichas", "400 fichas", "1.000 fichas"],
     ["Plan recomendado", "Starter 49 €/mes", "Pro 149 €/mes", "Elite 349 €/mes"],
-    ["Inversión anual FutbolBase", "588 €", "1.788 €", "4.188 €"],
+    ["Inversión anual GRADA", "588 €", "1.788 €", "4.188 €"],
     ["Horas ahorradas coord./año", "180 h", "320 h", "640 h"],
     ["Valor monetario ahorro tiempo (15 €/h)", "2.700 €", "4.800 €", "9.600 €"],
     ["Recuperación cuotas atrasadas (+12%)", "1.800 €", "5.200 €", "13.200 €"],
@@ -884,7 +884,7 @@ story.append(PageBreak())
 # ===================== 9. ONBOARDING =====================
 story += section_header("09", "Onboarding paso a paso (30 días)", PURPLE)
 story.append(Paragraph(
-    "Nuestra promesa: en 30 días el club opera 100 % en FutbolBase, sin volver al "
+    "Nuestra promesa: en 30 días el club opera 100 % en GRADA, sin volver al "
     "Excel. Le acompañamos día a día con un Customer Success Manager dedicado.",
     BODY))
 
@@ -892,7 +892,7 @@ steps = [
     ("Día 1 – Kick-off", GREEN,
      "Reunión 60 min con el coordinador: revisión del estado actual, decisión de "
      "alcance del piloto (¿toda la cantera o 1 categoría?), recogida de Excel/CSV "
-     "actuales, configuración del subdominio del club (clubX.futbolbase.app)."),
+     "actuales, configuración del subdominio del club (clubX.grada.app)."),
     ("Días 2-3 – Carga de datos", CYAN,
      "Migración asistida: importamos sus fichas, creamos los equipos por categoría, "
      "subimos el calendario federativo, configuramos los roles del personal. "
@@ -987,7 +987,7 @@ story += section_header("11", "Análisis competitivo exhaustivo", GREEN)
 story.append(Paragraph(
     "Comparativa honesta y detallada. En esta sección desmontamos a cada competidor "
     "con sus fortalezas, sus debilidades y los escenarios en los que ganan o pierden "
-    "frente a FutbolBase. No vendemos humo: si no encajamos, lo decimos.",
+    "frente a GRADA. No vendemos humo: si no encajamos, lo decimos.",
     BODY))
 
 # 11.1 Mapa del mercado
@@ -996,7 +996,7 @@ story.append(Paragraph("11.1 · Mapa del mercado del software para clubes de bas
 story.append(Paragraph(
     "Hemos identificado <b>4 categorías</b> de soluciones que hoy compiten por el "
     "mismo presupuesto del club. Cada una resuelve una parte del problema, pero "
-    "ninguna lo cubre por completo — y ahí entra FutbolBase.",
+    "ninguna lo cubre por completo — y ahí entra GRADA.",
     BODY))
 
 cat_data = [
@@ -1013,7 +1013,7 @@ cat_data = [
     ["D · Scouting profesional", "Wyscout, InStat, TransferRoom, Driblab",
      "Datos de jugadores profesionales, scouting internacional",
      "Gestión club, cobros, comunicación familias, base/cantera real"],
-    ["E · Vertical fútbol base", "FutbolBase",
+    ["E · Vertical fútbol base", "GRADA",
      "Todo lo anterior unificado en una plataforma",
      "Reportes ejecutivos avanzados (en roadmap Q3 2026)"],
 ]
@@ -1100,7 +1100,7 @@ cmp_rows = [
 ]
 
 # Construyo tabla con celdas coloreadas
-header_row = [["Criterio", "FutbolBase", "Excel+WA", "Clupik", "Competify", "Matchapp", "Wyscout"]]
+header_row = [["Criterio", "GRADA", "Excel+WA", "Clupik", "Competify", "Matchapp", "Wyscout"]]
 body_rows = []
 section_indices = []  # filas que son cabecera de subgrupo
 for i, row in enumerate(cmp_rows):
@@ -1195,7 +1195,7 @@ competitors = [
         "fortalezas": "Marca conocida. Web pública del club incluida. Onboarding self-service. Plan gratis hasta 30 fichas. Integración con la federación catalana en algunos puntos.",
         "debilidades": "UX heredada de 2015 (no PWA-first). Sin scouting profesional ni IA. Bizum/tarjeta como add-on con coste. App familia muy básica. Soporte por email exclusivamente. Sin factura electrónica Veri*Factu.",
         "ganan": "Clubes muy price-sensitive con &lt; 100 fichas que solo necesitan web + cuotas SEPA básicas.",
-        "ganamos": "Cualquier club que valore experiencia móvil moderna, scouting, factura electrónica obligatoria 2026, o soporte humano. Incluso a precio similar, FutbolBase tiene 3-4× más capacidades.",
+        "ganamos": "Cualquier club que valore experiencia móvil moderna, scouting, factura electrónica obligatoria 2026, o soporte humano. Incluso a precio similar, GRADA tiene 3-4× más capacidades.",
     },
     {
         "name": "COMPETIFY", "color": ORANGE, "bg": ORANGE_LT,
@@ -1213,7 +1213,7 @@ competitors = [
         "fortalezas": "UX muy pulida en la app móvil. Gamificación bien hecha (badges, perfiles tipo redes). Adopción alta entre padres jóvenes. Precio bajo (20-90 €/mes).",
         "debilidades": "No tiene cobros. No tiene gestión administrativa. No tiene scouting. RGPD encargado parcial. El club sigue necesitando Excel para todo lo serio. En la práctica son DOS sistemas, no uno.",
         "ganan": "Clubes que ya tienen su gestión cubierta y solo quieren mejorar la experiencia familia.",
-        "ganamos": "Cuando el club no quiere mantener 2 sistemas. FutbolBase + cobros + scouting cuesta menos que Matchapp + Clupik + asesor manual.",
+        "ganamos": "Cuando el club no quiere mantener 2 sistemas. GRADA + cobros + scouting cuesta menos que Matchapp + Clupik + asesor manual.",
     },
     {
         "name": "WYSCOUT / INSTAT / DRIBLAB", "color": GOLD, "bg": GOLD_LT,
@@ -1222,7 +1222,7 @@ competitors = [
         "fortalezas": "Profundidad de datos en jugadores profesionales sin comparación. Vídeo etiquetado, eventos, mapas de calor.",
         "debilidades": "No tienen datos de cantera. Pensados para clubes profesionales y agentes, no para clubes de base. Coste prohibitivo. No gestionan club, ni cuotas, ni familia.",
         "ganan": "Clubes con cantera DH/Honor que ya tienen estructura administrativa y solo necesitan un complemento de scouting profesional.",
-        "ganamos": "Cuando el club busca scouting de su propia cantera (no de jugadores externos profesionales). FutbolBase Elite a 349 €/mes hace scouting interno profesional + gestión completa, frente a 1.500-3.000 € de Wyscout solo para scouting externo.",
+        "ganamos": "Cuando el club busca scouting de su propia cantera (no de jugadores externos profesionales). GRADA Elite a 349 €/mes hace scouting interno profesional + gestión completa, frente a 1.500-3.000 € de Wyscout solo para scouting externo.",
     },
     {
         "name": "PLAYOFF / SPORTUP / OTROS", "color": RED, "bg": HexColor("#FAD7D5"),
@@ -1306,7 +1306,7 @@ class PositioningMatrix(Flowable):
             (0.36, 0.50, "Competify",   ORANGE),
             (0.22, 0.40, "Matchapp",    PURPLE),
             (0.85, 0.85, "Wyscout",     GOLD),
-            (0.32, 0.92, "FutbolBase",  GREEN),
+            (0.32, 0.92, "GRADA",  GREEN),
         ]
         for px, py, lbl, col in pts:
             x = px * self.w
@@ -1320,7 +1320,7 @@ class PositioningMatrix(Flowable):
             c.setFont("Helvetica-Bold", 8.2)
             # Etiqueta a la derecha del punto
             c.drawString(x + 0.35*cm, y - 0.08*cm, lbl)
-        # Resaltado FutbolBase
+        # Resaltado GRADA
         x = 0.32 * self.w; y = 0.92 * self.h
         c.setStrokeColor(GREEN); c.setLineWidth(1)
         c.setDash(2,2)
@@ -1331,7 +1331,7 @@ story.append(Spacer(1, 8))
 story.append(PositioningMatrix(16.4*cm, 9*cm))
 story.append(Spacer(1, 14))
 story.append(Paragraph(
-    "<b>Lectura.</b> FutbolBase ocupa el cuadrante superior-izquierdo: "
+    "<b>Lectura.</b> GRADA ocupa el cuadrante superior-izquierdo: "
     "<b>profundidad funcional comparable a Wyscout</b> (gracias al scouting con IA "
     "y la integración completa) <b>a precio del segmento generalista</b>. "
     "Los competidores generalistas (Clupik, Competify) están en zona media-baja "
@@ -1348,7 +1348,7 @@ story.append(Paragraph(
     BODY))
 
 pricing = [
-    ["Concepto", "FutbolBase Pro", "Clupik", "Competify", "Matchapp + Excel"],
+    ["Concepto", "GRADA Pro", "Clupik", "Competify", "Matchapp + Excel"],
     ["Suscripción base mensual",         "149 €",   "120 €",   "140 €",   "60 €"],
     ["Pasarela tarjeta/Bizum",           "Incluido","+30 €",   "+25 €",   "Manual"],
     ["Factura electrónica Veri*Factu",   "Incluido","Externa", "Externa", "Asesoría"],
@@ -1387,7 +1387,7 @@ t.setStyle(TableStyle(ts))
 story.append(t)
 story.append(Spacer(1, 8))
 story.append(info_box("La conclusión que más sorprende",
-    "FutbolBase Pro es <b>1,8× más barato por unidad de funcionalidad</b> que Clupik o "
+    "GRADA Pro es <b>1,8× más barato por unidad de funcionalidad</b> que Clupik o "
     "Competify, y <b>7,7× más barato</b> que mantener Matchapp + Excel + asesoría. "
     "El precio de etiqueta engaña: el coste real es lo que de verdad cuesta operar "
     "el club al año.",
@@ -1558,9 +1558,9 @@ story.append(t)
 story.append(PageBreak())
 
 # ===================== 13. SOBRE KRUJENS =====================
-story += section_header("13", "Sobre Krujens y FutbolBase", GOLD)
+story += section_header("13", "Sobre Krujens y GRADA", GOLD)
 story.append(Paragraph(
-    "FutbolBase es la primera vertical operativa de <b>Krujens Holding</b>, una "
+    "GRADA es la primera vertical operativa de <b>Krujens Holding</b>, una "
     "compañía española de software dedicada a construir sistemas operativos "
     "específicos para sectores tradicionalmente desatendidos por la tecnología.",
     BODY))
@@ -1569,7 +1569,7 @@ story.append(Paragraph("Estructura del grupo", H3))
 story.append(Paragraph(
     "<b>Krujens</b> (matriz) opera bajo un modelo de <i>endorsed brands</i>: cada "
     "vertical tiene su propia identidad pero comparte tecnología, equipo de "
-    "ingeniería y compromiso con la calidad. FutbolBase es la primera; en 2027 "
+    "ingeniería y compromiso con la calidad. GRADA es la primera; en 2027 "
     "lanzaremos verticales para baloncesto base y para escuelas de música.",
     BODY))
 
@@ -1597,10 +1597,10 @@ corp = [
     ["Razón social",      "Krujens Holding S.L. (en constitución)"],
     ["CIF / NIF",         "Pendiente de asignación (Registro Mercantil de Valencia)"],
     ["Domicilio social",  "Valencia, España"],
-    ["Web",               "krujens.com  ·  futbolbase.app"],
-    ["Email general",     "hola@futbolbase.app"],
+    ["Web",               "krujens.com  ·  grada.app"],
+    ["Email general",     "hola@grada.app"],
     ["DPO",               "dpo@krujens.com"],
-    ["Soporte clientes",  "soporte@futbolbase.app  ·  +34 600 000 000"],
+    ["Soporte clientes",  "soporte@grada.app  ·  +34 600 000 000"],
 ]
 t = Table(corp, colWidths=[4.4*cm, 12*cm])
 t.setStyle(TableStyle([
@@ -1661,17 +1661,17 @@ paths = [
      "Reservamos una demo de 30 minutos por videollamada. Cargamos su escudo y "
      "una muestra de sus categorías reales. Sale del demo con una propuesta "
      "personalizada por email en 24 h.",
-     "→ Reserve aquí: futbolbase.app/demo · O escriba a hola@futbolbase.app"),
+     "→ Reserve aquí: grada.app/demo · O escriba a hola@grada.app"),
     ("Camino 2 · Quiero probarlo ya", CYAN, CYAN_LT,
      "Empezamos hoy mismo el piloto de 30 días gratis. Solo necesitamos su CSV "
      "actual (o Excel) y 30 minutos para configurar su entorno. Sin compromiso. "
      "Devolución de datos garantizada al día 30 si no continúa.",
-     "→ Escriba ‘QUIERO EMPEZAR’ a pedro@futbolbase.app"),
+     "→ Escriba ‘QUIERO EMPEZAR’ a pedro@grada.app"),
     ("Camino 3 · Necesito pensarlo", ORANGE, ORANGE_LT,
      "Sin problema. Le mantenemos al tanto con un email mensual con casos de "
      "éxito y mejoras de producto. Cuando esté listo, retomamos donde lo "
      "dejamos. Su tiempo manda.",
-     "→ Suscríbase: futbolbase.app/newsletter"),
+     "→ Suscríbase: grada.app/newsletter"),
 ]
 for title, c, bg, body, cta in paths:
     body_html = f"{body}<br/><br/><b>{cta}</b>"
@@ -1684,11 +1684,11 @@ story.append(Spacer(1, 4))
 story.append(Paragraph("Contacto directo", H2))
 story.append(Paragraph(
     "<b>Pedro Paredes</b><br/>"
-    "Founder &amp; CEO · FutbolBase / Krujens Holding<br/>"
-    "📧 pedro@futbolbase.app<br/>"
+    "Founder &amp; CEO · GRADA / Krujens Holding<br/>"
+    "📧 pedro@grada.app<br/>"
     "📱 +34 600 000 000 (también WhatsApp)<br/>"
     "🔗 LinkedIn /in/pedroparedes<br/>"
-    "🌐 futbolbase.app  ·  krujens.com",
+    "🌐 grada.app  ·  krujens.com",
     BODY))
 story.append(Spacer(1, 14))
 story.append(info_box("Garantía de la propuesta",
@@ -1707,7 +1707,7 @@ story.append(Paragraph(
 doc = SimpleDocTemplate(OUT, pagesize=A4,
     leftMargin=1.5*cm, rightMargin=1.5*cm,
     topMargin=1.6*cm, bottomMargin=1.6*cm,
-    title="FutbolBase · Dossier comercial 2026",
+    title="GRADA · Dossier comercial 2026",
     author="Pedro Paredes / Krujens Holding",
     subject="Propuesta comercial para clubes de fútbol base",
     keywords="futbol base, krujens, saas, club, cantera, scouting, gestion deportiva")

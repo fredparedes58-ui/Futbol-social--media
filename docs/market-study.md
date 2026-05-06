@@ -1,4 +1,4 @@
-# FutbolBase — Estudio de mercado y pronóstico (Comunidad Valenciana)
+# GRADA — Estudio de mercado y pronóstico (Comunidad Valenciana)
 
 > Última actualización: abril 2026
 > Fuentes principales: FFCV (datos oficiales licencias), RFEF, comparables del sector.
@@ -126,7 +126,7 @@ Ejercicio hipotético que pides (100% TAM pagante, sin free tier):
 
 ## 5. Comparativa competitiva
 
-| App            | Modelo                        | Foco                          | Debilidad vs FutbolBase                |
+| App            | Modelo                        | Foco                          | Debilidad vs GRADA                |
 |----------------|-------------------------------|-------------------------------|----------------------------------------|
 | **FFCV app oficial** | Gratis, B2F               | Consulta licencias, actas, resultados oficiales | UX congelada 2015, sin red social, sin IA, sin gamificación |
 | **BeSoccer**   | Freemium 2,99€/mes            | Resultados LaLiga/Premier     | Ignora fútbol amateur regional         |
@@ -135,9 +135,9 @@ Ejercicio hipotético que pides (100% TAM pagante, sin free tier):
 | **Playoffs**   | B2B/B2C híbrido               | Torneos y ligas amateur       | Experiencia fragmentada, no es mobile-first |
 | **Strava**     | Freemium 8,99€/mes            | Running/ciclismo — no fútbol  | No cubre el deporte objetivo           |
 | **FUTBIN / FIFA companion** | Ads             | Gaming, no real               | No conecta con el jugador real         |
-| **FutbolBase** | Freemium 4,99€/mes + Club 29€ | **Red social + IA + carrera gamificada para jugador amateur federado** | — |
+| **GRADA** | Freemium 4,99€/mes + Club 29€ | **Red social + IA + carrera gamificada para jugador amateur federado** | — |
 
-### 5.1 Gap que FutbolBase captura
+### 5.1 Gap que GRADA captura
 
 Ningún competidor cubre simultáneamente:
 1. **Red social del jugador** (perfil, highlights, stats propias)
