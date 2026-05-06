@@ -1,123 +1,102 @@
-# Krujens · Mapa completo de productos y desarrollos
+# Mapa de productos y desarrollos · Pedro Paredes (`fredparedes58-ui`)
 
-> Documento maestro del portfolio Krujens. Cubre los cinco productos del holding,
-> con detalle técnico de **GRADA** (única vertical cuyo código vive en este repo) y
-> contexto de marca/negocio del resto, extraído de `docs/krujens-brand-context.md`.
+> Documento maestro: qué se está construyendo, dónde vive el código, qué hace cada
+> pieza. Cubre el portfolio del holding **Krujens** y los desarrollos paralelos
+> que hoy están **fuera del brand Krujens**.
+>
 > Última actualización: 2026-05-06.
 
 ---
 
-## 0. Krujens (matriz)
+## 1. Vista única del portfolio
+
+```
+                    PEDRO PAREDES (founder)
+                              │
+        ┌─────────────────────┼─────────────────────┐
+        ▼                                           ▼
+   KRUJENS (matriz)                        Fuera del brand Krujens
+        │                                           │
+   ┌────┼────┬─────────┬──────────┐         ┌──────┴───────┐
+   ▼    ▼    ▼         ▼          ▼         ▼              ▼
+GRADA Elite VITAS  Essence    [futuro]   Colegio       Brewchain
+      380          Bloom                  (educación)   (café)
+```
+
+**Comparativa rápida:**
+
+| Producto | Sector | Brand | Repo | Estado | ¿Código aquí? |
+|---|---|---|---|---|---|
+| **GRADA** | Fútbol amateur federado | Krujens | `fredparedes58-ui/Grada` | Lanzamiento Q2 2026, ronda seed 250k€ | **Sí — este repo** |
+| **Elite 380** | Academia de fútbol | Krujens | Carpeta Windows local (no GitHub público) | MVP en producción desde Q4 2025 | No |
+| **VITAS** | Análisis deportivo | Krujens | Sin repo identificado | En portfolio, sin lanzar | No |
+| **Essence Bloom** | Bienestar / rituales | Krujens | `fredparedes58-ui/essence-bloom` | Repo propio, estado por contrastar | No |
+| **[Futuro Krujens]** | Por definir | Krujens | — | Placeholder | — |
+| **Colegio** | Educación | Fuera de Krujens | Por confirmar | Desarrollo en marcha en otra sesión Claude Code | No |
+| **Brewchain** | Hospitality / café | Fuera de Krujens | `fredparedes58-ui/brewchain-app` | Desarrollo en marcha en otra sesión Claude Code | No |
+
+**Repos GitHub adicionales del fundador**, sin mapear todavía a un producto: `futuro-club`, `my-project-hub`, `interference-tool-advance`, `dreamteam-arena`. Detalle en §10.
+
+---
+
+## 2. Krujens (matriz)
 
 **Una frase:** holding español de SaaS verticales mobile-first que construye PWAs donde hoy solo hay Excel y WhatsApp.
 
-**Tagline corto:** *Tecnología que entiende tu mundo.*
-**Tagline largo:** *Krujens construye herramientas digitales donde hoy sólo hay hojas de Excel, WhatsApp y papel.*
+**Tagline:** *Tecnología que entiende tu mundo.*
 
 **Misión:** democratizar el acceso a tecnología de nivel enterprise en sectores infraestructurados (deporte base, salud, educación, comunidad local).
 
-**Visión 2030:** referente iberoamericano en PWAs verticales para sectores sub-digitalizados — 3-5 productos activos, 150.000+ usuarios acumulados, ARR > 1,5M€, presencia España + LATAM.
+**Visión 2030:** referente iberoamericano en PWAs verticales — 3-5 productos activos, 150.000+ usuarios acumulados, ARR > 1,5M€, presencia España + LATAM.
 
-**Valores (4 pilares):**
-1. Mobile-first real (no adaptamos webs).
-2. IA útil, no IA marketing.
-3. Precio justo (5-15€/mes, accesible al usuario final).
-4. Datos del usuario son del usuario (RGPD máximo, cero reventa).
+**4 valores:** mobile-first real · IA útil no marketing · precio justo (5-15€/mes) · datos del usuario son del usuario.
 
-**Stack común a todos los verticales:** React + Vite + TypeScript + Tailwind + Supabase/Firebase + PWA (vite-plugin-pwa).
+**Stack común a todos los verticales Krujens:** React + Vite + TypeScript + Tailwind + Supabase/Firebase + PWA (`vite-plugin-pwa`).
 
-**Playbook por vertical:**
-1. Elegir sector sub-digitalizado con dolor real.
-2. MVP PWA en 8-12 semanas con stack reutilizable.
-3. Validar con 50-100 usuarios antes de invertir en ads.
-4. Monetizar a 5-15€/mes (precio que se paga sin pensarlo).
-5. Escalar por comunidad, no por ads.
-6. Reinvertir cash en el siguiente vertical.
+**Playbook por vertical:** elegir sector sub-digitalizado → MVP PWA en 8-12 semanas → validar con 50-100 usuarios → monetizar a 5-15€/mes → escalar por comunidad → reinvertir cash en el siguiente.
 
-**Fundador:** Pedro Paredes (Valencia, España).
+**Sistema de marca (endorsed brand):** cada vertical Krujens tiene marca propia, pero firma "una solución Krujens" en footer / about / legal. Colegio y Brewchain **no** llevan esa firma — son desarrollos paralelos del fundador, no del holding.
 
----
-
-## 1. Arquitectura del portfolio
-
-```
-                       KRUJENS (matriz)
-                             │
-   ┌─────────────┬───────────┼───────────┬──────────────┐
-   ▼             ▼           ▼           ▼              ▼
-GRADA         VITAS      Elite 380   Essence Bloom   [futuro]
-fútbol base   análisis    academia    bienestar /    próximo
-              deportivo   fútbol      rituales       vertical
-
-         Fuera del brand Krujens (por ahora)
-   ┌─────────────────────┬─────────────────────┐
-   ▼                     ▼
-Colegio              Brewchain
-(desarrollo           (desarrollo de
-educativo)            café / hospitality)
-```
-
-Sistema **endorsed brand** dentro de Krujens: cada vertical tiene marca propia, pero firma "una solución Krujens" en footer / about / legal. **Colegio y Brewchain NO entran en este sistema por ahora** — son desarrollos paralelos sin paraguas Krujens.
-
-**Color asignado a cada vertical** (paleta corporativa Krujens):
+**Paleta corporativa:**
 
 | Vertical | Color secundario | Hex | Por qué |
 |---|---|---|---|
+| Krujens (matriz) | Krujens Green + Obsidian Navy | `#00E676` + `#0A1628` | identidad corporativa |
 | GRADA | Neon Orange | `#FF6B00` | acción, deporte |
-| Elite 380 | Neon Orange | `#FF6B00` | acción, deporte (mismo sector) |
+| Elite 380 | Neon Orange | `#FF6B00` | acción, deporte |
 | VITAS | Electric Cyan | `#00D4FF` | tech, confianza |
 | Essence Bloom | Deep Purple | `#B347FF` | bienestar, premium |
-| Krujens (matriz) | Krujens Green `#00E676` + Obsidian Navy `#0A1628` | — | identidad corporativa |
-| **Colegio** *(fuera de Krujens)* | n/a | n/a | identidad propia, sin paraguas Krujens |
-| **Brewchain** *(fuera de Krujens)* | n/a | n/a | identidad propia, sin paraguas Krujens |
+
+**Hitos comunicados:**
+
+| Fecha | Hito |
+|---|---|
+| 2025 Q4 | Primer MVP **Elite 380** en producción. |
+| 2026 Q1 | Krujens registra entidad matriz. |
+| 2026 Q2 | Lanzamiento **GRADA** + ronda seed 250k€. |
+| 2026 Q3 | Acuerdo piloto FFCV. |
+| 2027 | Expansión GRADA a 3 CCAA + 2º vertical (probablemente VITAS). |
+| 2030 | 3-5 verticales activas, 150k usuarios, ARR > 1,5M€. |
+
+**Fuente canónica:** `docs/krujens-brand-context.md`.
 
 ---
 
-## 2. Comparativa rápida del portfolio
+## 3. GRADA · producto insignia 2026
 
-### Dentro del brand Krujens
-
-| Producto | Sector | Audiencia | Modelo | Estado | Código |
-|---|---|---|---|---|---|
-| **GRADA** | Fútbol amateur federado | Jugador + club + familia + federación | Free + Pro 4,99€/mes + Club 29€/mes/equipo | Lanzamiento 2026 Q2, ronda seed 250k€ | **Este repo** |
-| **Elite 380** | Academia de fútbol | Academia + alumnos + familias | A definir | Primer MVP en producción 2025 Q4 | Repo aparte (no tocar) |
-| **VITAS** | Análisis deportivo | A definir (deportistas / clubes) | A definir | En portfolio, no lanzado | No en este repo |
-| **Essence Bloom** | Bienestar / rituales | Usuario final B2C | A definir | Repo propio, estado de desarrollo por confirmar | `fredparedes58-ui/essence-bloom` |
-| **[Futuro]** | Próximo vertical | A definir | A definir | A definir tras ARR Y2 GRADA | — |
-
-### Fuera del brand Krujens (por ahora)
-
-Desarrollos paralelos del fundador que no se consideran verticales Krujens hoy. Pueden incorporarse en el futuro o quedarse como marcas independientes.
-
-| Producto | Sector | Estado | Código |
-|---|---|---|---|
-| **Colegio** | Educación (centro educativo) | Desarrollo en marcha en otra sesión / repo de Claude Code | Repo no identificado todavía — sospechoso: `futuro-club`, por confirmar |
-| **Brewchain** | Hospitality / café | Desarrollo en marcha en otra sesión / repo de Claude Code | `fredparedes58-ui/brewchain-app` |
-| **Otros repos sin clasificar** | Por confirmar | Detectados en listado GitHub del fundador, ver §6b.3 | `futuro-club`, `my-project-hub`, `interference-tool-advance`, `dreamteam-arena` |
-
----
-
-## 3. GRADA (producto insignia 2026 — único cuyo código vive aquí)
+Único producto cuyo código vive en este repo. PWA mobile-first para el ecosistema del fútbol amateur federado.
 
 **Una frase:** Red social + IA + carrera gamificada para el jugador amateur federado.
 
-**Producto insignia 2026** del portfolio Krujens. Primera vertical en ir a mercado con go-to-market, ronda seed y modelo SaaS recurrente.
-
 **Posicionamiento:** ningún competidor combina simultáneamente red social del jugador, IA determinista útil, gamificación FIFA-style, B2C direct-to-player y mobile-first PWA (gap recogido en `docs/market-study.md` §5.1).
 
-**Modelo:** Free (ads + límites IA) · Pro 4,99€/mes ó 39€/año · Club 29€/mes/equipo. ARPU mezclado proyectado ~2€/mes.
+**Modelo:** Free + Pro 4,99€/mes (o 39€/año) + Club 29€/mes/equipo. ARPU mezclado proyectado ~2€/mes.
 
 **Mercado (CV):** TAM 126k jugadores federados → SAM 84k → SOM Y5 21k usuarios activos → ARR Y5 504k€ (escenario base). Techo teórico 1-pago-por-federado @ 4,99€ = 7,58M€/año.
 
-**Hitos comunicados:**
-- 2026 Q2 — lanzamiento + ronda seed 250k€.
-- 2026 Q3 — acuerdo piloto FFCV.
-- 2027 — expansión a 3 CCAA.
-- 2030 — break-even Y5 escenario base.
+**Stack:** React 19.2 · Vite 8 · TypeScript 5.9 · Tailwind 3.4 · Framer Motion 12 · React Router 7 · Vitest 2 · Playwright 1.59 · vite-plugin-pwa 1.2.
 
-**Stack del repo:** React 19.2 + Vite 8 + TypeScript 5.9 + Tailwind 3.4 + Framer Motion 12 + React Router 7 + Vitest 2 + Playwright 1.59 + vite-plugin-pwa 1.2.
-
-### 3.1 Estructura de ruteo (`src/App.tsx`)
+### 3.1 Rutas (`src/App.tsx`)
 
 | Ruta | Página | Eager / Lazy | Protegida |
 |---|---|---|---|
@@ -135,7 +114,7 @@ Desarrollos paralelos del fundador que no se consideran verticales Krujens hoy. 
 
 Viewport fijo a 430px (formato móvil enmarcado). Animaciones por ruta vía `PageTransition` (`slide` / `fade` / `scale`).
 
-**Providers** (`src/context/`): `ThemeContext`, `AuthContext` (user + toast), `NotificationsContext`, `PredictionsContext`.
+**Providers** (`src/context/`): `ThemeContext`, `AuthContext` (user + toast global), `NotificationsContext` (campana del header), `PredictionsContext` (picks persistidos).
 
 ### 3.2 Páginas (`src/pages/`)
 
@@ -157,48 +136,46 @@ Viewport fijo a 430px (formato móvil enmarcado). Animaciones por ruta vía `Pag
 
 ### 3.3 Features modulares (`src/features/`)
 
-Cada carpeta es una unidad funcional autocontenida (sheet + datos/store si lo necesita). Todas se gatean con feature flags.
+Cada carpeta es una unidad funcional autocontenida. Todas se gatean con feature flags (`src/lib/featureFlags.ts`, override vía localStorage `fb_feature_flags_v1`, hook `useFlag(key)`).
 
 | Feature | Archivo principal | Qué hace |
 |---|---|---|
 | **achievements** | `AchievementsSheet.tsx` + `catalog.ts` | Logros con rareza (common/rare/epic/legendary). |
-| **coach** | `CoachChatSheet.tsx` | Chat con Coach AI (drills + feedback de stats). |
-| **duels** | `DuelsSheet.tsx` | Retos 1v1 entre jugadores. |
+| **coach** | `CoachChatSheet.tsx` | Chat con Coach AI (drills + feedback). |
+| **duels** | `DuelsSheet.tsx` | Retos 1v1. |
 | **events** | `EventsSheet.tsx` | Eventos del equipo / liga. |
 | **heatmap** | `HeatmapPitch.tsx` | Mapa de calor sobre cancha. |
 | **leaderboard** | `LeaderboardSheet.tsx` | Ranking regional / nacional / amigos. |
-| **market** | `MarketSheet.tsx` | "Mercado" gamificado de jugadores. |
-| **polls** | `PollCard.tsx` | Encuestas de la comunidad. |
-| **replay** | `MatchReplaySheet.tsx` | Replay narrado de partido (328 LOC, el más grande). |
-| **seasonPass** | `SeasonPassSheet.tsx` | Pase de temporada con recompensas. |
+| **market** | `MarketSheet.tsx` | "Mercado" gamificado. |
+| **polls** | `PollCard.tsx` | Encuestas. |
+| **replay** | `MatchReplaySheet.tsx` | Replay narrado (328 LOC, el más grande). |
+| **seasonPass** | `SeasonPassSheet.tsx` | Pase de temporada. |
 | **share** | `shareFifaCard.ts` | Exporta tarjeta FIFA a imagen (html-to-image). |
 | **stories** | `StoriesStrip.tsx` + `storiesData.ts` | Stories tipo Instagram con persistencia de "vistas". |
 | **streaks** | `StreakBadge.tsx` + `streaksStore.ts` | Racha de días activos. |
-| **tactics** | `TacticsBoardSheet.tsx` | Pizarra táctica interactiva. |
+| **tactics** | `TacticsBoardSheet.tsx` | Pizarra táctica. |
 
-**Feature flags** (`src/lib/featureFlags.ts`): `coach-chat`, `match-replay`, `duels`, `market`, `season-pass`, `stories`, `polls`, `events`, `leaderboard`. Override vía localStorage `fb_feature_flags_v1`. Hook `useFlag(key)`.
-
-### 3.4 Capa de "AI" (`src/ai/` + `src/lib/aiMocks.ts`)
+### 3.4 Capa de "AI"
 
 Filosofía **deterministic-first**: mocks deterministas con contrato estable, listos para enchufar LLM real sin tocar vistas.
 
-`src/lib/aiMocks.ts` (1.202 LOC):
+`src/lib/aiMocks.ts` (1.202 LOC) expone 13 servicios:
 
-| Función | Salida | Uso |
-|---|---|---|
-| `suggestReplies` | hasta 3 chips | Smart replies de chat (16 reglas regex + tono). |
-| `suggestScore` | marcador + razonamiento | Quiniela Copilot (balanced/optimistic/analytic). |
-| `generateMatchRecap` | headline + body + highlights | Recap auto-narrado (ES/EN, 3 tonos). |
-| `generateMatchPreview` | matchup + fortalezas + xFactor | Preview pre-partido. |
-| `generateCoachFeedback` | nota A+ a C + plan | Coach AI del perfil. |
-| `matchTeams` | top-2 con score 0-99 | Team Matcher de Comunidad. |
-| `generateWeeklyDigest` | título + secciones + outlook | Resumen semanal en Home. |
-| `parseSearchIntent` | filtros NL → estructurados | Buscador semántico de Comunidad. |
-| `suggestMediaTags` | hasta 5 tags | Auto-tagging al postear. |
-| `suggestVideoClips` | clips ordenados | Highlights auto-cut. |
-| `answerAppQuestion` | respuesta + follow-ups | FAQ bot. |
-| `generateLineup` | XI con ratings y x/y | Auto-alineación (4-3-3/4-4-2/3-5-2/4-2-3-1/5-3-2). |
-| `generateRivalReport` | overall + forma + danger player | Scouting report. |
+| Función | Uso |
+|---|---|
+| `suggestReplies` | Smart replies del chat (16 reglas regex × tono). |
+| `suggestScore` | Quiniela Copilot (balanced/optimistic/analytic). |
+| `generateMatchRecap` | Recap auto-narrado (ES/EN, 3 tonos). |
+| `generateMatchPreview` | Preview pre-partido. |
+| `generateCoachFeedback` | Coach AI: nota A+ a C + plan. |
+| `matchTeams` | Team Matcher de Comunidad (top-2 con score 0-99). |
+| `generateWeeklyDigest` | Resumen semanal en Home. |
+| `parseSearchIntent` | Buscador semántico de equipos. |
+| `suggestMediaTags` | Auto-tagging al postear. |
+| `suggestVideoClips` | Highlights auto-cut. |
+| `answerAppQuestion` | FAQ bot. |
+| `generateLineup` | Auto-alineación (4-3-3/4-4-2/3-5-2/4-2-3-1/5-3-2). |
+| `generateRivalReport` | Scouting report del rival. |
 
 `src/ai/agents/`:
 
@@ -210,208 +187,142 @@ Filosofía **deterministic-first**: mocks deterministas con contrato estable, li
 | `matchCommentatorAgent` | Comentarios en vivo a partir de eventos. |
 | `orchestrator` | `runParallel` / `runSequential` / `runPipeline`. |
 
-`src/ai/rag/`: `knowledgeBase.ts` + `retriever.ts` (`retrieve(query,k)`, `ragAnswer(query,k)`).
+`src/ai/rag/`: `knowledgeBase.ts` + `retriever.ts` (`retrieve`, `ragAnswer`).
 
 `src/ai/services/`: `deterministic.ts` (`mulberry32`, `seedFromString`, `winProbability`, `gradeFromStats`), `drills.ts`, `highlights.ts`, `leaderboard.ts`. Todos con tests Vitest.
 
-### 3.5 Librería UI (`src/components/ui/` — 26 componentes)
+### 3.5 Librería UI (`src/components/ui/`, 26 componentes)
 
-- **Layout/nav:** `BottomNav`, `BottomSheet`, `PageTransition`, `RouteFallback`, `ErrorBoundary`.
+- **Layout / nav:** `BottomNav`, `BottomSheet`, `PageTransition`, `RouteFallback`, `ErrorBoundary`.
 - **Efectos:** `EpicStadiumBackground`, `FloatingOrbs`, `FloatingEmojis`, `FloatingChip`, `ParticleBackground`, `PulseRings`, `LikeBurst`, `AIBorder`, `Skeleton`.
-- **Inputs/botones:** `NeonButton`, `NeonInput`, `RippleButton`, `useRipple`, `GlassCard`.
+- **Inputs / botones:** `NeonButton`, `NeonInput`, `RippleButton`, `useRipple`, `GlassCard`.
 - **Sheets de partido:** `LineupSheet`, `LiveMatchSheet`, `LiveTicker`, `MatchPredictionSheet`, `RivalScoutSheet`.
 - **Misc:** `CountUp`, `Toast`, `NotificationsPanel`.
 
-### 3.6 Hooks e i18n
+### 3.6 Hooks, i18n, backend mínimo
 
-`src/hooks/useSimulatedLoad.ts`, `src/hooks/useSpeechRecognition.ts` (Web Speech API), `src/i18n/translations.ts` (ES/EN), `src/i18n/useT.ts`.
-
-### 3.7 Backend mínimo y scripts
-
+- `src/hooks/useSimulatedLoad.ts`, `src/hooks/useSpeechRecognition.ts` (Web Speech API).
+- `src/i18n/translations.ts` (ES/EN), `src/i18n/useT.ts`.
 - `api/og.ts` — endpoint serverless Vercel para OG images dinámicas.
 - `scripts/gen-icons.ts` — genera iconos PWA desde SVG.
-- `vercel.json`, `vite.config.ts` (PWA), `playwright.config.ts` (+ `e2e/screenshots.spec.ts` que rellena `public/screenshots/`).
+- `vercel.json`, `vite.config.ts` (PWA), `playwright.config.ts` + `e2e/screenshots.spec.ts`.
 
-### 3.8 Documentos comerciales (`docs/` — solo material de GRADA)
+### 3.7 Documentación comercial (`docs/`, solo material de GRADA salvo `krujens-brand-context.md`)
 
-**Producto / showcase:** `GRADA-App-Walkthrough.html`, `GRADA-App-Showcase.html` / `-v2.html`.
+**Showcase:** `GRADA-App-Walkthrough.html`, `GRADA-App-Showcase.html` / `-v2.html`.
 
-**Pitch / inversión / proyección:** `GRADA-Pitch-Inversor.html`, `GRADA-Pitch-Clubes.html`, `GRADA-Proyeccion-5Anos.html` / `-v2-Realista.html` / `-Unificada.html`, `projection-premium.html` (+ variantes Conservador 333k€ / Realista 554k€ / Optimista 988k€ / Comparacion), `projection-visual.html`, `financial-projection.html`.
+**Pitch / inversión / proyección:** `GRADA-Pitch-Inversor.html`, `GRADA-Pitch-Clubes.html`, `GRADA-Proyeccion-5Anos.html` / `-v2-Realista.html` / `-Unificada.html`, `projection-premium.html` (+ Conservador 333k€ / Realista 554k€ / Optimista 988k€ / Comparacion), `projection-visual.html`, `financial-projection.html`.
 
 **Análisis competitivo / mercado:** `GRADA-Analisis-Competitivo.html`, `GRADA-vs-Federaciones.html` / `-v2.html`, `market-study.html` + `market-study.md`, `grada-prospecting-list.html`.
 
 **Por audiencia:** `proyecto-clubes.html`, `proyecto-jugadores.html` + `grada-dossier-comercial.pdf`, `proyecto-padres.html` + `grada-guia-familias.pdf`, `proyecto-ffcv.html`, `proyecto-master.html`.
 
-**Branding / GTM:** `grada-brand-book.html`, `grada-brand-context.html`, `grada-brand-guidelines.pdf`, `grada-gtm-master.html`, `krujens-brand-context.md` (corporativo, transversal a todo el portfolio).
+**Branding / GTM:** `grada-brand-book.html`, `grada-brand-context.html`, `grada-brand-guidelines.pdf`, `grada-gtm-master.html`, **`krujens-brand-context.md` (corporativo, transversal)**.
 
-**Scripts Python (regeneran PDFs):** `build_brand_guidelines.py`, `build_client_dossier.py`, `build_family_guide.py`.
+**Scripts Python:** `build_brand_guidelines.py`, `build_client_dossier.py`, `build_family_guide.py`.
 
 **Notas técnicas:** `custom-domain.md`, `lighthouse.md`, `og-images.md`, `sentry.md`.
 
-### 3.9 Assets (`public/`)
+### 3.8 Assets (`public/`)
 
-`favicon.svg`, `icon-192.png`, `icon-512.png`, `icons.svg`, `ball.png`. `screenshots/` (5 pantallas generadas por Playwright). `pruebas/` (sandbox, no entra al bundle).
-
----
-
-## 4. Elite 380 (academia de fútbol)
-
-**Sector:** academia de fútbol (formación deportiva).
-
-**Estado:** primer MVP en producción 2025 Q4 — fue la primera vertical Krujens en entrar en producción, antes de GRADA.
-
-**Audiencia:** academia + alumnos + familias.
-
-**Color secundario asignado:** Neon Orange `#FF6B00` (mismo bucket "deporte" que GRADA).
-
-**Relación con GRADA:** sectores hermanos (ambos fútbol base), pero foco distinto — Elite 380 es B2B academia (gestión interna de la academia), GRADA es B2C jugador + B2B2C club. No comparten código.
-
-**Repo:** vive en otra carpeta (`Presentaciones Elite 380/`). **Regla operativa innegociable** del briefing original: nada fuera de este repo se toca. Si te piden trabajar sobre Elite 380, abrir sesión en su repo.
+Iconos PWA (`favicon.svg`, `icon-192.png`, `icon-512.png`, `icons.svg`, `ball.png`). `screenshots/` (5 pantallas generadas por Playwright). `pruebas/` (sandbox separado, no entra al bundle).
 
 ---
 
-## 5. VITAS (análisis deportivo)
+## 4. Elite 380
 
-**Sector:** análisis deportivo (data + visualización + IA aplicada).
+Academia de fútbol. **Primer MVP del portfolio en entrar en producción** (Q4 2025), antes que GRADA.
 
-**Estado:** en portfolio, **no lanzado**. Sin código en este repo.
+- **Audiencia:** academia + alumnos + familias.
+- **Color:** Neon Orange `#FF6B00`.
+- **Repo:** carpeta local en Windows del fundador (`Presentaciones Elite 380/`). No publicado en GitHub al menos en el listado de top repos.
+- **Relación con GRADA:** sectores hermanos (ambos fútbol base). Elite 380 es B2B academia (gestión interna). GRADA es B2C jugador + B2B2C club. No comparten código.
 
-**Color secundario asignado:** Electric Cyan `#00D4FF` (bucket "tech, confianza").
-
-**Posicionamiento previsible:** la "capa analítica" del portfolio — encaja como complemento natural a GRADA y Elite 380 (datos del deporte amateur), aunque el scope final está por definir.
-
-**Próximos pasos previstos en el plan Krujens:** lanzamiento de un 2º vertical en 2027 una vez GRADA genere caja. VITAS es el candidato más alineado por sector.
-
----
-
-## 6. Essence Bloom (bienestar / rituales)
-
-**Sector:** bienestar / rituales (B2C wellness).
-
-**Repositorio:** `github.com/fredparedes58-ui/essence-bloom` (confirmado desde el listado de top repos del fundador).
-
-**Estado:** tiene repo propio, **estado de desarrollo por confirmar** (`docs/krujens-brand-context.md` dice "no lanzado", pero al existir el repo es probable que haya código en marcha — pendiente revisar al abrir el repo).
-
-**Color secundario asignado:** Deep Purple `#B347FF` (bucket "bienestar, premium").
-
-**Diferenciador respecto al resto del portfolio:** primer vertical que sale del eje deportivo. Encaja con la misión Krujens de cubrir "salud, comunidad local" además de deporte.
-
-**Cuándo se lanza:** sin fecha pública. Probablemente después de validar el playbook con GRADA y un segundo vertical.
-
-**Pendiente:** abrir el repo en otra sesión para contrastar avance real vs. lo que dice el brand context.
+**Regla operativa heredada del briefing original de este repo:** nada fuera del repo Grada se toca desde aquí. Si hay que trabajar Elite 380, abrir sesión en su repo.
 
 ---
 
-## 6b. Desarrollos fuera del brand Krujens
+## 5. VITAS
 
-Aclaración del fundador: hay dos desarrollos en marcha que **hoy no forman parte del paraguas Krujens** y se trabajan en sesiones / repos separados de Claude Code (no accesibles desde esta sesión, que está restringida al repo `fredparedes58-ui/Grada`).
+Análisis deportivo. **En portfolio, sin lanzar.** Sin repo identificado en GitHub público del fundador.
 
-### 6b.1 Colegio
+- **Color:** Electric Cyan `#00D4FF`.
+- **Encaje:** capa analítica natural sobre los productos deportivos del portfolio (GRADA + Elite 380).
+- **Cuándo:** candidato a 2º lanzamiento Krujens en 2027 una vez GRADA genere caja.
+
+---
+
+## 6. Essence Bloom
+
+Bienestar / rituales (B2C wellness). Primer vertical Krujens fuera del eje deportivo.
+
+- **Color:** Deep Purple `#B347FF`.
+- **Repo:** `fredparedes58-ui/essence-bloom`.
+- **Estado:** el brand context decía "no lanzado", pero existe repo propio → hay desarrollo en marcha. Estado real por contrastar abriendo el repo en otra sesión.
+
+---
+
+## 7. [Futuro Krujens]
+
+Placeholder de la arquitectura: 3-5 verticales activas en 2030. Sectores candidatos según la misión: salud familiar, educación extraescolar, comunidad local, autónomos / pymes. Decisión de entrada tras validar GRADA + un segundo vertical.
+
+---
+
+## 8. Colegio · fuera del brand Krujens
+
+Desarrollo educativo paralelo del fundador, **no es vertical Krujens** y **no aparece firmado por Krujens**.
 
 - **Sector:** educación (centro educativo).
-- **Tipo:** desarrollo paralelo, fuera del brand Krujens por ahora.
-- **Estado:** en construcción en otra sesión / repo. Sin acceso desde aquí.
-- **Pendiente de aportar (cuando el fundador comparta el repo o los datos):**
-  - Nombre comercial definitivo.
-  - Audiencia exacta (¿profesores, dirección, alumnos, familias, todos?).
-  - Modelo de negocio (¿SaaS al colegio?, ¿gratis para familias?, ¿licencia por aula?).
-  - Stack y repositorio.
-  - Estado de avance (idea / MVP / producción).
-  - Decisión sobre si en algún momento se incorpora al brand Krujens o se mantiene independiente.
-
-### 6b.2 Brewchain (café)
-
-- **Sector:** hospitality / café.
-- **Repositorio:** `github.com/fredparedes58-ui/brewchain-app` (confirmado desde el listado de top repos del fundador).
-- **Tipo:** desarrollo paralelo, fuera del brand Krujens por ahora.
+- **Repo:** sin identificar todavía. El repo más sospechoso del listado público es `fredparedes58-ui/futuro-club` (encajaría: "club del futuro" como comunidad educativa). Por confirmar.
 - **Estado:** en construcción en otra sesión / repo de Claude Code. No accesible desde esta sesión (alcance GitHub MCP limitado a `fredparedes58-ui/Grada`).
-- **Hipótesis sobre el nombre:** "Brewchain" sugiere algo en torno a la **trazabilidad / cadena del café** (brew + chain), aunque "chain" también puede leerse como cadena de cafeterías. Confirmar.
-- **Pendiente de aportar (al abrir el repo en otra sesión o al pasarme su README):**
-  - Sub-segmento real (¿trazabilidad blockchain del café?, ¿gestión interna de la cafetería?, ¿fidelización de clientes?, ¿marketplace de café de especialidad?, ¿formación a baristas?).
-  - Audiencia, modelo, stack.
-  - Estado de avance.
-  - Decisión sobre si entra en Krujens o se mantiene independiente.
+- **Pendiente:** nombre del repo, audiencia (¿profesores / dirección / alumnos / familias?), modelo de negocio, stack, estado de avance, decisión sobre si en algún momento entra en Krujens.
 
 ---
 
-### 6b.3 Otros repos detectados (sin clasificar)
+## 9. Brewchain · fuera del brand Krujens
 
-En el listado de top repos del fundador (`fredparedes58-ui`) aparecen estos cuatro proyectos adicionales que **no están mapeados** ni en el brand Krujens ni en la lista de "fuera del brand". Pueden ser experimentos, MVPs descartados, herramientas internas, alias de un producto ya listado o el repo de "Colegio" bajo otro nombre — **hace falta confirmación del fundador**:
+Desarrollo de hospitality / café paralelo del fundador, **no es vertical Krujens**.
+
+- **Sector:** hospitality / café.
+- **Repo:** `fredparedes58-ui/brewchain-app` (confirmado).
+- **Estado:** en construcción en otra sesión / repo de Claude Code. No accesible desde esta sesión.
+- **Lectura del nombre (a confirmar):** "brew + chain" sugiere trazabilidad / cadena del café (especialidad, origen) más que "cadena de cafeterías", aunque ambas lecturas son posibles.
+- **Pendiente:** sub-segmento real, audiencia, modelo, stack, estado de avance.
+
+---
+
+## 10. Repos GitHub sin clasificar
+
+Aparecen en el listado de top repos del fundador (`fredparedes58-ui`) y todavía no están mapeados a un producto:
 
 | Repo | Hipótesis (a validar) |
 |---|---|
-| `fredparedes58-ui/futuro-club` | ¿"Club del futuro"? Por nombre podría sonar a club deportivo / comunidad → ¿se solapa con GRADA o con Elite 380? ¿O es un proyecto educativo con lógica de "club"? Posible candidato a ser el repo de **Colegio**. |
-| `fredparedes58-ui/my-project-hub` | Por nombre, parece un *meta-hub* (portfolio / landing que enlaza a los demás productos). |
-| `fredparedes58-ui/interference-tool-advance` | Sin pista clara desde el nombre — sonaría a herramienta técnica / utilidad interna. |
-| `fredparedes58-ui/dreamteam-arena` | Por nombre, deportivo / fantasy. ¿Posible spin-off de GRADA o experimento previo? |
+| `futuro-club` | Posible repo de **Colegio** ("club del futuro" = comunidad educativa). |
+| `my-project-hub` | Probable meta-hub / portfolio que enlaza a los demás productos. |
+| `interference-tool-advance` | Sin pista clara — sonaría a herramienta técnica / utilidad interna. |
+| `dreamteam-arena` | Por nombre, deportivo / fantasy. ¿Spin-off de GRADA o experimento previo? |
 
-> **Acción concreta para cerrar este apartado:** dictarme una línea por repo ("X es Y, está en estado Z, encaja en/fuera de Krujens") o pasarme el README de cada uno. Con eso reorganizo §3–§6b correctamente.
-
-> **Nota sobre "Colegio":** en la pantalla compartida hoy no aparece un repo llamado `colegio` o `escuela`. Puede que esté bajo "Show more" del listado, o que se llame de otra forma (sospechoso: `futuro-club`). Confirmar el repo correcto.
-
----
-
-## 7. [Futuro] (próximo vertical sin definir)
-
-**Estado:** placeholder en la arquitectura. Sectores candidatos según la misión Krujens: salud familiar, educación extraescolar, comunidad local, autónomos / pymes locales.
-
-**Criterio de entrada:** se decide tras validar unit economics de GRADA + una segunda vertical (probablemente Elite 380 maduro o VITAS lanzado).
-
-**Objetivo 2030:** que el portfolio activo sea de 3-5 verticales (hoy hay 2 con código en producción: GRADA + Elite 380).
-
----
-
-## 8. Hitos cronológicos del holding
-
-| Fecha | Hito |
-|---|---|
-| 2025 Q4 | Primer MVP **Elite 380** en producción. |
-| 2026 Q1 | Krujens se registra legalmente como entidad matriz. |
-| 2026 Q2 | Lanzamiento **GRADA** + ronda seed 250k€. |
-| 2026 Q3 | Acuerdo piloto con FFCV (Federación Fútbol Com. Valenciana). |
-| 2027 | Expansión GRADA a 3 CCAA + lanzamiento 2º vertical (probablemente VITAS). |
-| 2030 | 3-5 verticales activas, 150k usuarios, ARR > 1,5M€. |
-
----
-
-## 9. Audiencias cruzadas a todo el portfolio
-
-| # | Audiencia | Mensaje clave Krujens |
-|---|---|---|
-| 1 | **Usuarios finales B2C** (familias, jugadores, pacientes) | *"Por fin una herramienta que entiende tu día a día."* |
-| 2 | **Organizaciones B2B / B2B2C** (clubes, academias, federaciones, clínicas) | *"Software que tus usuarios usan de verdad, no solo tu equipo admin."* |
-| 3 | **Inversores / partners** (BAs, fondos seed, family offices, federaciones) | *"Portfolio de SaaS verticales con unit economics reales y founder que envía producto cada semana."* |
-| 4 | **Talento técnico** (devs, diseñadores, growth) | *"Aquí envías producto en días, no en sprints de 3 meses. Tu código toca a miles de usuarios."* |
-
----
-
-## 10. Estado de cada vertical en 1 línea
-
-**Dentro del brand Krujens:**
-
-- **GRADA** — código completo en este repo, lanzamiento Q2 2026, ronda seed activa.
-- **Elite 380** — MVP en producción desde Q4 2025, repo aparte, no se toca desde aquí.
-- **VITAS** — en portfolio, sin código aquí, candidata a 2º lanzamiento 2027.
-- **Essence Bloom** — repo propio (`essence-bloom`), estado de desarrollo por contrastar.
-- **[Futuro]** — placeholder, sin definir, decisión post-validación de los primeros lanzamientos.
-
-**Fuera del brand Krujens (por ahora):**
-
-- **Colegio** — desarrollo educativo paralelo. Repo aún sin identificar (sospechoso: `fredparedes58-ui/futuro-club`, por confirmar).
-- **Brewchain** — desarrollo de hospitality / café. Repo: `fredparedes58-ui/brewchain-app`. No accesible desde esta sesión.
-
-**Otros repos detectados sin clasificar todavía** (`fredparedes58-ui/...`): `futuro-club`, `my-project-hub`, `interference-tool-advance`, `dreamteam-arena`. Naturaleza por confirmar — ver §6b.3.
-
-> **Nota de consistencia del brand context:** `docs/krujens-brand-context.md` lista 4 verticales Krujens + placeholder y está alineado con §0–§5 de este documento. Colegio y Brewchain no entran ahí porque hoy están **fuera** del brand Krujens; si en el futuro se decide absorberlos, habría que actualizar §2 ("El portfolio de soluciones"), §4 (paleta) y §8 (hitos) de ese brand context. Lo mismo aplica a los repos sin clasificar de §6b.3 si alguno resulta ser un vertical Krujens en encubierto.
+**Para resolver:** una línea por repo del fundador y se reorganizan §3–§9.
 
 ---
 
 ## 11. Cómo navegar este documento
 
-- ¿Solo te importa **GRADA**? → §3 (todo el detalle del repo).
-- ¿Quieres comparar **producto a producto** del portfolio? → §2.
-- ¿Necesitas **identidad visual / paleta** de un vertical? → §1 (color asignado).
-- ¿Te preguntan por **el holding y su tesis**? → §0.
-- ¿Necesitas **un timeline de hitos**? → §8.
-- ¿Te preguntan por **los números de mercado de GRADA**? → `docs/market-study.md`.
-- ¿Te preguntan por **branding o tono Krujens**? → `docs/krujens-brand-context.md`.
+- **Solo me importa GRADA** → §3.
+- **Comparativa producto a producto** → §1.
+- **Tesis del holding, valores, paleta, hitos** → §2 (y `docs/krujens-brand-context.md`).
+- **Mercado y números de GRADA** → `docs/market-study.md`.
+- **Productos fuera del brand** → §8 (Colegio) y §9 (Brewchain).
+- **Repos sueltos por mapear** → §10.
+
+---
+
+## Apéndice · qué falta por confirmar para cerrar este doc
+
+1. **Colegio:** confirmar repo (¿es `futuro-club`?). Si es otro, decir cuál.
+2. **Brewchain:** confirmar lectura del nombre y sub-segmento real.
+3. **Repos sin clasificar (§10):** una línea por repo (`futuro-club`, `my-project-hub`, `interference-tool-advance`, `dreamteam-arena`).
+4. **Essence Bloom:** estado real del repo `essence-bloom` (el brand context dice "no lanzado", el repo existe).
+5. **Elite 380 y VITAS:** confirmar si tienen repos en GitHub que no están en la vista de "top repos" o siguen solo en local / sin código.
+
+> Si en el futuro Colegio o Brewchain se absorben en Krujens, hay que actualizar §2, §4 (paleta) y §8 (hitos) de `docs/krujens-brand-context.md` para que el brand context quede consistente con este doc.
