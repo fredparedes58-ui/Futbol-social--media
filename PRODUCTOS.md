@@ -52,14 +52,12 @@ fútbol base   análisis    academia    bienestar /    próximo
          Fuera del brand Krujens (por ahora)
    ┌─────────────────────┬─────────────────────┐
    ▼                     ▼
-Colegio              Café (nombre por
-(desarrollo           recordar — el usuario
-educativo)            está trabajándolo
-                      en Claude Code en
-                      otra sesión / repo)
+Colegio              Brewchain
+(desarrollo           (desarrollo de
+educativo)            café / hospitality)
 ```
 
-Sistema **endorsed brand** dentro de Krujens: cada vertical tiene marca propia, pero firma "una solución Krujens" en footer / about / legal. **Colegio y Café NO entran en este sistema por ahora** — son desarrollos paralelos sin paraguas Krujens.
+Sistema **endorsed brand** dentro de Krujens: cada vertical tiene marca propia, pero firma "una solución Krujens" en footer / about / legal. **Colegio y Brewchain NO entran en este sistema por ahora** — son desarrollos paralelos sin paraguas Krujens.
 
 **Color asignado a cada vertical** (paleta corporativa Krujens):
 
@@ -71,7 +69,7 @@ Sistema **endorsed brand** dentro de Krujens: cada vertical tiene marca propia, 
 | Essence Bloom | Deep Purple | `#B347FF` | bienestar, premium |
 | Krujens (matriz) | Krujens Green `#00E676` + Obsidian Navy `#0A1628` | — | identidad corporativa |
 | **Colegio** *(fuera de Krujens)* | n/a | n/a | identidad propia, sin paraguas Krujens |
-| **Café** *(fuera de Krujens)* | n/a | n/a | identidad propia, sin paraguas Krujens |
+| **Brewchain** *(fuera de Krujens)* | n/a | n/a | identidad propia, sin paraguas Krujens |
 
 ---
 
@@ -84,7 +82,7 @@ Sistema **endorsed brand** dentro de Krujens: cada vertical tiene marca propia, 
 | **GRADA** | Fútbol amateur federado | Jugador + club + familia + federación | Free + Pro 4,99€/mes + Club 29€/mes/equipo | Lanzamiento 2026 Q2, ronda seed 250k€ | **Este repo** |
 | **Elite 380** | Academia de fútbol | Academia + alumnos + familias | A definir | Primer MVP en producción 2025 Q4 | Repo aparte (no tocar) |
 | **VITAS** | Análisis deportivo | A definir (deportistas / clubes) | A definir | En portfolio, no lanzado | No en este repo |
-| **Essence Bloom** | Bienestar / rituales | Usuario final B2C | A definir | En portfolio, no lanzado | No en este repo |
+| **Essence Bloom** | Bienestar / rituales | Usuario final B2C | A definir | Repo propio, estado de desarrollo por confirmar | `fredparedes58-ui/essence-bloom` |
 | **[Futuro]** | Próximo vertical | A definir | A definir | A definir tras ARR Y2 GRADA | — |
 
 ### Fuera del brand Krujens (por ahora)
@@ -93,8 +91,9 @@ Desarrollos paralelos del fundador que no se consideran verticales Krujens hoy. 
 
 | Producto | Sector | Estado | Código |
 |---|---|---|---|
-| **Colegio** | Educación (centro educativo) | Desarrollo en marcha en otra sesión / repo de Claude Code | No en este repo, no accesible desde esta sesión |
-| **Café** *(nombre por recordar)* | Hospitality / café | Desarrollo en marcha en otra sesión / repo de Claude Code | No en este repo, no accesible desde esta sesión |
+| **Colegio** | Educación (centro educativo) | Desarrollo en marcha en otra sesión / repo de Claude Code | Repo no identificado todavía — sospechoso: `futuro-club`, por confirmar |
+| **Brewchain** | Hospitality / café | Desarrollo en marcha en otra sesión / repo de Claude Code | `fredparedes58-ui/brewchain-app` |
+| **Otros repos sin clasificar** | Por confirmar | Detectados en listado GitHub del fundador, ver §6b.3 | `futuro-club`, `my-project-hub`, `interference-tool-advance`, `dreamteam-arena` |
 
 ---
 
@@ -289,13 +288,17 @@ Filosofía **deterministic-first**: mocks deterministas con contrato estable, li
 
 **Sector:** bienestar / rituales (B2C wellness).
 
-**Estado:** en portfolio, **no lanzado**. Sin código en este repo.
+**Repositorio:** `github.com/fredparedes58-ui/essence-bloom` (confirmado desde el listado de top repos del fundador).
+
+**Estado:** tiene repo propio, **estado de desarrollo por confirmar** (`docs/krujens-brand-context.md` dice "no lanzado", pero al existir el repo es probable que haya código en marcha — pendiente revisar al abrir el repo).
 
 **Color secundario asignado:** Deep Purple `#B347FF` (bucket "bienestar, premium").
 
 **Diferenciador respecto al resto del portfolio:** primer vertical que sale del eje deportivo. Encaja con la misión Krujens de cubrir "salud, comunidad local" además de deporte.
 
 **Cuándo se lanza:** sin fecha pública. Probablemente después de validar el playbook con GRADA y un segundo vertical.
+
+**Pendiente:** abrir el repo en otra sesión para contrastar avance real vs. lo que dice el brand context.
 
 ---
 
@@ -316,19 +319,35 @@ Aclaración del fundador: hay dos desarrollos en marcha que **hoy no forman part
   - Estado de avance (idea / MVP / producción).
   - Decisión sobre si en algún momento se incorpora al brand Krujens o se mantiene independiente.
 
-### 6b.2 Café (nombre por recordar)
+### 6b.2 Brewchain (café)
 
 - **Sector:** hospitality / café.
+- **Repositorio:** `github.com/fredparedes58-ui/brewchain-app` (confirmado desde el listado de top repos del fundador).
 - **Tipo:** desarrollo paralelo, fuera del brand Krujens por ahora.
-- **Estado:** en construcción en otra sesión / repo de Claude Code. **El fundador no recuerda el nombre con el que está nombrado el proyecto** y desde esta sesión no se puede listar el resto de repos para cruzarlo (alcance GitHub limitado a `fredparedes58-ui/Grada`).
-- **Pendiente de aportar:**
-  - Nombre comercial / nombre del repo.
-  - Sub-segmento (¿gestión interna de la cafetería?, ¿fidelización de clientes?, ¿marketplace de café de especialidad?, ¿formación a baristas?).
-  - Audiencia, modelo, stack, repositorio.
+- **Estado:** en construcción en otra sesión / repo de Claude Code. No accesible desde esta sesión (alcance GitHub MCP limitado a `fredparedes58-ui/Grada`).
+- **Hipótesis sobre el nombre:** "Brewchain" sugiere algo en torno a la **trazabilidad / cadena del café** (brew + chain), aunque "chain" también puede leerse como cadena de cafeterías. Confirmar.
+- **Pendiente de aportar (al abrir el repo en otra sesión o al pasarme su README):**
+  - Sub-segmento real (¿trazabilidad blockchain del café?, ¿gestión interna de la cafetería?, ¿fidelización de clientes?, ¿marketplace de café de especialidad?, ¿formación a baristas?).
+  - Audiencia, modelo, stack.
   - Estado de avance.
   - Decisión sobre si entra en Krujens o se mantiene independiente.
 
-> **Acción concreta para retomar este apartado:** o me pasas las URLs de los repos (o sus nombres en `fredparedes58-ui/...`), o abres el cliente web de Claude Code, copias el nombre del proyecto donde lo trabajaste y me lo dictas. Con eso completo §6b.
+---
+
+### 6b.3 Otros repos detectados (sin clasificar)
+
+En el listado de top repos del fundador (`fredparedes58-ui`) aparecen estos cuatro proyectos adicionales que **no están mapeados** ni en el brand Krujens ni en la lista de "fuera del brand". Pueden ser experimentos, MVPs descartados, herramientas internas, alias de un producto ya listado o el repo de "Colegio" bajo otro nombre — **hace falta confirmación del fundador**:
+
+| Repo | Hipótesis (a validar) |
+|---|---|
+| `fredparedes58-ui/futuro-club` | ¿"Club del futuro"? Por nombre podría sonar a club deportivo / comunidad → ¿se solapa con GRADA o con Elite 380? ¿O es un proyecto educativo con lógica de "club"? Posible candidato a ser el repo de **Colegio**. |
+| `fredparedes58-ui/my-project-hub` | Por nombre, parece un *meta-hub* (portfolio / landing que enlaza a los demás productos). |
+| `fredparedes58-ui/interference-tool-advance` | Sin pista clara desde el nombre — sonaría a herramienta técnica / utilidad interna. |
+| `fredparedes58-ui/dreamteam-arena` | Por nombre, deportivo / fantasy. ¿Posible spin-off de GRADA o experimento previo? |
+
+> **Acción concreta para cerrar este apartado:** dictarme una línea por repo ("X es Y, está en estado Z, encaja en/fuera de Krujens") o pasarme el README de cada uno. Con eso reorganizo §3–§6b correctamente.
+
+> **Nota sobre "Colegio":** en la pantalla compartida hoy no aparece un repo llamado `colegio` o `escuela`. Puede que esté bajo "Show more" del listado, o que se llame de otra forma (sospechoso: `futuro-club`). Confirmar el repo correcto.
 
 ---
 
@@ -373,15 +392,17 @@ Aclaración del fundador: hay dos desarrollos en marcha que **hoy no forman part
 - **GRADA** — código completo en este repo, lanzamiento Q2 2026, ronda seed activa.
 - **Elite 380** — MVP en producción desde Q4 2025, repo aparte, no se toca desde aquí.
 - **VITAS** — en portfolio, sin código aquí, candidata a 2º lanzamiento 2027.
-- **Essence Bloom** — en portfolio, sin código aquí, fuera del eje deportivo.
+- **Essence Bloom** — repo propio (`essence-bloom`), estado de desarrollo por contrastar.
 - **[Futuro]** — placeholder, sin definir, decisión post-validación de los primeros lanzamientos.
 
 **Fuera del brand Krujens (por ahora):**
 
-- **Colegio** — desarrollo educativo paralelo, en otro repo / sesión, no accesible desde aquí.
-- **Café** *(nombre por recordar)* — desarrollo de hospitality paralelo, en otro repo / sesión, nombre olvidado por el fundador, no localizable desde esta sesión.
+- **Colegio** — desarrollo educativo paralelo. Repo aún sin identificar (sospechoso: `fredparedes58-ui/futuro-club`, por confirmar).
+- **Brewchain** — desarrollo de hospitality / café. Repo: `fredparedes58-ui/brewchain-app`. No accesible desde esta sesión.
 
-> **Nota de consistencia del brand context:** `docs/krujens-brand-context.md` lista 4 verticales Krujens + placeholder y está alineado con §0–§5 de este documento. Colegio y Café no entran ahí porque hoy están **fuera** del brand Krujens; si en el futuro se decide absorberlos, habría que actualizar §2 ("El portfolio de soluciones"), §4 (paleta) y §8 (hitos) de ese brand context.
+**Otros repos detectados sin clasificar todavía** (`fredparedes58-ui/...`): `futuro-club`, `my-project-hub`, `interference-tool-advance`, `dreamteam-arena`. Naturaleza por confirmar — ver §6b.3.
+
+> **Nota de consistencia del brand context:** `docs/krujens-brand-context.md` lista 4 verticales Krujens + placeholder y está alineado con §0–§5 de este documento. Colegio y Brewchain no entran ahí porque hoy están **fuera** del brand Krujens; si en el futuro se decide absorberlos, habría que actualizar §2 ("El portfolio de soluciones"), §4 (paleta) y §8 (hitos) de ese brand context. Lo mismo aplica a los repos sin clasificar de §6b.3 si alguno resulta ser un vertical Krujens en encubierto.
 
 ---
 
