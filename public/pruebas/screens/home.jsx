@@ -7,7 +7,7 @@ const FEED_POSTS = [
     avatarBg: '#1e3ca8',
     caption: 'Golazo de chilena en la final',
     highlight: 'Golazo',
-    hashtags: '#FutbolBase · #Cracks · #Gol',
+    hashtags: '#GRADA · #Cracks · #Gol',
     likes: 1200, comments: 340,
     bg: 'https://images.unsplash.com/photo-1551958219-acbc608c6377?w=900&q=85&auto=format&fit=crop',
     action: 'bicycle',

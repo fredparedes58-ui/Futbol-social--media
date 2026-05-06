@@ -2,7 +2,7 @@
 const { useState, useEffect, useRef } = React;
 
 // localStorage persistence
-const STORAGE_KEY = 'futbolbase_state_v1';
+const STORAGE_KEY = 'grada_state_v1';
 function loadState() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -123,7 +123,7 @@ function App() {
               fontFamily: 'Archivo, sans-serif', fontWeight: 900, fontStyle: 'italic',
               fontSize: 16, letterSpacing: '-0.01em', lineHeight: 1,
               color: '#fff',
-            }}>FUTBOLBASE</div>
+            }}>GRADA</div>
             <div style={{
               fontFamily: 'JetBrains Mono, monospace', fontSize: 9,
               letterSpacing: '0.2em', color: 'var(--accent-primary)',
