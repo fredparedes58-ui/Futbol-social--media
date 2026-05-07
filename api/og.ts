@@ -26,7 +26,7 @@ function teamSVG({ name, wins, draws, losses }: { name: string; wins: number; dr
   <g transform="translate(72,72)">
     <rect width="64" height="64" rx="14" fill="url(#badge)"/>
     <text x="32" y="48" text-anchor="middle" font-family="sans-serif" font-size="36" font-weight="900" fill="#0F0D0A">⚽</text>
-    <text x="84" y="44" font-family="sans-serif" font-size="28" font-weight="800" fill="#CCFF00">FútbolBase</text>
+    <text x="84" y="44" font-family="sans-serif" font-size="28" font-weight="800" fill="#CCFF00">GRADA</text>
   </g>
   <text x="72" y="260" font-family="sans-serif" font-size="84" font-weight="900" fill="#FAF5EB" letter-spacing="-3">${esc(name)}</text>
   <text x="72" y="310" font-family="sans-serif" font-size="24" fill="rgba(250,245,235,0.6)">Temporada en curso</text>
@@ -76,7 +76,7 @@ function playerSVG({ name, rating, team }: { name: string; rating: number; team:
 export default function handler(req: Request): Response {
   const url = new URL(req.url)
   const type = url.searchParams.get('type') ?? 'player'
-  const name = url.searchParams.get('name') ?? 'FútbolBase'
+  const name = url.searchParams.get('name') ?? 'GRADA'
 
   let svg: string
   if (type === 'team') {
@@ -90,7 +90,7 @@ export default function handler(req: Request): Response {
     svg = playerSVG({
       name,
       rating: Number(url.searchParams.get('rating')) || 78,
-      team: url.searchParams.get('team') ?? 'FútbolBase',
+      team: url.searchParams.get('team') ?? 'GRADA',
     })
   }
 

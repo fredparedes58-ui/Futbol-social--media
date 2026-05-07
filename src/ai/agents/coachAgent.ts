@@ -1,6 +1,7 @@
 /**
  * CoachAgent — conversacional. Recibe stats del usuario + query y devuelve
- * feedback + plan semanal. 100% determinístico (mismo input → misma respuesta).
+ * feedback (Claude AI) + plan semanal (determinístico).
+ * Llama a /api/coach (Edge Function) para el reply; fallback determinístico si falla.
  */
 import { defineAgent } from './types'
 import { mulberry32, seedFromString, deriveMetrics, gradeFromStats, type PlayerStats } from '../services/deterministic'
@@ -46,10 +47,43 @@ function analyze(stats: PlayerStats) {
   return { strengths, weaknesses }
 }
 
+function deterministicReply(input: CoachInput, grade: string, strengths: string[], weaknesses: string[]): string {
+  const q = (input.query ?? '').trim().toLowerCase()
+  if (!q) return `Hola ${input.name}. Tu nivel es ${grade}. Fortalezas en ${strengths.join(' y ')}, y una oportunidad clara en ${weaknesses[0]}. Plan de 7 días abajo.`
+  if (/plan|entren|rutina|ejercicio/.test(q)) return `Plan semanal enfocado en ${weaknesses[0]}. Cada sesión 40-60 min. Clave: consistencia.`
+  if (/gol|definic|remate/.test(q)) return `Ratio de goles ${input.stats.goals}/${input.stats.matches}. Finalización con arquero 3x/semana y 20 visualizaciones de remate antes de dormir.`
+  if (/asisten|pase/.test(q)) return `Asistencias = leer 2 pases antes. Rondos + pase largo + 20 min de video-análisis semanal.`
+  if (/mvp|mejorar|consejo/.test(q)) return `Para MVPs regulares: primer toque limpio, dominio del lado débil y comunicación constante.`
+  return `Seguí apalancando "${strengths[0]}" y metele foco esta semana en "${weaknesses[0]}".`
+}
+
+async function fetchAIReply(input: CoachInput, grade: string, strengths: string[], weaknesses: string[]): Promise<string> {
+  try {
+    const res = await fetch('/api/coach', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: input.name,
+        position: input.position,
+        query: input.query,
+        grade,
+        strengths,
+        weaknesses,
+        stats: input.stats,
+      }),
+    })
+    if (!res.ok) throw new Error(`HTTP ${res.status}`)
+    const { reply } = await res.json() as { reply: string }
+    return reply
+  } catch {
+    return deterministicReply(input, grade, strengths, weaknesses)
+  }
+}
+
 export const coachAgent = defineAgent<CoachInput, CoachOutput>(
   'coach-ai',
-  'Genera feedback y plan semanal determinístico basado en stats.',
-  (input, _ctx, trace) => {
+  'Feedback con Claude AI + plan semanal determinístico.',
+  async (input, _ctx, trace) => {
     const seed = seedFromString(`${input.name}-${input.stats.matches}-${input.stats.goals}`)
     const rng = mulberry32(seed)
     trace.push(`seed: ${seed}`)
@@ -71,32 +105,20 @@ export const coachAgent = defineAgent<CoachInput, CoachOutput>(
     ].slice(0, 7)
 
     const DAYS = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom']
+    const FOCUS_LABEL: Record<keyof typeof DRILLS, string> = {
+      shot: 'Definición', pass: 'Pase', def: 'Defensa',
+      phy: 'Físico', pace: 'Velocidad', dribble: 'Regate', mental: 'Mental',
+    }
     const plan = DAYS.map((d, i) => {
       const area = focusAreas[i % focusAreas.length]
       const drills = DRILLS[area]
       const drill = drills[Math.floor(rng() * drills.length)]
-      const FOCUS_LABEL: Record<keyof typeof DRILLS, string> = {
-        shot: 'Definición', pass: 'Pase', def: 'Defensa',
-        phy: 'Físico', pace: 'Velocidad', dribble: 'Regate', mental: 'Mental',
-      }
       return { day: d, focus: FOCUS_LABEL[area], drill }
     })
 
-    const q = (input.query ?? '').trim().toLowerCase()
-    let reply: string
-    if (!q) {
-      reply = `Hola ${input.name}. Tu nivel actual es ${grade}. Veo fortalezas en ${strengths.join(' y ')}, y una oportunidad clara en ${weaknesses[0]}. Te armé un plan de 7 días: cortito, específico y acumulativo.`
-    } else if (/plan|entren|rutina|ejercicio/.test(q)) {
-      reply = `Perfecto, acá va tu plan semanal enfocado en ${weaknesses[0]}. Cada sesión dura 40-60 min. La clave: consistencia, no intensidad.`
-    } else if (/gol|definic|remate/.test(q)) {
-      reply = `Tu ratio de goles es ${input.stats.goals}/${input.stats.matches}. Para subirlo, entrená finalización con arquero real 3x/semana y visualizá 20 remates antes de dormir.`
-    } else if (/asisten|pase/.test(q)) {
-      reply = `Las asistencias vienen de leer 2 pases antes. Rondos + pase largo + ver partidos con foco en los 10 del equipo favorito. 20 min de video-análisis semanales.`
-    } else if (/mvp|mejorar|consejo/.test(q)) {
-      reply = `Si querés MVPs regulares: primer toque limpio, dominio del lado débil y comunicación. El MVP suele ser el que más decisiones correctas toma, no el más rápido.`
-    } else {
-      reply = `Buena pregunta. Mi lectura rápida: seguí apalancando "${strengths[0]}" y metele foco esta semana en "${weaknesses[0]}". El plan lo tenés abajo.`
-    }
+    trace.push('fetching AI reply')
+    const reply = await fetchAIReply(input, grade, strengths, weaknesses)
+    trace.push('reply ok')
 
     return { reply, plan, grade, strengths, weaknesses }
   },

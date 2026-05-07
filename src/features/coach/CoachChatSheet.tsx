@@ -114,7 +114,7 @@ export default function CoachChatSheet({ open, onClose, name, position, stats }:
               Conversación 1:1
             </div>
             <div style={{ fontFamily: 'Space Grotesk', fontSize: 11, color: 'rgba(250,245,235,0.55)' }}>
-              Determinístico · recuerda tus stats
+              Claude AI · personalizado a tus stats
             </div>
           </div>
         </div>
