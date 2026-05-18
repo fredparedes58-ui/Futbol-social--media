@@ -5,11 +5,16 @@ import { useNotifications, type NotifKind } from '../../context/NotificationsCon
 interface Props { open: boolean; onClose: () => void }
 
 const ICONS: Record<NotifKind, { icon: typeof Target; color: string }> = {
-  goal:    { icon: Target,         color: '#CCFF00' },
-  match:   { icon: Calendar,       color: '#FFB800' },
-  message: { icon: MessageCircle,  color: '#CCFF00' },
-  team:    { icon: Users,          color: '#FF5B3A' },
-  trophy:  { icon: Trophy,         color: '#FFB800' },
+  goal:                 { icon: Target,         color: '#CCFF00' },
+  match:                { icon: Calendar,       color: '#FFB800' },
+  message:              { icon: MessageCircle,  color: '#CCFF00' },
+  team:                 { icon: Users,          color: '#FF5B3A' },
+  trophy:               { icon: Trophy,         color: '#FFB800' },
+  // FFCV
+  ffcv_schedule_change: { icon: Calendar,       color: '#FFB800' },
+  ffcv_postponed:       { icon: Calendar,       color: '#FF5B3A' },
+  ffcv_live_goal:       { icon: Target,         color: '#FF5B3A' },
+  ffcv_result:          { icon: Trophy,         color: '#CCFF00' },
 }
 
 export default function NotificationsPanel({ open, onClose }: Props) {

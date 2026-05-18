@@ -22,6 +22,8 @@ import TacticsBoardSheet from '../features/tactics/TacticsBoardSheet'
 import EventsSheet from '../features/events/EventsSheet'
 import PollCard from '../features/polls/PollCard'
 import { Calendar as CalendarIcon } from 'lucide-react'
+import FFCVEventCard from '../components/home/FFCVEventCard'
+import { FFCV_FEED_EVENTS, MATCHES_EXTERNAL } from '../lib/mock-ffcv'
 
 interface Post {
   id: number
@@ -306,6 +308,41 @@ export default function HomePage() {
             totalVoters={140}
           />
         </div>
+
+        {/* FFCV live events */}
+        {!loading && FFCV_FEED_EVENTS.length > 0 && (
+          <div style={{ padding: '0 20px 14px' }}>
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10,
+            }}>
+              <div style={{
+                width: 6, height: 6, borderRadius: '50%',
+                background: '#FF5B3A', boxShadow: '0 0 8px #FF5B3A',
+                animation: 'pulse-glow 1.2s ease-in-out infinite',
+              }} />
+              <span style={{
+                fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 10,
+                color: 'rgba(250, 245, 235, 0.5)', letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+              }}>
+                Novedades FFCV · en tiempo real
+              </span>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {FFCV_FEED_EVENTS.map(ev => {
+                const match = MATCHES_EXTERNAL.find(m => m.id === ev.match_id)
+                if (!match) return null
+                return (
+                  <FFCVEventCard
+                    key={ev.id}
+                    event={ev}
+                    match={match}
+                  />
+                )
+              })}
+            </div>
+          </div>
+        )}
 
         {/* Eventos CTA */}
         <div style={{ padding: '0 20px 14px' }}>
