@@ -5,11 +5,13 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronLeft, Plus, Minus, Target, Sparkles, Check, RefreshCw, Share2 } from 'lucide-react'
+import { ChevronLeft, Plus, Minus, Target, Sparkles, Check, RefreshCw, Share2, Zap, Star } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import NeonInput from '../components/ui/NeonInput'
 import NeonButton from '../components/ui/NeonButton'
 import FloatingOrbs from '../components/ui/FloatingOrbs'
+import { matchCommentatorAgent } from '../ai/agents/matchCommentatorAgent'
+import { detectHighlights, type Highlight } from '../ai/services/highlights'
 
 // Mock scorers pool (jugadores del equipo)
 const SQUAD = [
@@ -80,6 +82,7 @@ export default function RecordMatchPage() {
   const [recap, setRecap] = useState('')
   const [recapLoading, setRecapLoading] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [highlights, setHighlights] = useState<Highlight[]>([])
 
   const myTeam = user?.team ?? 'Mi equipo'
   const result: 'W' | 'D' | 'L' = myGoals > oppGoals ? 'W' : myGoals < oppGoals ? 'L' : 'D'
@@ -93,18 +96,24 @@ export default function RecordMatchPage() {
 
   function advance() {
     if (step === 2) {
-      // Generar recap
+      // Generar recap + highlights
       setDir(1)
       setStep(3)
       setRecapLoading(true)
-      setTimeout(() => {
+      const delay = new Promise<void>(r => setTimeout(r, 1100))
+      Promise.all([
+        matchCommentatorAgent.run({ home: myTeam, away: opponent, count: 18 }),
+        delay,
+      ]).then(([result]) => {
+        const { highlights: hl } = detectHighlights(result.data.events, 3)
+        setHighlights(hl)
         setRecap(generateRecap({
           myTeam, opponent,
           myGoals, oppGoals,
           scorers, date: matchDate,
         }))
         setRecapLoading(false)
-      }, 1100)
+      })
       return
     }
     if (step === 3) {
@@ -558,6 +567,65 @@ export default function RecordMatchPage() {
                     </div>
                   )}
                 </div>
+
+                {/* Momentos clave */}
+                {!recapLoading && highlights.length > 0 && (
+                  <div style={{ marginBottom: 14 }}>
+                    <div style={{
+                      display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8,
+                    }}>
+                      <Star size={12} color="#FFB800" />
+                      <span style={{
+                        fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 10,
+                        color: '#FFB800', textTransform: 'uppercase', letterSpacing: '0.1em',
+                      }}>
+                        Momentos clave del partido
+                      </span>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                      {highlights.map((hl, i) => {
+                        const typeColor: Record<string, string> = {
+                          goal: '#CCFF00', red: '#FF5B3A', save: '#00D4FF',
+                          chance: '#FFB800', halftime: '#B347FF', fulltime: '#CCFF00',
+                        }
+                        const color = typeColor[hl.event.type] ?? '#FAF5EB'
+                        return (
+                          <div key={i} style={{
+                            display: 'flex', alignItems: 'flex-start', gap: 10,
+                            padding: '10px 12px', borderRadius: 10,
+                            background: `${color}0d`,
+                            border: `1px solid ${color}33`,
+                          }}>
+                            <div style={{
+                              minWidth: 34, height: 22, borderRadius: 6,
+                              background: `${color}22`,
+                              display: 'flex', alignItems: 'center', justifyContent: 'center',
+                              fontFamily: 'Archivo', fontWeight: 900, fontSize: 10,
+                              color,
+                            }}>
+                              {hl.event.minute}'
+                            </div>
+                            <div style={{ flex: 1 }}>
+                              <div style={{
+                                fontFamily: 'Space Grotesk', fontSize: 12,
+                                color: 'rgba(250,245,235,0.85)', lineHeight: 1.4,
+                              }}>
+                                {hl.event.text}
+                              </div>
+                              <div style={{
+                                marginTop: 3, fontFamily: 'Space Grotesk', fontSize: 10,
+                                color: color, fontWeight: 600,
+                              }}>
+                                {hl.reason}
+                              </div>
+                            </div>
+                            <Zap size={12} color={color} style={{ flexShrink: 0, marginTop: 2 }} />
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )}
 
                 {!recapLoading && (
                   <button

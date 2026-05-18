@@ -18,7 +18,10 @@ import DuelsSheet from '../features/duels/DuelsSheet'
 import MarketSheet from '../features/market/MarketSheet'
 import MatchReplaySheet from '../features/replay/MatchReplaySheet'
 import { shareFifaCard } from '../features/share/shareFifaCard'
-import { MessageCircle, Flame, Crown, Swords, Store, Share2, Film } from 'lucide-react'
+import LeaderboardSheet from '../features/leaderboard/LeaderboardSheet'
+import TacticsBoardSheet from '../features/tactics/TacticsBoardSheet'
+import DrillsSheet from '../features/training/DrillsSheet'
+import { MessageCircle, Flame, Crown, Swords, Store, Share2, Film, BarChart2, Grid3X3, Dumbbell } from 'lucide-react'
 
 const STATS = [
   { icon: Trophy, label: 'Partidos',   value: 42, color: '#CCFF00' },
@@ -69,6 +72,9 @@ export default function ProfilePage() {
   const [duelsOpen, setDuelsOpen] = useState(false)
   const [marketOpen, setMarketOpen] = useState(false)
   const [replayOpen, setReplayOpen] = useState(false)
+  const [leaderboardOpen, setLeaderboardOpen] = useState(false)
+  const [tacticsOpen, setTacticsOpen] = useState(false)
+  const [drillsOpen, setDrillsOpen] = useState(false)
   const fifaCardRef = useRef<HTMLDivElement>(null)
 
   const [editing, setEditing] = useState(false)
@@ -404,12 +410,15 @@ export default function ProfilePage() {
 
         <div style={{ padding: '0 20px 18px', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
           {[
-            { label: 'Coach AI',   icon: MessageCircle, color: '#B347FF', onClick: () => setCoachOpen(true) },
-            { label: 'Pase',       icon: Crown,         color: '#FFB800', onClick: () => setPassOpen(true) },
-            { label: 'Duelos',     icon: Swords,        color: '#FF5B3A', onClick: () => setDuelsOpen(true) },
-            { label: 'Mercado',    icon: Store,         color: '#00D4FF', onClick: () => setMarketOpen(true) },
-            { label: 'Replay',     icon: Film,          color: '#CCFF00', onClick: () => setReplayOpen(true) },
-            { label: 'Compartir',  icon: Share2,        color: '#FAF5EB', onClick: async () => {
+            { label: 'Coach AI',    icon: MessageCircle, color: '#B347FF', onClick: () => setCoachOpen(true) },
+            { label: 'Pase',        icon: Crown,         color: '#FFB800', onClick: () => setPassOpen(true) },
+            { label: 'Duelos',      icon: Swords,        color: '#FF5B3A', onClick: () => setDuelsOpen(true) },
+            { label: 'Mercado',     icon: Store,         color: '#00D4FF', onClick: () => setMarketOpen(true) },
+            { label: 'Replay',      icon: Film,          color: '#CCFF00', onClick: () => setReplayOpen(true) },
+            { label: 'Ranking',     icon: BarChart2,     color: '#FFB800', onClick: () => setLeaderboardOpen(true) },
+            { label: 'Táctica',     icon: Grid3X3,       color: '#00D4FF', onClick: () => setTacticsOpen(true) },
+            { label: 'Entrenos',    icon: Dumbbell,      color: '#CCFF00', onClick: () => setDrillsOpen(true) },
+            { label: 'Compartir',   icon: Share2,        color: '#FAF5EB', onClick: async () => {
               if (!fifaCardRef.current) return
               const ok = await shareFifaCard(fifaCardRef.current, `${name}-fifa-card`)
               setToast(ok ? 'Tarjeta compartida' : 'No se pudo compartir')
@@ -817,6 +826,9 @@ export default function ProfilePage() {
       <DuelsSheet open={duelsOpen} onClose={() => setDuelsOpen(false)} me={name} />
       <MarketSheet open={marketOpen} onClose={() => setMarketOpen(false)} />
       <MatchReplaySheet open={replayOpen} onClose={() => setReplayOpen(false)} home={team} away="Rival FC" />
+      <LeaderboardSheet open={leaderboardOpen} onClose={() => setLeaderboardOpen(false)} me={name} />
+      <TacticsBoardSheet open={tacticsOpen} onClose={() => setTacticsOpen(false)} />
+      <DrillsSheet open={drillsOpen} onClose={() => setDrillsOpen(false)} name={name} weaknesses={['shot', 'def', 'pace']} />
       <BottomNav />
     </div>
   )
