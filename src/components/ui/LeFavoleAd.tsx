@@ -1,7 +1,6 @@
 /**
- * LeFavoleAd — Publicidad flotante interactiva del restaurante Le Favole.
- * Aparece con delay, flota con animación, brilla con destellos dorados.
- * Al pulsarla abre https://lefavole.es/es/ en nueva pestaña.
+ * LeFavoleAd — Publicidad flotante compacta de Le Favole.
+ * Tamaño reducido, integrada con el design system de GRADA.
  */
 import { useEffect, useState } from 'react'
 
@@ -10,24 +9,22 @@ const GOLD2 = '#E8C97A'
 const URL   = 'https://lefavole.es/es/'
 
 export default function LeFavoleAd() {
-  const [visible, setVisible] = useState(false)
+  const [visible, setVisible]   = useState(false)
   const [dismissed, setDismissed] = useState(false)
-  const [sparkle, setSparkle] = useState(false)
+  const [sparkle, setSparkle]   = useState(false)
 
-  // Aparece con 1.8 s de delay para no interrumpir el primer render
   useEffect(() => {
     const t = setTimeout(() => setVisible(true), 1800)
     return () => clearTimeout(t)
   }, [])
 
-  // Sparkle cada 4 s
   useEffect(() => {
     if (!visible) return
-    const interval = setInterval(() => {
+    const id = setInterval(() => {
       setSparkle(true)
-      setTimeout(() => setSparkle(false), 900)
-    }, 4000)
-    return () => clearInterval(interval)
+      setTimeout(() => setSparkle(false), 800)
+    }, 5000)
+    return () => clearInterval(id)
   }, [visible])
 
   if (dismissed) return null
@@ -36,155 +33,139 @@ export default function LeFavoleAd() {
     <>
       <style>{`
         @keyframes lf-float {
-          0%,100% { transform: translateY(0px) rotate(-1deg); }
-          50%      { transform: translateY(-7px) rotate(0.5deg); }
-        }
-        @keyframes lf-glow-pulse {
-          0%,100% { box-shadow: 0 0 18px ${GOLD}55, 0 0 40px ${GOLD}22, inset 0 0 12px rgba(201,167,106,0.08); }
-          50%      { box-shadow: 0 0 28px ${GOLD}99, 0 0 60px ${GOLD}44, inset 0 0 18px rgba(201,167,106,0.15); }
-        }
-        @keyframes lf-shimmer {
-          0%   { left: -80px; opacity: 0; }
-          20%  { opacity: 1; }
-          80%  { opacity: 1; }
-          100% { left: 160px; opacity: 0; }
-        }
-        @keyframes lf-sparkle-in {
-          0%   { opacity: 0; transform: scale(0) rotate(0deg); }
-          50%  { opacity: 1; transform: scale(1.3) rotate(180deg); }
-          100% { opacity: 0; transform: scale(0) rotate(360deg); }
+          0%,100% { transform: translateY(0px); }
+          50%      { transform: translateY(-5px); }
         }
         @keyframes lf-enter {
-          0%   { opacity: 0; transform: translateY(20px) scale(0.88); }
-          100% { opacity: 1; transform: translateY(0) scale(1); }
+          from { opacity: 0; transform: translateY(12px) scale(0.92); }
+          to   { opacity: 1; transform: translateY(0)    scale(1); }
         }
-        @keyframes lf-border-rotate {
-          0%   { background-position: 0% 50%; }
-          50%  { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
+        @keyframes lf-glow {
+          0%,100% { box-shadow: 0 0 10px ${GOLD}44, 0 2px 12px rgba(0,0,0,0.5); }
+          50%      { box-shadow: 0 0 18px ${GOLD}77, 0 2px 16px rgba(0,0,0,0.6); }
+        }
+        @keyframes lf-shimmer {
+          0%   { left: -50px; opacity: 0; }
+          30%  { opacity: 0.9; }
+          70%  { opacity: 0.9; }
+          100% { left: 110px; opacity: 0; }
+        }
+        @keyframes lf-spark {
+          0%   { opacity: 0; transform: scale(0) rotate(0deg); }
+          50%  { opacity: 1; transform: scale(1.2) rotate(180deg); }
+          100% { opacity: 0; transform: scale(0) rotate(360deg); }
         }
       `}</style>
 
-      {/* Contenedor principal */}
-      <div
-        style={{
-          position: 'absolute',
-          bottom: 90,
-          right: 16,
-          zIndex: 50,
-          opacity: visible ? 1 : 0,
-          pointerEvents: visible ? 'auto' : 'none',
-          animation: visible ? 'lf-enter 0.6s cubic-bezier(.2,.8,.2,1) both, lf-float 5s ease-in-out 0.6s infinite' : 'none',
-        }}
-      >
-        {/* Capa de borde con gradiente animado */}
+      <div style={{
+        position: 'absolute',
+        bottom: 72,
+        right: 14,
+        zIndex: 50,
+        opacity: visible ? 1 : 0,
+        pointerEvents: visible ? 'auto' : 'none',
+        animation: visible
+          ? 'lf-enter 0.5s cubic-bezier(.2,.8,.2,1) both, lf-float 4.5s ease-in-out 0.5s infinite'
+          : 'none',
+      }}>
+
+        {/* Borde dorado fino */}
         <div style={{
-          position: 'absolute', inset: -2, borderRadius: 18,
-          background: `linear-gradient(135deg, ${GOLD}, #8B6A2E, ${GOLD2}, #6B4F1E, ${GOLD})`,
-          backgroundSize: '300% 300%',
-          animation: 'lf-border-rotate 4s ease infinite',
-          filter: 'blur(1px)',
+          position: 'absolute', inset: -1.5, borderRadius: 13,
+          background: `linear-gradient(135deg, ${GOLD}99, #6B4F1E55, ${GOLD2}88, #6B4F1E44)`,
+          filter: 'blur(0.5px)',
         }} />
 
-        {/* Card principal */}
+        {/* Card */}
         <div
           onClick={() => window.open(URL, '_blank', 'noopener,noreferrer')}
           style={{
             position: 'relative',
-            width: 162,
-            background: 'linear-gradient(145deg, #0D0B08, #1A1508, #0D0B08)',
-            borderRadius: 16,
-            padding: '12px 14px 11px',
+            width: 118,
+            background: 'linear-gradient(160deg, #110F09, #1C1508)',
+            borderRadius: 12,
+            padding: '9px 10px 8px',
             cursor: 'pointer',
             overflow: 'hidden',
-            animation: 'lf-glow-pulse 3s ease-in-out infinite',
-            border: '1px solid rgba(201,167,106,0.3)',
+            animation: 'lf-glow 3.5s ease-in-out infinite',
           }}
         >
           {/* Shimmer sweep */}
-          <div style={{
-            position: 'absolute', top: 0, bottom: 0, width: 60,
-            background: 'linear-gradient(90deg, transparent, rgba(201,167,106,0.25), transparent)',
-            animation: sparkle ? 'lf-shimmer 0.9s ease-in-out' : 'none',
-            pointerEvents: 'none',
-          }} />
-
-          {/* Estrellas de destello */}
           {sparkle && (
-            <>
-              <div style={{ position: 'absolute', top: 6, right: 18, animation: 'lf-sparkle-in 0.9s ease-out', pointerEvents: 'none' }}>
-                <StarGlyph size={10} color={GOLD2} />
-              </div>
-              <div style={{ position: 'absolute', bottom: 10, left: 10, animation: 'lf-sparkle-in 0.9s ease-out 0.12s both', pointerEvents: 'none' }}>
-                <StarGlyph size={7} color={GOLD} />
-              </div>
-              <div style={{ position: 'absolute', top: 22, right: 8, animation: 'lf-sparkle-in 0.9s ease-out 0.22s both', pointerEvents: 'none' }}>
-                <StarGlyph size={5} color={GOLD2} />
-              </div>
-            </>
+            <div style={{
+              position: 'absolute', top: 0, bottom: 0, width: 40,
+              background: `linear-gradient(90deg, transparent, ${GOLD}30, transparent)`,
+              animation: 'lf-shimmer 0.8s ease-in-out',
+              pointerEvents: 'none',
+            }} />
           )}
 
-          {/* Badge "Patrocinado" */}
+          {/* Destellos */}
+          {sparkle && <>
+            <div style={{ position: 'absolute', top: 5, right: 14, animation: 'lf-spark 0.8s ease-out', pointerEvents: 'none' }}>
+              <Spark size={6} color={GOLD2} />
+            </div>
+            <div style={{ position: 'absolute', bottom: 8, left: 8, animation: 'lf-spark 0.8s ease-out 0.1s both', pointerEvents: 'none' }}>
+              <Spark size={4.5} color={GOLD} />
+            </div>
+          </>}
+
+          {/* Fila superior: label + cerrar */}
           <div style={{
-            position: 'absolute', top: 7, left: 8,
-            fontFamily: 'Space Grotesk, sans-serif', fontSize: 7.5, fontWeight: 700,
-            color: `${GOLD}99`, letterSpacing: '0.12em', textTransform: 'uppercase',
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            marginBottom: 6,
           }}>
-            Patrocinado
-          </div>
-
-          {/* Botón cerrar */}
-          <button
-            onClick={e => { e.stopPropagation(); setDismissed(true) }}
-            style={{
-              position: 'absolute', top: 5, right: 6,
-              background: 'transparent', border: 'none', cursor: 'pointer',
-              color: `${GOLD}66`, fontSize: 13, lineHeight: 1,
-              padding: 2,
-            }}
-            aria-label="Cerrar"
-          >
-            ×
-          </button>
-
-          {/* Logo SVG — Art Deco "LE" monogram */}
-          <div style={{ display: 'flex', justifyContent: 'center', marginTop: 14, marginBottom: 8 }}>
-            <LeFavoleLogo size={56} />
-          </div>
-
-          {/* Texto Le Favole */}
-          <div style={{ textAlign: 'center' }}>
-            <div style={{
-              fontFamily: 'Georgia, "Times New Roman", serif',
-              fontSize: 10.5, fontWeight: 400, letterSpacing: '0.28em',
-              color: GOLD, textTransform: 'uppercase',
-              textShadow: `0 0 10px ${GOLD}88`,
+            <span style={{
+              fontFamily: 'Space Grotesk, sans-serif', fontSize: 7, fontWeight: 600,
+              color: `${GOLD}88`, letterSpacing: '0.14em', textTransform: 'uppercase',
             }}>
-              Le Favole
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4, margin: '4px 0 2px' }}>
-              <div style={{ flex: 1, height: 0.5, background: `linear-gradient(90deg, transparent, ${GOLD}88)` }} />
-              <div style={{ flex: 1, height: 0.5, background: `linear-gradient(270deg, transparent, ${GOLD}88)` }} />
-            </div>
-            <div style={{
-              fontFamily: 'Space Grotesk, sans-serif', fontSize: 8.5, fontWeight: 400,
-              color: `${GOLD}99`, letterSpacing: '0.15em',
-              textTransform: 'uppercase',
-            }}>
-              Restaurante
+              Patrocinado
+            </span>
+            <button
+              onClick={e => { e.stopPropagation(); setDismissed(true) }}
+              style={{
+                background: 'none', border: 'none', cursor: 'pointer',
+                color: `${GOLD}66`, fontSize: 11, lineHeight: 1, padding: '0 0 0 4px',
+              }}
+              aria-label="Cerrar"
+            >×</button>
+          </div>
+
+          {/* Logo + nombre en fila */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 7 }}>
+            <LeFavoleLogo size={30} />
+            <div>
+              <div style={{
+                fontFamily: 'Georgia, serif', fontSize: 9, fontWeight: 400,
+                color: GOLD, letterSpacing: '0.18em', textTransform: 'uppercase',
+                textShadow: `0 0 8px ${GOLD}66`,
+                lineHeight: 1.2,
+              }}>
+                Le Favole
+              </div>
+              {/* Líneas decorativas */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 2, margin: '2px 0' }}>
+                <div style={{ flex: 1, height: 0.5, background: `${GOLD}66` }} />
+              </div>
+              <div style={{
+                fontFamily: 'Space Grotesk, sans-serif', fontSize: 6.5, fontWeight: 400,
+                color: `${GOLD}88`, letterSpacing: '0.12em', textTransform: 'uppercase',
+              }}>
+                Restaurante
+              </div>
             </div>
           </div>
 
-          {/* CTA strip */}
+          {/* CTA */}
           <div style={{
-            marginTop: 9, padding: '6px 0', borderRadius: 8,
-            background: `linear-gradient(90deg, ${GOLD}22, ${GOLD}44, ${GOLD}22)`,
-            border: `1px solid ${GOLD}44`,
+            padding: '4px 6px', borderRadius: 6,
+            background: `linear-gradient(90deg, ${GOLD}25, ${GOLD}40, ${GOLD}25)`,
+            border: `0.5px solid ${GOLD}55`,
             textAlign: 'center',
           }}>
             <span style={{
-              fontFamily: 'Space Grotesk, sans-serif', fontSize: 8.5, fontWeight: 700,
-              color: GOLD, letterSpacing: '0.12em', textTransform: 'uppercase',
+              fontFamily: 'Space Grotesk, sans-serif', fontSize: 7, fontWeight: 700,
+              color: GOLD2, letterSpacing: '0.1em', textTransform: 'uppercase',
             }}>
               Reservar mesa →
             </span>
@@ -195,58 +176,35 @@ export default function LeFavoleAd() {
   )
 }
 
-/** Monograma Art Deco "LE" inspirado en el logo de Le Favole */
-function LeFavoleLogo({ size = 56 }: { size?: number }) {
-  const g = GOLD
-  const g2 = GOLD2
+function LeFavoleLogo({ size = 30 }: { size?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 56 56" fill="none">
-      {/* Fondo circular sutil */}
-      <circle cx="28" cy="28" r="27" fill="rgba(201,167,106,0.06)" stroke={`${g}44`} strokeWidth="0.5" />
-
-      {/* ─── Letra L (izquierda) ─── */}
-      {/* Vertical lines del L */}
-      <line x1="12" y1="12" x2="12" y2="38" stroke={g}  strokeWidth="1.6" strokeLinecap="round" />
-      <line x1="15" y1="12" x2="15" y2="38" stroke={g2} strokeWidth="1.1" strokeLinecap="round" />
-      <line x1="18" y1="14" x2="18" y2="38" stroke={g}  strokeWidth="0.7" strokeLinecap="round" />
-      {/* Horizontal foot del L */}
-      <line x1="12" y1="38" x2="26" y2="38" stroke={g}  strokeWidth="1.6" strokeLinecap="round" />
-      <line x1="12" y1="35" x2="26" y2="35" stroke={g2} strokeWidth="1.1" strokeLinecap="round" />
-
-      {/* ─── Letra E (derecha) ─── */}
-      {/* Vertical spine del E */}
-      <line x1="28" y1="12" x2="28" y2="38" stroke={g}  strokeWidth="1.6" strokeLinecap="round" />
-      <line x1="31" y1="12" x2="31" y2="38" stroke={g2} strokeWidth="1.1" strokeLinecap="round" />
-      {/* Top bar */}
-      <line x1="28" y1="12" x2="42" y2="12" stroke={g}  strokeWidth="1.6" strokeLinecap="round" />
-      <line x1="28" y1="15" x2="42" y2="15" stroke={g2} strokeWidth="1.1" strokeLinecap="round" />
-      {/* Middle bar */}
-      <line x1="28" y1="24" x2="39" y2="24" stroke={g}  strokeWidth="1.5" strokeLinecap="round" />
-      <line x1="28" y1="27" x2="37" y2="27" stroke={g2} strokeWidth="0.9" strokeLinecap="round" />
-      {/* Bottom bar */}
-      <line x1="28" y1="38" x2="44" y2="38" stroke={g}  strokeWidth="1.6" strokeLinecap="round" />
-      <line x1="28" y1="35" x2="44" y2="35" stroke={g2} strokeWidth="1.1" strokeLinecap="round" />
-
-      {/* Destello central */}
-      <circle cx="28" cy="25" r="1.2" fill={g2} opacity="0.7" />
-
-      {/* Líneas decorativas esquinas */}
-      <line x1="4"  y1="50" x2="52" y2="50" stroke={`${g}55`} strokeWidth="0.5" />
-      <line x1="4"  y1="52" x2="52" y2="52" stroke={`${g}33`} strokeWidth="0.4" />
+    <svg width={size} height={size} viewBox="0 0 30 30" fill="none" style={{ flexShrink: 0 }}>
+      <rect width="30" height="30" rx="5" fill="rgba(201,167,106,0.07)" />
+      {/* L */}
+      <line x1="6"  y1="6"  x2="6"  y2="21" stroke={GOLD}  strokeWidth="1.4" strokeLinecap="round" />
+      <line x1="8.5" y1="6" x2="8.5" y2="21" stroke={GOLD2} strokeWidth="0.8" strokeLinecap="round" />
+      <line x1="6"  y1="21" x2="14" y2="21" stroke={GOLD}  strokeWidth="1.4" strokeLinecap="round" />
+      <line x1="6"  y1="18.5" x2="14" y2="18.5" stroke={GOLD2} strokeWidth="0.8" strokeLinecap="round" />
+      {/* E */}
+      <line x1="16" y1="6"  x2="16" y2="21" stroke={GOLD}  strokeWidth="1.4" strokeLinecap="round" />
+      <line x1="18.5" y1="6" x2="18.5" y2="21" stroke={GOLD2} strokeWidth="0.8" strokeLinecap="round" />
+      <line x1="16" y1="6"  x2="24" y2="6"  stroke={GOLD}  strokeWidth="1.4" strokeLinecap="round" />
+      <line x1="16" y1="13" x2="22" y2="13" stroke={GOLD}  strokeWidth="1.2" strokeLinecap="round" />
+      <line x1="16" y1="21" x2="24" y2="21" stroke={GOLD}  strokeWidth="1.4" strokeLinecap="round" />
+      {/* línea deco inferior */}
+      <line x1="2" y1="26" x2="28" y2="26" stroke={`${GOLD}55`} strokeWidth="0.4" />
+      <line x1="2" y1="27.5" x2="28" y2="27.5" stroke={`${GOLD}33`} strokeWidth="0.3" />
     </svg>
   )
 }
 
-/** Estrella de 4 puntas para los destellos */
-function StarGlyph({ size = 8, color = GOLD2 }: { size?: number; color?: string }) {
+function Spark({ size = 6, color = GOLD2 }: { size?: number; color?: string }) {
   const h = size / 2
-  const q = size / 4
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} fill="none">
       <path
-        d={`M${h} 0 L${h + q * 0.3} ${h - q * 0.3} L${size} ${h} L${h + q * 0.3} ${h + q * 0.3} L${h} ${size} L${h - q * 0.3} ${h + q * 0.3} L0 ${h} L${h - q * 0.3} ${h - q * 0.3} Z`}
+        d={`M${h} 0 L${h * 1.25} ${h * 0.75} L${size} ${h} L${h * 1.25} ${h * 1.25} L${h} ${size} L${h * 0.75} ${h * 1.25} L0 ${h} L${h * 0.75} ${h * 0.75} Z`}
         fill={color}
-        filter={`drop-shadow(0 0 ${q}px ${color})`}
       />
     </svg>
   )
