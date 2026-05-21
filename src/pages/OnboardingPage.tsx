@@ -5,6 +5,7 @@ import FloatingOrbs from '../components/ui/FloatingOrbs'
 import FloatingEmojis from '../components/ui/FloatingEmojis'
 import FloatingChip from '../components/ui/FloatingChip'
 import PulseRings from '../components/ui/PulseRings'
+import LeFavoleAd from '../components/ui/LeFavoleAd'
 
 export default function OnboardingPage() {
   const nav = useNavigate()
@@ -241,6 +242,9 @@ export default function OnboardingPage() {
           Inicia sesión
         </button>
       </div>
+
+      {/* Le Favole — publicidad flotante */}
+      <LeFavoleAd />
 
       {/* Local keyframes used in this page */}
       <style>{`

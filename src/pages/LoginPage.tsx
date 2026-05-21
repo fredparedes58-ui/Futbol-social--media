@@ -6,6 +6,7 @@ import EpicStadiumBackground from '../components/ui/EpicStadiumBackground'
 import FloatingOrbs from '../components/ui/FloatingOrbs'
 import NeonButton from '../components/ui/NeonButton'
 import NeonInput from '../components/ui/NeonInput'
+import LeFavoleAd from '../components/ui/LeFavoleAd'
 
 export default function LoginPage() {
   const nav = useNavigate()
@@ -131,6 +132,9 @@ export default function LoginPage() {
           </button>
         </div>
       </div>
+
+      {/* Le Favole — publicidad flotante */}
+      <LeFavoleAd />
     </div>
   )
 }
