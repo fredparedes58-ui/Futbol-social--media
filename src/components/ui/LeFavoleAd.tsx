@@ -144,23 +144,6 @@ export default function LeFavoleAd() {
   )
 }
 
-function LeFavoleLogo({ size = 18 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 30 30" fill="none" style={{ flexShrink: 0 }}>
-      <rect width="30" height="30" rx="5" fill="rgba(201,167,106,0.07)" />
-      <line x1="6"  y1="6"  x2="6"  y2="21" stroke={GOLD}  strokeWidth="1.4" strokeLinecap="round" />
-      <line x1="8.5" y1="6" x2="8.5" y2="21" stroke={GOLD2} strokeWidth="0.8" strokeLinecap="round" />
-      <line x1="6"  y1="21" x2="14" y2="21" stroke={GOLD}  strokeWidth="1.4" strokeLinecap="round" />
-      <line x1="6"  y1="18.5" x2="14" y2="18.5" stroke={GOLD2} strokeWidth="0.8" strokeLinecap="round" />
-      <line x1="16" y1="6"  x2="16" y2="21" stroke={GOLD}  strokeWidth="1.4" strokeLinecap="round" />
-      <line x1="18.5" y1="6" x2="18.5" y2="21" stroke={GOLD2} strokeWidth="0.8" strokeLinecap="round" />
-      <line x1="16" y1="6"  x2="24" y2="6"  stroke={GOLD}  strokeWidth="1.4" strokeLinecap="round" />
-      <line x1="16" y1="13" x2="22" y2="13" stroke={GOLD}  strokeWidth="1.2" strokeLinecap="round" />
-      <line x1="16" y1="21" x2="24" y2="21" stroke={GOLD}  strokeWidth="1.4" strokeLinecap="round" />
-    </svg>
-  )
-}
-
 function Spark({ size = 4, color = GOLD2 }: { size?: number; color?: string }) {
   const h = size / 2
   return (
