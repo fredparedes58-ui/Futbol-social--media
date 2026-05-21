@@ -110,12 +110,6 @@ export default function LeFavoleAd() {
             </div>
           )}
 
-          {/* Logo SVG mini */}
-          <LeFavoleLogo size={18} />
-
-          {/* Separador */}
-          <div style={{ width: 0.5, height: 14, background: `${GOLD}44`, flexShrink: 0 }} />
-
           {/* Texto */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
             <span style={{
