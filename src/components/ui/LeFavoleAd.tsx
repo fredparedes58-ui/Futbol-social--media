@@ -68,7 +68,7 @@ export default function LeFavoleAd() {
       {/* Contenedor principal */}
       <div
         style={{
-          position: 'fixed',
+          position: 'absolute',
           bottom: 90,
           right: 16,
           zIndex: 50,
