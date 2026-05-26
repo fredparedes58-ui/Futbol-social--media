@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>GRADA · Análisis Competitivo & Financiero 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,600;0,700;0,800;0,900;1,800;1,900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0F0D0A;--bg2:#141009;--bg3:#1A160E;
+  --surface:rgba(255,255,255,.03);--surface-hi:rgba(255,255,255,.065);--surface-hover:rgba(255,255,255,.09);
+  --lime:#CCFF00;--amber:#FFB800;--coral:#FF5B3A;--cyan:#00D4FF;--purple:#B347FF;--green:#00E676;
+  --warm:#FAF5EB;--wm:rgba(250,245,235,.65);--wd:rgba(250,245,235,.38);--ws:rgba(250,245,235,.82);
+  --border:rgba(255,220,180,.09);--border-hi:rgba(255,220,180,.18);
+  --ok:var(--lime);--warn:var(--amber);--bad:var(--coral);
+  --glow-lime:0 0 28px rgba(204,255,0,.28),0 0 56px rgba(204,255,0,.10);
+  --glow-amber:0 0 24px rgba(255,184,0,.22),0 0 48px rgba(255,184,0,.08);
+  --glow-coral:0 0 24px rgba(255,91,58,.22);
+  --sidebar-w:220px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--warm);font-family:'Space Grotesk',Inter,system-ui,sans-serif;
+  line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;
+  background-image:
+    radial-gradient(ellipse 1400px 700px at 10% -5%,rgba(204,255,0,.07),transparent 55%),
+    radial-gradient(ellipse 1200px 600px at 90% 5%,rgba(255,184,0,.05),transparent 55%),
+    radial-gradient(ellipse 1600px 800px at 50% 110%,rgba(179,71,255,.04),transparent 55%);
+  min-height:100vh;
+}
+h1,h2,h3,h4,h5{font-family:'Archivo',sans-serif;font-weight:900;letter-spacing:-.02em;line-height:1.1}
+
+/* LAYOUT */
+.layout{display:flex;gap:0;min-height:100vh}
+.sidebar{
+  width:var(--sidebar-w);flex-shrink:0;
+  position:sticky;top:0;height:100vh;overflow-y:auto;
+  border-right:1px solid var(--border);
+  padding:32px 0;
+  background:rgba(15,13,10,.92);backdrop-filter:blur(12px);
+}
+.sidebar-logo{padding:0 20px 24px;border-bottom:1px solid var(--border);margin-bottom:20px}
+.sidebar-logo .g{font-family:'Archivo';font-weight:900;font-size:20px;color:var(--lime);letter-spacing:-.01em}
+.sidebar-logo .sub{font-size:10px;color:var(--wd);letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
+.nav-item{
+  display:block;padding:7px 20px;font-size:11.5px;font-weight:600;
+  color:var(--wd);text-decoration:none;border-left:2px solid transparent;
+  transition:all .2s;letter-spacing:.01em;
+}
+.nav-item:hover{color:var(--warm);background:var(--surface)}
+.nav-item.active{color:var(--lime);border-left-color:var(--lime);background:rgba(204,255,0,.05)}
+.nav-group{padding:8px 20px 4px;font-size:9px;font-weight:800;color:var(--wd);letter-spacing:.14em;text-transform:uppercase;margin-top:8px}
+
+.main{flex:1;min-width:0;padding:56px 56px 120px;max-width:1100px}
+
+/* HERO */
+.badge{display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border-radius:999px;
+  background:rgba(204,255,0,.08);border:1px solid rgba(204,255,0,.28);
+  color:var(--lime);font-size:10px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;
+  margin-bottom:20px;font-family:'Space Grotesk'}
+.hero{padding-bottom:40px;border-bottom:1px solid var(--border);margin-bottom:64px}
+.hero h1{font-size:clamp(38px,4.5vw,58px);margin-bottom:16px;line-height:1.05}
+.hero h1 .grad{background:linear-gradient(120deg,var(--lime) 0%,var(--amber) 55%,var(--coral) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.hero .lede{font-size:17px;color:var(--wm);max-width:700px;line-height:1.6;margin-bottom:24px}
+.meta-row{display:flex;gap:24px;flex-wrap:wrap}
+.meta-chip{font-size:11px;color:var(--wd);font-family:'JetBrains Mono';
+  padding:4px 10px;border-radius:6px;background:var(--surface);border:1px solid var(--border)}
+.meta-chip strong{color:var(--ws);font-family:'Space Grotesk';font-weight:700}
+
+/* SECTIONS */
+.section{margin-bottom:80px;scroll-margin-top:40px}
+h2.section-title{
+  font-size:26px;margin-bottom:6px;display:flex;align-items:center;gap:14px;
+  padding-bottom:14px;border-bottom:1px solid var(--border);
+}
+h2.section-title .num{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:34px;height:34px;border-radius:9px;flex-shrink:0;
+  background:linear-gradient(135deg,rgba(204,255,0,.15),rgba(255,184,0,.10));
+  border:1px solid var(--border-hi);
+  font-size:13px;color:var(--lime);font-family:'JetBrains Mono';font-weight:700
+}
+.section-sub{color:var(--wm);font-size:14px;margin-bottom:32px;max-width:760px;line-height:1.65}
+
+/* VERDICT BOX */
+.verdict{
+  padding:28px 32px;border-radius:16px;margin-bottom:40px;
+  background:linear-gradient(135deg,rgba(255,91,58,.12),rgba(255,184,0,.06));
+  border:1px solid rgba(255,91,58,.4);
+}
+.verdict.good{background:linear-gradient(135deg,rgba(204,255,0,.10),rgba(0,230,118,.06));border-color:rgba(204,255,0,.35)}
+.verdict.warn{background:linear-gradient(135deg,rgba(255,184,0,.12),rgba(255,91,58,.06));border-color:rgba(255,184,0,.4)}
+.verdict-label{font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--coral);margin-bottom:8px;font-family:'Space Grotesk'}
+.verdict.good .verdict-label{color:var(--lime)}
+.verdict.warn .verdict-label{color:var(--amber)}
+.verdict p{font-size:15px;color:var(--ws);line-height:1.65}
+.verdict strong{color:var(--lime)}
+.verdict.warn strong{color:var(--amber)}
+
+/* CARDS */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px;transition:border-color .25s}
+.card:hover{border-color:var(--border-hi)}
+.card-title{font-family:'Archivo';font-weight:800;font-size:18px;margin-bottom:4px}
+.card-sub{font-size:12px;color:var(--wm);margin-bottom:16px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+
+/* STAT */
+.stat-block{text-align:center;padding:20px 16px;background:var(--surface);border:1px solid var(--border);border-radius:12px}
+.stat-block .val{font-family:'Archivo';font-weight:900;font-size:28px;color:var(--lime);line-height:1}
+.stat-block .lbl{font-size:11px;color:var(--wd);margin-top:6px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.stat-block .sub{font-size:10px;color:var(--wd);margin-top:2px;font-family:'JetBrains Mono'}
+
+/* COMPETITOR OVERVIEW TABLE */
+.comp-table-wrap{overflow-x:auto;margin-bottom:32px}
+.comp-table{width:100%;border-collapse:separate;border-spacing:0;font-size:12.5px;min-width:860px}
+.comp-table th{
+  padding:12px 14px;background:rgba(255,255,255,.025);
+  color:var(--wd);font-weight:800;font-size:10px;text-transform:uppercase;letter-spacing:.1em;
+  border-bottom:1px solid var(--border);font-family:'Archivo';white-space:nowrap;text-align:left
+}
+.comp-table th.us{background:rgba(204,255,0,.07);color:var(--lime)}
+.comp-table td{padding:11px 14px;border-bottom:1px solid rgba(255,255,255,.035);color:var(--wm);vertical-align:middle}
+.comp-table td.name{color:var(--warm);font-weight:700;white-space:nowrap}
+.comp-table td.us{background:rgba(204,255,0,.04)}
+.comp-table tr:hover td{background:var(--surface-hover)}
+.comp-table .mono{font-family:'JetBrains Mono';font-size:11.5px;color:var(--warm)}
+.comp-table .tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;letter-spacing:.06em}
+.tag-usa{background:rgba(0,212,255,.10);color:var(--cyan)}
+.tag-eu{background:rgba(204,255,0,.10);color:var(--lime)}
+.tag-es{background:rgba(255,184,0,.10);color:var(--amber)}
+.tag-global{background:rgba(179,71,255,.10);color:var(--purple)}
+.tag-latam{background:rgba(0,230,118,.10);color:var(--green)}
+
+/* FEATURE MATRIX */
+.matrix-wrap{overflow-x:auto;margin-bottom:32px}
+.matrix{width:100%;border-collapse:separate;border-spacing:0;font-size:12px;min-width:900px}
+.matrix th{
+  padding:12px 8px;text-align:center;background:rgba(255,255,255,.02);
+  color:var(--wd);font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.1em;
+  border-bottom:1px solid var(--border);font-family:'Archivo';white-space:nowrap
+}
+.matrix th.first{text-align:left}
+.matrix th.us-col{background:rgba(204,255,0,.07);color:var(--lime)}
+.matrix td{padding:10px 8px;text-align:center;border-bottom:1px solid rgba(255,255,255,.035);font-size:13px}
+.matrix td.first{text-align:left;color:var(--warm);font-weight:600;font-size:12px;white-space:nowrap}
+.matrix td.us-col{background:rgba(204,255,0,.04)}
+.matrix tr:hover td{background:var(--surface-hover)}
+.ok{color:var(--lime);font-size:16px}
+.no{color:var(--coral);opacity:.7;font-size:14px;font-weight:700}
+.mid{color:var(--amber);font-size:13px;font-weight:700}
+.na{color:var(--wd);font-size:12px}
+
+/* MOAT */
+.moat-item{display:flex;align-items:center;gap:16px;padding:14px 0;border-bottom:1px solid var(--border)}
+.moat-item:last-child{border-bottom:none}
+.moat-name{font-weight:700;font-size:14px;min-width:240px;flex-shrink:0}
+.moat-bar-wrap{flex:1;height:8px;background:rgba(255,255,255,.06);border-radius:99px;overflow:hidden}
+.moat-bar{height:100%;border-radius:99px;transition:width .6s ease}
+.moat-score{font-family:'JetBrains Mono';font-size:13px;font-weight:700;min-width:32px;text-align:right}
+.moat-note{font-size:11px;color:var(--wd);margin-top:3px}
+
+/* FIFA CARD MOCK */
+.fifa-card{
+  width:180px;flex-shrink:0;
+  background:linear-gradient(160deg,#2C2208,#1A1506,#0F0D0A);
+  border:1px solid rgba(201,167,106,.4);border-radius:12px;
+  padding:14px 12px;position:relative;overflow:hidden;
+  box-shadow:0 0 30px rgba(201,167,106,.18),0 8px 32px rgba(0,0,0,.6);
+}
+.fifa-card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(232,201,122,.06) 0%,transparent 50%,rgba(201,167,106,.04) 100%);
+  pointer-events:none;
+}
+.fifa-card .overall{font-family:'Archivo';font-weight:900;font-size:38px;color:#E8C97A;line-height:1;margin-bottom:2px}
+.fifa-card .pos{font-size:11px;font-weight:700;color:rgba(232,201,122,.7);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px}
+.fifa-card .avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,rgba(204,255,0,.15),rgba(255,184,0,.1));
+  border:1.5px solid rgba(232,201,122,.3);margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:32px}
+.fifa-card .player-name{font-family:'Archivo';font-weight:900;font-size:12px;color:#E8C97A;letter-spacing:.08em;text-transform:uppercase;text-align:center;margin-bottom:8px}
+.fifa-card .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.fifa-card .stat-row{display:flex;align-items:center;justify-content:space-between;font-size:9px}
+.fifa-card .stat-row .sv{font-family:'JetBrains Mono';font-weight:700;color:#E8C97A;font-size:11px}
+.fifa-card .stat-row .sk{color:rgba(232,201,122,.6);font-weight:700;letter-spacing:.06em}
+.fifa-card .nation{font-size:8px;color:rgba(232,201,122,.4);text-align:center;margin-top:8px;letter-spacing:.1em;text-transform:uppercase;border-top:1px solid rgba(232,201,122,.15);padding-top:6px}
+
+/* RISK TABLE */
+.risk-row{display:grid;grid-template-columns:28px 1fr auto;gap:16px;align-items:start;padding:14px 0;border-bottom:1px solid var(--border)}
+.risk-row:last-child{border-bottom:none}
+.risk-num{font-family:'JetBrains Mono';font-weight:700;font-size:12px;color:var(--wd)}
+.risk-body .risk-title{font-weight:700;font-size:14px;margin-bottom:3px}
+.risk-body .risk-desc{font-size:12px;color:var(--wm);line-height:1.55}
+.risk-level{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  padding:3px 10px;border-radius:5px;white-space:nowrap;align-self:start;margin-top:2px}
+.risk-high{background:rgba(255,91,58,.15);color:var(--coral)}
+.risk-med{background:rgba(255,184,0,.15);color:var(--amber)}
+.risk-low{background:rgba(204,255,0,.12);color:var(--lime)}
+
+/* FUNDING CHART */
+.funding-chart{display:flex;align-items:flex-end;gap:12px;height:200px;padding:20px 0 0;border-bottom:1px solid var(--border);margin-bottom:16px}
+.funding-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%}
+.funding-bar{width:100%;border-radius:6px 6px 0 0;transition:opacity .2s;cursor:default;min-height:4px;position:relative}
+.funding-bar:hover{opacity:.85}
+.funding-bar-label{font-size:10px;font-weight:700;color:var(--wd);text-align:center;letter-spacing:.05em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.funding-bar-val{position:absolute;top:-20px;left:50%;transform:translateX(-50%);font-family:'JetBrains Mono';font-size:10px;color:var(--warm);white-space:nowrap}
+
+/* KPI BOXES */
+.kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}
+.kpi{padding:20px;border-radius:12px;background:var(--surface);border:1px solid var(--border)}
+.kpi .kv{font-family:'Archivo';font-weight:900;font-size:30px;line-height:1;margin-bottom:4px}
+.kpi .kl{font-size:11px;color:var(--wd);font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.kpi .ks{font-size:11px;color:var(--wm);margin-top:4px}
+
+/* DECISION BOXES */
+.decision{
+  display:flex;gap:16px;padding:18px 20px;border-radius:12px;
+  background:var(--surface);border:1px solid var(--border-hi);margin-bottom:12px;
+  align-items:flex-start
+}
+.decision .d-num{
+  font-family:'JetBrains Mono';font-weight:700;font-size:13px;color:var(--amber);
+  min-width:28px;margin-top:2px
+}
+.decision .d-body .d-title{font-weight:700;font-size:15px;margin-bottom:4px}
+.decision .d-body .d-desc{font-size:13px;color:var(--wm);line-height:1.6}
+
+/* ANNEX COMP CARD */
+.comp-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:24px}
+.comp-card-head{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.comp-card-name{font-family:'Archivo';font-weight:900;font-size:22px}
+.comp-card-meta{font-size:12px;color:var(--wm);margin-top:3px}
+.comp-card .pill-row{display:flex;gap:8px;flex-wrap:wrap}
+.kv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:16px}
+.kv-item .kv-label{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--wd);margin-bottom:4px}
+.kv-item .kv-val{font-family:'JetBrains Mono';font-size:13px;color:var(--warm);font-weight:500}
+.kv-item .kv-note{font-size:11px;color:var(--wm);margin-top:2px}
+.verdict-mini{font-size:12px;color:var(--wm);padding:12px 16px;border-radius:8px;border-left:3px solid var(--amber);background:rgba(255,184,0,.05);margin-top:12px}
+.verdict-mini.ok-left{border-left-color:var(--lime);background:rgba(204,255,0,.04)}
+.verdict-mini.bad-left{border-left-color:var(--coral);background:rgba(255,91,58,.05)}
+
+/* PRINT */
+@media print{
+  .sidebar{display:none}
+  .main{padding:24px;max-width:100%}
+  .comp-table-wrap,.matrix-wrap{overflow:visible}
+}
+@media(max-width:900px){
+  .sidebar{display:none}
+  .main{padding:28px 20px 80px}
+  .grid-2,.grid-3,.grid-4,.kpi-row{grid-template-columns:1fr}
+}
+
+/* CITATION */
+cite{font-style:normal;font-size:10px;font-family:'JetBrains Mono';color:var(--wd);vertical-align:super;margin-left:2px}
+.footnotes{font-size:11px;color:var(--wd);border-top:1px solid var(--border);padding-top:20px;margin-top:40px;line-height:1.8}
+.footnotes a{color:var(--cyan);text-decoration:none}
+.footnotes a:hover{text-decoration:underline}
+
+/* TAGS */
+.tag-pill{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:999px;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.tp-lime{background:rgba(204,255,0,.10);border:1px solid rgba(204,255,0,.25);color:var(--lime)}
+.tp-amber{background:rgba(255,184,0,.10);border:1px solid rgba(255,184,0,.25);color:var(--amber)}
+.tp-coral{background:rgba(255,91,58,.10);border:1px solid rgba(255,91,58,.25);color:var(--coral)}
+.tp-cyan{background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.22);color:var(--cyan)}
+.tp-purple{background:rgba(179,71,255,.08);border:1px solid rgba(179,71,255,.22);color:var(--purple)}
+.tp-dim{background:var(--surface);border:1px solid var(--border);color:var(--wd)}
+
+ul.bullet-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-top:12px}
+ul.bullet-list li{display:flex;gap:10px;font-size:13px;color:var(--wm);line-height:1.55}
+ul.bullet-list li::before{content:'→';color:var(--lime);font-weight:700;flex-shrink:0;font-family:'JetBrains Mono'}
+ul.bullet-list li strong{color:var(--warm)}
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+<!-- SIDEBAR -->
+<nav class="sidebar" id="sidebar" aria-label="Índice">
+  <div class="sidebar-logo">
+    <div class="g">GRADA</div>
+    <div class="sub">Análisis competitivo 2026</div>
+  </div>
+  <div class="nav-group">Resumen</div>
+  <a class="nav-item active" href="#tldr">TL;DR ejecutivo</a>
+  <a class="nav-item" href="#snapshot">GRADA snapshot</a>
+  <div class="nav-group">Competidores</div>
+  <a class="nav-item" href="#panorama">Panorama</a>
+  <a class="nav-item" href="#matriz">Matriz comparativa</a>
+  <div class="nav-group">Posición</div>
+  <a class="nav-item" href="#diferenciadores">Diferenciadores</a>
+  <a class="nav-item" href="#gaps">Gaps vs incumbents</a>
+  <div class="nav-group">Financiero</div>
+  <a class="nav-item" href="#mercado">Mercado & VC</a>
+  <a class="nav-item" href="#posicionamiento">Posicionamiento</a>
+  <a class="nav-item" href="#fundraising">Fundraising</a>
+  <div class="nav-group">Riesgos</div>
+  <a class="nav-item" href="#riesgos">Riesgos 12m</a>
+  <div class="nav-group">Anexos</div>
+  <a class="nav-item" href="#anexo-a">A · Fichas competidor</a>
+  <a class="nav-item" href="#anexo-b">B · Fuentes</a>
+</nav>
+
+<!-- MAIN -->
+<main class="main">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="badge">🔍 Análisis estratégico · Mayo 2026</div>
+  <h1>GRADA vs. <span class="grad">el mercado real</span></h1>
+  <p class="lede">Análisis competitivo y financiero honesto de GRADA en el ecosistema global de apps para fútbol amateur. Sin eufemismos. Con datos citados.</p>
+  <div class="meta-row">
+    <div class="meta-chip"><strong>Scope</strong> España · Europa · LATAM</div>
+    <div class="meta-chip"><strong>Stack real</strong> React + Vite + Capacitor PWA + Claude AI</div>
+    <div class="meta-chip"><strong>Ask seed</strong> 250k€</div>
+    <div class="meta-chip"><strong>Actualizado</strong> Mayo 2026</div>
+  </div>
+</div>
+
+<!-- ============ S1: TL;DR ============ -->
+<section class="section" id="tldr">
+  <h2 class="section-title"><span class="num">01</span> TL;DR ejecutivo</h2>
+  <p class="section-sub">Los cinco hallazgos de producto, cinco financieros, tres decisiones urgentes y el veredicto.</p>
+
+  <div class="verdict" style="background:linear-gradient(135deg,rgba(255,91,58,.14),rgba(255,184,0,.07));border-color:rgba(255,91,58,.45);margin-bottom:32px">
+    <div class="verdict-label">⚡ Veredicto — Léelo primero</div>
+    <p><strong>GRADA como app consumer standalone no es fundeable en el clima VC 2025–2026.</strong> El mercado de consumer sports apps sufrió una contracción del 64,6% en funding en 2025. La cautionary tale más directa es Tonsser: posicionamiento idéntico, $23,8M recaudados, siete años sin exit ni nueva ronda. Sin embargo, <strong>GRADA sí es defensible como B2B2C con FFCV como distribución ancla</strong>, y como capa social del holding Krujens tiene unit economics razonables con 250k€ seed si el foco permanece en CV. El análisis a continuación explica el por qué con datos.</p>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:32px">
+    <div class="card">
+      <div class="card-title" style="color:var(--lime)">📊 5 Hallazgos de producto</div>
+      <ul class="bullet-list" style="margin-top:16px">
+        <li><strong>Nadie cubre el nicho exacto en habla hispana.</strong> Red social + IA + gamificación FIFA en un solo producto para el jugador amateur 16–35 hispanohablante. Vacío real, no accidental.</li>
+        <li><strong>WhatsApp es el competidor real.</strong> No TeamSnap. El 70%+ de equipos amateurs en Europa usan grupos de WhatsApp. El switching trigger es cuando la fricción de WA supera su inercia.</li>
+        <li><strong>Tonsser es el espejo más honesto.</strong> Posicionamiento casi idéntico, $23,8M recaudados, 1,7M usuarios, cero exit, cero funding desde 2018. La pregunta de todo VC será: ¿qué hace GRADA diferente?</li>
+        <li><strong>TeamSnap es un falso enemigo.</strong> Opera principalmente en USA, modelo org-centric ($600+/año por club), no compite frontalmente en el mercado amateur europeo.</li>
+        <li><strong>BeSoccer (25M MAU) fue adquirida por Livesport (nov 2024)</strong> y se convierte en un giant de live scores, no en gestión de equipos. El espacio de comunidad+IA sigue vacío.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title" style="color:var(--amber)">💰 5 Hallazgos financieros</div>
+      <ul class="bullet-list" style="margin-top:16px">
+        <li><strong>VC consumer sports se contrajo 64,6% en 2025.</strong> Solo el 15,4% de seed de 2022 llegaron a Series A. El timing es el peor en 6 años.</li>
+        <li><strong>Strava IPO (ene 2026) a 4–6× ARR</strong> es el único múltiplo comparable real. A 504k€ ARR en Y5, GRADA valdría ~2–3M€. Insuficiente para justificar ronda VC clásica.</li>
+        <li><strong>El modelo de Spond (gratis + transaction fees) es superior al freemium.</strong> Con solo $17M recaudados, Spond procesa €160M/año en pagos. El revenue está en los flujos del club, no en la subscripción del jugador.</li>
+        <li><strong>Ningún competidor del segmento (Spond, Heja, Tonsser) ha sido adquirido.</strong> Cero exits confirmados. El M&A no es el camino probable a 5 años.</li>
+        <li><strong>LATAM es el TAM no capturado.</strong> Brasil: 154M usuarios móviles, 26% crecimiento installs, sin Spond local. Primera entrada requiere capital y foco fuera del plan 250k€.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div style="margin-bottom:32px">
+    <h3 style="font-size:17px;margin-bottom:16px;color:var(--warm)">⚡ 3 Decisiones urgentes</h3>
+    <div class="decision">
+      <div class="d-num">D1</div>
+      <div class="d-body">
+        <div class="d-title">Pivotar narrativa a B2B2C vía FFCV — no atacar consumer puro</div>
+        <div class="d-desc">El acuerdo FFCV multiplica penetración ×3, reduce CAC a ~0 y da la credencial defensiva que ningún VC consumer va a ignorar. Sin ese acuerdo, GRADA es "otra app de fútbol". Con él, es "la app oficial del fútbol valenciano".</div>
+      </div>
+    </div>
+    <div class="decision">
+      <div class="d-num">D2</div>
+      <div class="d-body">
+        <div class="d-title">Modelo Spond (transaction fees en clubs) > modelo Tonsser (premium por jugador)</div>
+        <div class="d-desc">Los €29/mes por club tienen menor churn que los €4,99/mes por jugador individual. El dinero real está en las inscripciones, torneos y pagos que los clubs gestionan. Copiar el modelo de Spond: app gratis + comisión en pagos del club.</div>
+      </div>
+    </div>
+    <div class="decision">
+      <div class="d-num">D3</div>
+      <div class="d-body">
+        <div class="d-title">LATAM como TAM narrativo en el pitch, no como plan operativo</div>
+        <div class="d-desc">Brasil, Argentina, Colombia no tienen un Spond local — la oportunidad es enorme y real. Pero 250k€ no cubre expansión internacional. Incluirlo en el deck como "expansión Y4–Y5" sin comprometer recursos operativos actuales.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="border-color:rgba(0,212,255,.25)">
+    <div class="card-title" style="color:var(--cyan)">❓ 3 Preguntas de VC sin respuesta</div>
+    <ul class="bullet-list" style="margin-top:12px">
+      <li><strong>Tonsser gastó $23,8M y no escaló. ¿Qué hace GRADA diferente estructuralmente?</strong> La respuesta "tenemos Claude AI" no es suficiente — necesita datos de retención D30 reales.</li>
+      <li><strong>¿Cuál es el coeficiente viral demostrado?</strong> Sin cohortes reales, cualquier modelo de CAC es una hipótesis. El primer piloto con 10 clubs CV es crítico antes de cualquier conversación inversora.</li>
+      <li><strong>Si Spond (gratuito, €160M en pagos) decide entrar en España mañana, ¿cuál es el moat?</strong> La respuesta honesta hoy es: "la integración con FFCV y el Coach IA en español". Ninguno está validado con usuarios.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ S2: SNAPSHOT ============ -->
+<section class="section" id="snapshot">
+  <h2 class="section-title"><span class="num">02</span> GRADA snapshot</h2>
+  <p class="section-sub">Lo que es hoy, lo que pretende ser, y dónde están las brechas entre ambos.</p>
+
+  <div class="grid-2" style="margin-bottom:28px">
+    <div>
+      <div class="card">
+        <div class="card-title">Stack técnico real</div>
+        <div class="card-sub">Confirmado desde el repositorio — mayo 2026</div>
+        <ul class="bullet-list">
+          <li><strong>Frontend:</strong> React 19 + TypeScript + Vite 8</li>
+          <li><strong>Mobile:</strong> Capacitor 6 (iOS + Android nativo desde PWA)</li>
+          <li><strong>IA:</strong> Claude (Anthropic) via API + agentes con defineAgent pattern</li>
+          <li><strong>Backend:</strong> Supabase (pendiente integración real — mock data en producción)</li>
+          <li><strong>Deploy:</strong> Vercel Edge Functions + PWA (74 assets precacheados)</li>
+          <li><strong>CI/CD:</strong> GitHub Actions (test → typecheck → build → lint)</li>
+        </ul>
+        <div class="verdict-mini bad-left" style="margin-top:16px">⚠️ <strong>Nota para inversores:</strong> El deck menciona "React Native + Modal GPU". El stack real es React PWA + Capacitor. Son equivalentes en resultado pero diferentes en percepción técnica. Se recomienda alinear el messaging.</div>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <div class="card-title">Modelo de negocio</div>
+        <div class="card-sub">Tal como está definido en market-study.md</div>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px">
+          <div style="padding:12px;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid var(--border)">
+            <div style="font-size:11px;font-weight:800;color:var(--wd);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px">Free</div>
+            <div style="font-family:'JetBrains Mono';font-size:14px;color:var(--warm)">0€</div>
+            <div style="font-size:12px;color:var(--wm);margin-top:4px">Ads + límites IA · 55% usuarios · ARPU ~0,30€/mes</div>
+          </div>
+          <div style="padding:12px;border-radius:8px;background:rgba(204,255,0,.05);border:1px solid rgba(204,255,0,.2)">
+            <div style="font-size:11px;font-weight:800;color:var(--lime);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px">Pro</div>
+            <div style="font-family:'JetBrains Mono';font-size:14px;color:var(--warm)">4,99€/mes · 39€/año</div>
+            <div style="font-size:12px;color:var(--wm);margin-top:4px">Coach AI ilimitado, replay, FIFA card share, sin ads · 38%</div>
+          </div>
+          <div style="padding:12px;border-radius:8px;background:rgba(255,184,0,.05);border:1px solid rgba(255,184,0,.2)">
+            <div style="font-size:11px;font-weight:800;color:var(--amber);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px">Club</div>
+            <div style="font-family:'JetBrains Mono';font-size:14px;color:var(--warm)">29€/mes por equipo</div>
+            <div style="font-size:12px;color:var(--wm);margin-top:4px">Hasta 22 jugadores, gestión equipo, rankings internos · 7%</div>
+          </div>
+        </div>
+        <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:12px;color:var(--wm)">ARPU mezclado: <span style="font-family:'JetBrains Mono';color:var(--lime);font-weight:700">~2,00€/mes</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-4" style="margin-bottom:28px">
+    <div class="stat-block"><div class="val">126k</div><div class="lbl">TAM CV</div><div class="sub">jugadores federados</div></div>
+    <div class="stat-block"><div class="val">84k</div><div class="lbl">SAM realista</div><div class="sub">con smartphone 16-35</div></div>
+    <div class="stat-block"><div class="val" style="color:var(--amber)">504k€</div><div class="lbl">ARR Y5 base</div><div class="sub">25% penetración SAM</div></div>
+    <div class="stat-block"><div class="val" style="color:var(--coral)">−52k€</div><div class="lbl">EBITDA Y1</div><div class="sub">break-even Y5 base</div></div>
+  </div>
+</section>
+
+<!-- ============ S3: PANORAMA ============ -->
+<section class="section" id="panorama">
+  <h2 class="section-title"><span class="num">03</span> Panorama competitivo</h2>
+  <p class="section-sub">Vista consolidada de los actores clave con métricas públicas verificadas. Confianza marcada explícitamente.</p>
+
+  <div class="comp-table-wrap">
+    <table class="comp-table" role="table">
+      <thead>
+        <tr>
+          <th>Competidor</th>
+          <th>Foco</th>
+          <th>MAU / Usuarios</th>
+          <th>Funding total</th>
+          <th>Modelo revenue</th>
+          <th>Geografía</th>
+          <th>Confianza</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="name"><span class="tag-pill tp-lime">★ GRADA</span></td>
+          <td>Red social + IA + gamificación · fútbol amateur</td>
+          <td class="mono">—</td>
+          <td class="mono">250k€ (seed objetivo)</td>
+          <td>Freemium + Club 29€</td>
+          <td><span class="tag tag-es">ES</span></td>
+          <td><span class="tag-pill tp-dim">Interno</span></td>
+        </tr>
+        <tr>
+          <td class="name">TeamSnap</td>
+          <td>Gestión equipos/ligas + streaming IA</td>
+          <td class="mono">30M total · 4,2M MAU</td>
+          <td class="mono">~52,5M$ + PE buyout</td>
+          <td>SaaS $10–130/mes equipo · Brands</td>
+          <td><span class="tag tag-usa">USA</span></td>
+          <td><span class="tag-pill tp-lime">Alta</span></td>
+        </tr>
+        <tr>
+          <td class="name">Spond</td>
+          <td>Gestión grupos/clubs · sin ads · gratis</td>
+          <td class="mono">3–4M MAU · 50k clubs</td>
+          <td class="mono">17M$</td>
+          <td>Transaction fees (€160M vol.)</td>
+          <td><span class="tag tag-eu">EU</span></td>
+          <td><span class="tag-pill tp-lime">Alta</span></td>
+        </tr>
+        <tr>
+          <td class="name">Heja</td>
+          <td>Comunicación equipo · padres + coaches</td>
+          <td class="mono">2M usuarios · 235k equipos</td>
+          <td class="mono">7M$</td>
+          <td>Freemium · Heja Pro (coaches)</td>
+          <td><span class="tag tag-global">Global</span></td>
+          <td><span class="tag-pill tp-amber">Media</span></td>
+        </tr>
+        <tr>
+          <td class="name">Tonsser</td>
+          <td>Red social fútbol amateur · scouting</td>
+          <td class="mono">1,7M usuarios · 10 países</td>
+          <td class="mono">23,8M$ (última ronda 2018)</td>
+          <td>Scout subscriptions + premium player</td>
+          <td><span class="tag tag-eu">EU</span></td>
+          <td><span class="tag-pill tp-amber">Media</span></td>
+        </tr>
+        <tr>
+          <td class="name">BeSoccer</td>
+          <td>Resultados · stats · noticias fútbol</td>
+          <td class="mono">25M MAU · 100M downloads</td>
+          <td class="mono">Adquirida (Livesport nov 2024)</td>
+          <td>Freemium + BeSoccer Pro B2B</td>
+          <td><span class="tag tag-es">ES</span><span class="tag tag-global" style="margin-left:4px">Global</span></td>
+          <td><span class="tag-pill tp-lime">Alta</span></td>
+        </tr>
+        <tr>
+          <td class="name">Veo Camera</td>
+          <td>Grabación automática partidos · vídeo IA</td>
+          <td class="mono">No publicado</td>
+          <td class="mono">115M$</td>
+          <td>Hardware + SaaS $804–1308/año</td>
+          <td><span class="tag tag-global">Global</span></td>
+          <td><span class="tag-pill tp-lime">Alta</span></td>
+        </tr>
+        <tr>
+          <td class="name">WhatsApp (sustitución)</td>
+          <td>Comunicación de equipo informal</td>
+          <td class="mono">~70%+ equipos amateurs EU</td>
+          <td class="mono">Meta ($19B acq.)</td>
+          <td>Gratis · datos del usuario</td>
+          <td><span class="tag tag-global">Global</span></td>
+          <td><span class="tag-pill tp-amber">Estimado</span></td>
+        </tr>
+        <tr>
+          <td class="name">Strava (benchmark)</td>
+          <td>Tracking running/ciclismo · social atlético</td>
+          <td class="mono">195M registrados · 50M MAU</td>
+          <td class="mono">~130M$ · IPO ene 2026</td>
+          <td>Freemium · $8,99/mes</td>
+          <td><span class="tag tag-global">Global</span></td>
+          <td><span class="tag-pill tp-lime">Alta</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card" style="border-color:rgba(255,184,0,.25)">
+    <div class="card-title" style="color:var(--amber)">📊 Funding visual — Raised vs. GRADA</div>
+    <div class="card-sub">Escala relativa. Las barras representan funding total en millones $.</div>
+    <div class="funding-chart" id="fundingChart" style="align-items:flex-end"></div>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:11px;color:var(--wd)">
+      <span>🟢 <span style="color:var(--lime)">GRADA</span> — beachhead CV</span>
+      <span>🔵 Competidores consumer</span>
+      <span>⚠️ TeamSnap también PE buyout no cuantificado</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ S4: MATRIZ ============ -->
+<section class="section" id="matriz">
+  <h2 class="section-title"><span class="num">04</span> Matriz comparativa de features</h2>
+  <p class="section-sub">Capacidades por dimensión. ✅ completo · ⚡ parcial/básico · ❌ ausente · — no aplica</p>
+
+  <div class="matrix-wrap">
+    <table class="matrix" role="table">
+      <thead>
+        <tr>
+          <th class="first">Dimensión</th>
+          <th class="us-col">GRADA</th>
+          <th>TeamSnap</th>
+          <th>Spond</th>
+          <th>Heja</th>
+          <th>Tonsser</th>
+          <th>BeSoccer</th>
+          <th>WhatsApp</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="first">Perfil de jugador con stats persistentes</td><td class="us-col"><span class="ok">✅</span></td><td><span class="no">❌</span></td><td><span class="no">❌</span></td><td><span class="no">❌</span></td><td><span class="ok">✅</span></td><td><span class="mid">⚡</span></td><td><span class="no">❌</span></td></tr>
+        <tr><td class="first">Gamificación tipo FIFA card</td><td class="us-col"><span class="ok">✅</span></td><td><span class="no">❌</span></td><td><span class="no">❌</span></td><td><span class="no">❌</span></td><td><span class="mid">⚡</span></td><td><span class="no">❌</span></td><td><span class="no">❌</span></td></tr>
+        <tr><td class="first">Feed social y engagement</td><td class="us-col"><span class="ok">✅</span></td><td><span class="mid">⚡</span></td><td><span class="mid">⚡</span></td><td><span class="mid">⚡</span></td><td><span class="ok">✅</span></td><td><span class="no">❌</span></td><td><span class="mid">⚡</span></td></tr>
+        <tr><td class="first">Coach IA personal</td><td class="us-col"><span class="ok">✅</span></td><td><span class="no">❌</span></td><td><span class="no">❌</span></td><td><span class="no">❌</span></td><td><span class="no">❌</span></td><td><span class="no">❌</span></td><td><span class="no">❌</span></td></tr>
+        <tr><td class="first">Heatmaps y análisis post-partido</td><td class="us-col"><span class="ok">✅</span></td><td><span class="no">❌</span></td><td><span class="no">❌</span></td><td><span class="no">❌</span></td><td><span class="no">❌</span></td><td><span class="no">❌</span></td><td><span class="no">❌</span></td></tr>
+        <tr><td class="first">Gestión de equipos amateur</td><td class="us-col"><span class="ok">✅</span></td><td><span class="ok">✅</span></td><td><span class="ok">✅</span></td><td><span class="ok">✅</span></td><td><span class="mid">⚡</span></td><td><span class="no">❌</span></td><td><span class="mid">⚡</span></td></tr>
+        <tr><td class="first">Gestión de ligas y torneos</td><td class="us-col"><span class="ok">✅</span></td><td><span class="ok">✅</span></td><td><span class="mid">⚡</span></td><td><span class="mid">⚡</span></td><td><span class="no">❌</span></td><td><span class="ok">✅</span></td><td><span class="no">❌</span></td></tr>
+        <tr><td class="first">Tracking en partido (manual)</td><td class="us-col"><span class="ok">✅</span></td><td><span class="no">❌</span></td><td><span class="no">❌</span></td><td><span class="no">❌</span></td><td><span class="mid">⚡</span></td><td><span class="no">❌</span></td><td><span class="no">❌</span></td></tr>
+        <tr><td class="first">Streaming / video clipping</td><td class="us-col"><span class="no">❌</span></td><td><span class="ok">✅</span></td><td><span class="no">❌</span></td><td><span class="no">❌</span></td><td><span class="mid">⚡</span></td><td><span class="no">❌</span></td><td><span class="no">❌</span></td></tr>
+        <tr><td class="first">Cobro de cuotas / payments</td><td class="us-col"><span class="no">❌</span></td><td><span class="ok">✅</span></td><td><span class="ok">✅</span></td><td><span class="mid">⚡</span></td><td><span class="no">❌</span></td><td><span class="no">❌</span></td><td><span class="no">❌</span></td></tr>
+        <tr><td class="first">App nativa iOS + Android</td><td class="us-col"><span class="ok">✅</span></td><td><span class="ok">✅</span></td><td><span class="ok">✅</span></td><td><span class="ok">✅</span></td><td><span class="ok">✅</span></td><td><span class="ok">✅</span></td><td><span class="ok">✅</span></td></tr>
+        <tr><td class="first">Offline-first</td><td class="us-col"><span class="ok">✅</span></td><td><span class="no">❌</span></td><td><span class="no">❌</span></td><td><span class="no">❌</span></td><td><span class="no">❌</span></td><td><span class="no">❌</span></td><td><span class="mid">⚡</span></td></tr>
+        <tr><td class="first">Cobertura en español (nativo)</td><td class="us-col"><span class="ok">✅</span></td><td><span class="mid">⚡</span></td><td><span class="mid">⚡</span></td><td><span class="mid">⚡</span></td><td><span class="mid">⚡</span></td><td><span class="ok">✅</span></td><td><span class="ok">✅</span></td></tr>
+        <tr><td class="first">Integración federativa (FFCV)</td><td class="us-col"><span class="mid">⚡</span></td><td><span class="no">❌</span></td><td><span class="no">❌</span></td><td><span class="no">❌</span></td><td><span class="no">❌</span></td><td><span class="no">❌</span></td><td><span class="no">❌</span></td></tr>
+        <tr><td class="first">Precio mensual jugador</td><td class="us-col" style="color:var(--lime);font-family:'JetBrains Mono';font-size:12px">4,99€</td><td style="font-family:'JetBrains Mono';font-size:11px;color:var(--warm)">$10–18</td><td style="font-family:'JetBrains Mono';font-size:11px;color:var(--lime)">GRATIS</td><td style="font-family:'JetBrains Mono';font-size:11px;color:var(--lime)">GRATIS</td><td style="font-family:'JetBrains Mono';font-size:11px;color:var(--warm)">~gratis</td><td style="font-family:'JetBrains Mono';font-size:11px;color:var(--lime)">GRATIS</td><td style="font-family:'JetBrains Mono';font-size:11px;color:var(--lime)">GRATIS</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="verdict warn">
+    <div class="verdict-label">💡 Lectura de la matriz</div>
+    <p>GRADA lidera en <strong>IA + gamificación + tracking + análisis post-partido</strong> — dimensiones donde ningún competidor ofrece profundidad real para el amateur. La brecha crítica es <strong>payments y streaming</strong>: Spond hace €160M en flujos de pago con un modelo gratis; TeamSnap integra streaming IA con XbotGo. Ambas son palancas de monetización que GRADA todavía no tiene.</p>
+  </div>
+</section>
+
+<!-- ============ S5: DIFERENCIADORES ============ -->
+<section class="section" id="diferenciadores">
+  <h2 class="section-title"><span class="num">05</span> Diferenciadores GRADA + moat</h2>
+  <p class="section-sub">Qué hace GRADA que nadie hace para el jugador amateur 16–35 hispanohablante, y cuán defensible es cada ventaja.</p>
+
+  <div style="display:flex;gap:32px;margin-bottom:32px;flex-wrap:wrap">
+    <div style="flex:1;min-width:280px">
+      <div class="moat-item">
+        <div>
+          <div class="moat-name">Coach IA en español (Claude)</div>
+          <div class="moat-note">Único en el segmento. Consejo personalizado por debilidades del jugador.</div>
+        </div>
+        <div style="flex:1">
+          <div class="moat-bar-wrap"><div class="moat-bar" style="width:72%;background:linear-gradient(90deg,var(--lime),var(--amber))"></div></div>
+        </div>
+        <div class="moat-score" style="color:var(--lime)">3.6/5</div>
+      </div>
+      <div class="moat-item">
+        <div>
+          <div class="moat-name">Gamificación FIFA card</div>
+          <div class="moat-note">Referencia cultural directa al FIFA Ultimate Team que el target ya conoce.</div>
+        </div>
+        <div style="flex:1">
+          <div class="moat-bar-wrap"><div class="moat-bar" style="width:58%;background:linear-gradient(90deg,var(--amber),var(--coral))"></div></div>
+        </div>
+        <div class="moat-score" style="color:var(--amber)">2.9/5</div>
+      </div>
+      <div class="moat-item">
+        <div>
+          <div class="moat-name">Integración FFCV / federativa</div>
+          <div class="moat-note">Si se cierra el acuerdo, crea una barrera de datos y distribución muy difícil de replicar.</div>
+        </div>
+        <div style="flex:1">
+          <div class="moat-bar-wrap"><div class="moat-bar" style="width:85%;background:linear-gradient(90deg,var(--lime),var(--cyan))"></div></div>
+        </div>
+        <div class="moat-score" style="color:var(--lime)">4.3/5</div>
+      </div>
+      <div class="moat-item">
+        <div>
+          <div class="moat-name">Producto nativo hispano</div>
+          <div class="moat-note">Idioma, cultura futbolística y referentes locales. Competidores nórdicos/americanos tienen fricción lingüística.</div>
+        </div>
+        <div style="flex:1">
+          <div class="moat-bar-wrap"><div class="moat-bar" style="width:65%;background:linear-gradient(90deg,var(--amber),var(--lime))"></div></div>
+        </div>
+        <div class="moat-score" style="color:var(--amber)">3.3/5</div>
+      </div>
+      <div class="moat-item">
+        <div>
+          <div class="moat-name">Network effect (liga + equipo)</div>
+          <div class="moat-note">Cuando todo el equipo está en GRADA, el coste de irse sube. Pero requiere masa crítica primero.</div>
+        </div>
+        <div style="flex:1">
+          <div class="moat-bar-wrap"><div class="moat-bar" style="width:40%;background:linear-gradient(90deg,var(--coral),var(--amber))"></div></div>
+        </div>
+        <div class="moat-score" style="color:var(--coral)">2.0/5</div>
+      </div>
+      <div class="moat-item">
+        <div>
+          <div class="moat-name">Offline-first PWA</div>
+          <div class="moat-note">Diferencial técnico en campos sin cobertura, pero poco valorado como argumento comercial.</div>
+        </div>
+        <div style="flex:1">
+          <div class="moat-bar-wrap"><div class="moat-bar" style="width:48%;background:linear-gradient(90deg,var(--cyan),var(--purple))"></div></div>
+        </div>
+        <div class="moat-score" style="color:var(--cyan)">2.4/5</div>
+      </div>
+    </div>
+
+    <!-- FIFA CARD MOCK -->
+    <div style="display:flex;flex-direction:column;align-items:center;gap:12px">
+      <div class="fifa-card">
+        <div class="overall">87</div>
+        <div class="pos">DEL</div>
+        <div class="avatar">⚽</div>
+        <div class="player-name">A. Rivera</div>
+        <div class="stats-grid">
+          <div class="stat-row"><span class="sv">84</span><span class="sk">VEL</span></div>
+          <div class="stat-row"><span class="sv">78</span><span class="sk">TIR</span></div>
+          <div class="stat-row"><span class="sv">91</span><span class="sk">PAS</span></div>
+          <div class="stat-row"><span class="sv">82</span><span class="sk">REG</span></div>
+          <div class="stat-row"><span class="sv">69</span><span class="sk">DEF</span></div>
+          <div class="stat-row"><span class="sv">77</span><span class="sk">FIS</span></div>
+        </div>
+        <div class="nation">FFCV · Los Pumas FC</div>
+      </div>
+      <div style="font-size:11px;color:var(--wd);text-align:center;max-width:180px">Mock FIFA card — diferenciador visual único en el segmento amateur</div>
+    </div>
+  </div>
+
+  <div class="verdict good">
+    <div class="verdict-label">✅ El diferenciador más defensible</div>
+    <p>El moat más alto (4,3/5) es el <strong>acuerdo FFCV / federativo</strong>. No porque sea difícil de replicar técnicamente, sino porque las federaciones tienen una dinámica política de "primer mover" — una vez firmado, es muy difícil que una federación cambie de proveedor. La integración Coach IA (3,6/5) es la segunda baza, pero requiere datos reales de retención para ser creíble ante inversores.</p>
+  </div>
+</section>
+
+<!-- ============ S6: GAPS ============ -->
+<section class="section" id="gaps">
+  <h2 class="section-title"><span class="num">06</span> Gaps vs incumbents — la verdad incómoda</h2>
+  <p class="section-sub">Lo que tienen ellos por network density y nosotros no. Cómo competir sin colisión frontal.</p>
+
+  <div class="card" style="border-color:rgba(255,91,58,.3);margin-bottom:20px">
+    <div class="card-title" style="color:var(--coral)">🚨 TeamSnap — No atacar. Estudiar el playbook.</div>
+    <div class="card-sub">30M usuarios · 4,2M MAU · PE-backed · $44M revenue estimado · flywheel de organización imparable</div>
+    <ul class="bullet-list">
+      <li><strong>Su flywheel es imposible de romper frontalmente:</strong> los coaches incorporan a sus clubes → los jugadores siguen → los padres se unen → las ligas se integran. Una vez dentro, el coste de salida para la organización es altísimo (datos, historial, comunicaciones).</li>
+      <li><strong>Estrategia correcta vs. TeamSnap:</strong> no competir en su mercado (USA, youth sports organizadas). Explotar que TeamSnap es caro ($600+/año por club), en inglés, y no tiene cultura futbolística hispana.</li>
+      <li><strong>Aprender de su M&A playbook:</strong> Korrio (registro), LeagueSide (patrocinios), MOJO (streaming) + XbotGo. GRADA puede replicar esta arquitectura a micro-escala: primero comunidad, después pagos, después vídeo.</li>
+      <li><strong>Lo que GRADA tiene que TeamSnap no:</strong> Coach IA, gamificación FIFA, cultura hispana nativa, precio 10× menor para el jugador individual.</li>
+    </ul>
+  </div>
+
+  <div class="card" style="border-color:rgba(255,184,0,.3);margin-bottom:20px">
+    <div class="card-title" style="color:var(--amber)">⚠️ Spond — El competidor más peligroso si entra en España</div>
+    <div class="card-sub">4M MAU · €160M en pagos procesados · modelo 100% gratis · expansión activa en Europa</div>
+    <ul class="bullet-list">
+      <li><strong>Spond puede entrar en España mañana:</strong> ya opera en 19 países, tiene versión en español, su modelo gratis elimina la resistencia de precio.</li>
+      <li><strong>Su gap:</strong> cero IA, cero gamificación, cero cultura futbolística. Es una herramienta de gestión, no una red social de jugadores.</li>
+      <li><strong>Defensa de GRADA:</strong> ser percibido como "la comunidad del jugador" antes de que Spond llegue a tener masa crítica en CV. El acuerdo FFCV es crítico aquí — Spond no puede replicar una integración federativa española de la noche a la mañana.</li>
+      <li><strong>Aprender de su modelo:</strong> el 100% gratis + transaction fees puede ser más viable que el freemium para GRADA en fases tempranas de adopción. Considerar implementar cobro de cuotas de club como monetización principal.</li>
+    </ul>
+  </div>
+
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-title">Heja y Tonsser — Lecciones, no amenazas</div>
+    <ul class="bullet-list" style="margin-top:12px">
+      <li><strong>Heja ($7M, $1,2M ARR):</strong> demuestra que el segmento puede ser rentable a pequeña escala con foco en padres/coaches. Su growth lento ($700k→$1,2M ARR en un año) es un benchmark realista para GRADA Y1-Y2.</li>
+      <li><strong>Tonsser ($23,8M, sin exit, NBA pivot 2024):</strong> la cautionary tale más directa. Mismo posicionamiento, más dinero, sin exit. La diferencia debe ser el modelo de monetización (GRADA cobra al club, Tonsser cobraba al scout) y la integración federativa.</li>
+    </ul>
+  </div>
+
+  <div class="card" style="border-color:rgba(0,212,255,.25)">
+    <div class="card-title" style="color:var(--cyan)">El competidor que más subestimamos: WhatsApp</div>
+    <ul class="bullet-list" style="margin-top:12px">
+      <li><strong>WhatsApp no tiene roadmap deportivo pero captura el 100% del comportamiento:</strong> convocatorias, resultados, fotos del partido. El jugador medio no siente el pain point hasta que lo articulas.</li>
+      <li><strong>La pregunta correcta no es "¿por qué usar GRADA en vez de WA?" sino "¿qué hace GRADA que WA no puede hacer nunca?":</strong> stats persistentes, coach IA, gamificación, historial de carrera. Esas son las razones concretas.</li>
+      <li><strong>CAC real de GRADA es conquistar el grupo de WA del equipo:</strong> si el capitán adopta GRADA, los demás siguen. El onboarding viral debe estar centrado en la figura del capitán/entrenador, no en el jugador individual.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ S7: MERCADO ============ -->
+<section class="section" id="mercado">
+  <h2 class="section-title"><span class="num">07</span> Análisis financiero y de mercado</h2>
+  <p class="section-sub">VC landscape 2023–2026 · Mercado global · Múltiplos · Métricas que pedirán los inversores.</p>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="kv" style="color:var(--coral)">−64,6%</div><div class="kl">Caída funding SportsTech analytics 2025</div><div class="ks">vs. 2024 — Tracxn. El timing de GRADA es el peor en 6 años.</div></div>
+    <div class="kpi"><div class="kv" style="color:var(--amber)">15,4%</div><div class="kl">Tasa seed → Series A (class 2022)</div><div class="ks">vs. 30,6% en 2018. El Series A crunch es real.</div></div>
+    <div class="kpi"><div class="kv" style="color:var(--lime)">4–6×</div><div class="kl">ARR multiple Strava (IPO ene 2026)</div><div class="ks">El único comparable real de exit consumer sports subscription.</div></div>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:24px">
+    <div class="card">
+      <div class="card-title">Mercado global sports apps</div>
+      <ul class="bullet-list" style="margin-top:12px">
+        <li><strong>$4,81B (2024)</strong> → proyectado $13,22B en 2034 (CAGR 10,64%)</li>
+        <li>Distribución: <strong>NA 37% · APAC 30% · Europa 20% · LATAM 10%</strong></li>
+        <li>Europa = ~962M$ en 2024 en el mercado total de apps deportivas</li>
+        <li>LATAM = ~481M$ en 2024, con Brasil liderando (26% crecimiento de installs H1 2024)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">Métricas que pedirá todo VC consumer</div>
+      <ul class="bullet-list" style="margin-top:12px">
+        <li><strong>D1 retention "buena":</strong> ≥40% (a16z benchmark consumer social)</li>
+        <li><strong>D30 retention "buena":</strong> ≥25% (a16z). Health/fitness app median: solo 3%</li>
+        <li><strong>Viral coefficient:</strong> K &gt; 1 para crecimiento orgánico sostenido</li>
+        <li><strong>CAC payback:</strong> &lt;12 meses B2C. Con ARPU 2€/mes y CAC &lt;3€ = 1,5 meses ✅</li>
+        <li><strong>Gross margin:</strong> &gt;85% (benchmark SaaS). El modelo GRADA es software-only → alcanzable</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" style="border-color:rgba(204,255,0,.2);margin-bottom:20px">
+    <div class="card-title" style="color:var(--lime)">Comparables de exit defendibles</div>
+    <div class="comp-table-wrap" style="margin-top:16px;margin-bottom:0">
+      <table class="comp-table" style="min-width:600px">
+        <thead><tr><th>Empresa</th><th>ARR / Revenue</th><th>Valoración</th><th>Múltiplo ARR</th><th>Aplicabilidad GRADA</th></tr></thead>
+        <tbody>
+          <tr><td class="name">Strava (IPO 2026)</td><td class="mono">~500M$</td><td class="mono">2,2–3B$</td><td class="mono" style="color:var(--lime)">4–6×</td><td>Alta — modelo subscription consumer sports</td></tr>
+          <tr><td class="name">Whoop (pre-IPO)</td><td class="mono">~1,1B$ bookings</td><td class="mono">10,1B$</td><td class="mono">~9×</td><td>Baja — hardware+software, diferente categoría</td></tr>
+          <tr><td class="name">Heja (privada)</td><td class="mono">~1,2M$ ARR</td><td class="mono">N/D</td><td class="mono">—</td><td>Alta — tamaño comparable, modelo freemium</td></tr>
+          <tr><td class="name">BeSoccer (adquirida)</td><td class="mono">~15M$ est.</td><td class="mono">N/D</td><td class="mono">—</td><td>Media — misma geografía, diferente modelo</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="verdict">
+    <div class="verdict-label">📊 La cuenta que todo VC hará</div>
+    <p>Con ARR Y5 base de <strong>504k€ y múltiplo Strava de 4–6×, GRADA valdría 2–3M€</strong> en ese escenario. Eso no justifica una ronda VC clásica que espera 10–30× sobre la inversión. El caso fundeable requiere o bien (a) ARR Y5 en el escenario optimista (987k€ → ~5M€ de valoración, todavía pequeño), o bien (b) <strong>reframing completo hacia el TAM España completo (1,1M federados) + LATAM como upside</strong> — donde el mismo múltiplo aplicado a 5M€ ARR potencial daría 20–30M€ de valoración en Y5, más creíble para una ronda seed.</p>
+  </div>
+</section>
+
+<!-- ============ S8: POSICIONAMIENTO ============ -->
+<section class="section" id="posicionamiento">
+  <h2 class="section-title"><span class="num">08</span> Posicionamiento estratégico</h2>
+  <p class="section-sub">La narrativa para el jugador 16–35 hispanohablante. Por qué importa tenerla clara.</p>
+
+  <div class="card" style="border-color:rgba(204,255,0,.3);margin-bottom:20px">
+    <div class="card-title" style="color:var(--lime)">La narrativa que funciona</div>
+    <p style="font-size:15px;line-height:1.7;margin-top:12px;color:var(--ws);font-style:italic;">"Llevas años jugando al fútbol. Tienes estadísticas, tienes momentos, tienes una carrera. Pero no existe ningún sitio donde eso quede registrado. Tu club tiene un Excel. Tu equipo tiene un grupo de WhatsApp. Y cuando cambias de equipo, empiezas de cero. <strong>GRADA es el lugar donde tu carrera amateur existe, mejora y se comparte.</strong>"</p>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Por qué el target 16–35 hispanohablante</div>
+      <ul class="bullet-list" style="margin-top:12px">
+        <li><strong>FIFA Ultimate Team es referencia cultural:</strong> el 16–35 ya entiende el lenguaje de las cards, los overalls y las estadísticas. No hay que educar al usuario.</li>
+        <li><strong>España: 1,1M federados · 30k clubs.</strong> El mercado no está fragmentado en muchas apps — hay un vacío real.</li>
+        <li><strong>LATAM: 0 competidores con escala.</strong> Brasil, Argentina, Colombia, México no tienen un Spond local. La oportunidad es enorme y sin fricción de desplazamiento.</li>
+        <li><strong>El jugador amateur no tiene representación digital:</strong> el PRO tiene transfermarkt, whoscored, sofascore. El amateur tiene su grupo de WA.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">Lo que no funciona en el pitch</div>
+      <ul class="bullet-list" style="margin-top:12px">
+        <li><strong>"Somos el Strava del fútbol":</strong> Strava tiene 195M usuarios y un IPO en camino. La comparación implica que GRADA es "un Strava más pequeño", no algo nuevo.</li>
+        <li><strong>"Competimos con TeamSnap":</strong> TeamSnap es USA-centric, B2B-heavy y no relevante para el jugador individual en España. Mencionar TeamSnap en el pitch confunde el segmento.</li>
+        <li><strong>"IA revolucionaria":</strong> sin datos de retención reales, el Coach IA es una feature, no un moat. Mejor framing: "el único coach de fútbol que habla español, entiende tu juego y está disponible 24h".</li>
+        <li><strong>TAM de "fútbol mundial":</strong> indefendible sin un plan de expansión creíble. Mejor empezar con "líder en CV" → "primera app del fútbol federado español".</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ S9: FUNDRAISING ============ -->
+<section class="section" id="fundraising">
+  <h2 class="section-title"><span class="num">09</span> Fundraising readiness</h2>
+  <p class="section-sub">Consumer puro vs. B2B2C. Lo que falta. Lo que sobra. Cuándo es el momento de hablar con inversores.</p>
+
+  <div class="grid-2" style="margin-bottom:24px">
+    <div class="card" style="border-color:rgba(255,91,58,.3)">
+      <div class="card-title" style="color:var(--coral)">❌ GRADA como consumer standalone</div>
+      <ul class="bullet-list" style="margin-top:12px">
+        <li>VC consumer sports contrajo 64,6% en 2025. Timing terrible.</li>
+        <li>Tonsser gastó $23,8M en el mismo posicionamiento y no escaló. Sin respuesta clara a esa objeción, el pitch muere en la segunda reunión.</li>
+        <li>D1/D7/D30 retention sin datos reales. No hay cohortes que defender.</li>
+        <li>ARR Y5 base de 504k€ → valoración 2–3M€ con múltiplo Strava. MoIC insuficiente para fondo VC clásico.</li>
+        <li>Sin partnership FFCV, el moat es "somos mejores que WA". Eso no defiende una ronda.</li>
+      </ul>
+    </div>
+    <div class="card" style="border-color:rgba(204,255,0,.3)">
+      <div class="card-title" style="color:var(--lime)">✅ GRADA como B2B2C dentro de Krujens</div>
+      <ul class="bullet-list" style="margin-top:12px">
+        <li>Partnership FFCV como distribución → reduce CAC a ~0 y da credencial federativa única.</li>
+        <li>El holding Krujens valida el playbook multi-vertical. GRADA no es la única apuesta.</li>
+        <li>250k€ seed es defensible con: 10 clubs piloto CV + datos de retención reales + MOU FFCV.</li>
+        <li>El TAM correcto para el pitch: España 1,1M federados + LATAM como upside → ARR potencial 5M€ en Y5 escenario ambicioso → valoración 20–30M€.</li>
+        <li>Business angels / family offices sectoriales (ex-jugadores, directivos de clubs, inversores deportivos) más alineados que fondos VC genéricos.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" style="border-color:rgba(255,184,0,.3)">
+    <div class="card-title" style="color:var(--amber)">🗓️ Hoja de ruta para la ronda seed</div>
+    <ul class="bullet-list" style="margin-top:12px">
+      <li><strong>AHORA → Q3 2026:</strong> Piloto real con 10 clubs CV. Objetivo: 300+ usuarios activos, D30 retention &gt;20%, NPS &gt;50.</li>
+      <li><strong>Q3 2026:</strong> Firma MOU con FFCV (aunque sea acuerdo de datos anonimizados). Esto es el hito que abre la conversación inversora.</li>
+      <li><strong>Q4 2026:</strong> Levantar la ronda con: (a) datos de retención reales, (b) acuerdo FFCV formalizado, (c) modelo de transaction fees validado con al menos 2 clubs cobrando cuotas a través de GRADA.</li>
+      <li><strong>Inversores target:</strong> Business angels con experiencia en deporte/fútbol, family offices valencianos, fondos seed ibéricos (Kibo, Swanlaab, Draper B1). Evitar fondos que solo hacen B2B SaaS — no van a entender la narrativa consumer.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ S10: RIESGOS ============ -->
+<section class="section" id="riesgos">
+  <h2 class="section-title"><span class="num">10</span> Riesgos competitivos 12 meses</h2>
+  <p class="section-sub">Ordenados por probabilidad × impacto. Honestidad brutal.</p>
+
+  <div class="card">
+    <div class="risk-row">
+      <div class="risk-num">01</div>
+      <div class="risk-body">
+        <div class="risk-title">Spond entra en España con modelo 100% gratis</div>
+        <div class="risk-desc">Spond ya opera en 19 países con expansión activa. Su modelo gratis elimina toda resistencia de precio. Si lanza una campaña en España antes de que GRADA tenga masa crítica en CV, puede bloquear el beachhead. No tiene IA ni gamificación, pero tiene 4M MAU de credibilidad.</div>
+      </div>
+      <div class="risk-level risk-high">Alto</div>
+    </div>
+    <div class="risk-row">
+      <div class="risk-num">02</div>
+      <div class="risk-body">
+        <div class="risk-title">WhatsApp lanza features de gestión de equipos / grupos deportivos</div>
+        <div class="risk-desc">Meta tiene los recursos y el acceso. Si WhatsApp añade RSVPs, tracking de asistencia o calendarios deportivos básicos, elimina el switching trigger principal. Probabilidad baja a 12m, pero impacto máximo.</div>
+      </div>
+      <div class="risk-level risk-med">Medio</div>
+    </div>
+    <div class="risk-row">
+      <div class="risk-num">03</div>
+      <div class="risk-body">
+        <div class="risk-title">FFCV desarrolla su propia app o firma con otro proveedor</div>
+        <div class="risk-desc">Las federaciones son lentas pero se mueven. Si la RFEF lanza una app nacional o si Clupik / BeSoccer (ahora Livesport) firma un acuerdo federativo primero, GRADA pierde su moat más defensible antes de construirlo.</div>
+      </div>
+      <div class="risk-level risk-high">Alto</div>
+    </div>
+    <div class="risk-row">
+      <div class="risk-num">04</div>
+      <div class="risk-body">
+        <div class="risk-title">Churn de usuarios post-temporada</div>
+        <div class="risk-desc">El fútbol amateur tiene una estacionalidad marcada. Sin features de fuera de temporada (entrenos, fichajes, pretemporada), el DAU colapsa en verano. La retención anual puede ser muy inferior a la mensual en temporada.</div>
+      </div>
+      <div class="risk-level risk-med">Medio</div>
+    </div>
+    <div class="risk-row">
+      <div class="risk-num">05</div>
+      <div class="risk-body">
+        <div class="risk-title">Coste de la API de Claude escala más rápido que el revenue</div>
+        <div class="risk-desc">El Coach IA es el diferenciador principal pero también el coste variable más impredecible. Si la retención es baja pero el uso de IA es alto (usuarios que prueban y abandonan), el unit economics se rompe.</div>
+      </div>
+      <div class="risk-level risk-med">Medio</div>
+    </div>
+    <div class="risk-row">
+      <div class="risk-num">06</div>
+      <div class="risk-body">
+        <div class="risk-title">Sin datos reales antes de hablar con inversores</div>
+        <div class="risk-desc">Este es el riesgo más inmediato. Intentar levantar la ronda seed sin cohortes reales resulta en: rondas más caras (mayor equity cedido), más dificultad para cerrar, y pitch menos creíble. El piloto CV no es opcional.</div>
+      </div>
+      <div class="risk-level risk-high">Alto · Inmediato</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ANEXO A ============ -->
+<section class="section" id="anexo-a">
+  <h2 class="section-title"><span class="num">A</span> Fichas de competidor — Europa · LATAM</h2>
+  <p class="section-sub">Datos citados con nivel de confianza. Actualizados a mayo 2026.</p>
+
+  <!-- TEAMSNAP -->
+  <div class="comp-card">
+    <div class="comp-card-head">
+      <div>
+        <div class="comp-card-name">TeamSnap</div>
+        <div class="comp-card-meta">Boulder, CO (USA) · Fundada 2009 · PE-backed (Waud Capital 2021)</div>
+      </div>
+      <div class="pill-row">
+        <span class="tag-pill tp-coral">Incumbent USA</span>
+        <span class="tag-pill tp-dim">B2B2C</span>
+        <span class="tag-pill tp-cyan">AI Streaming</span>
+      </div>
+    </div>
+    <div class="kv-grid">
+      <div class="kv-item"><div class="kv-label">Usuarios totales</div><div class="kv-val">30M+</div><div class="kv-note">Padres, jugadores, coaches · Oficial PR ene 2024</div></div>
+      <div class="kv-item"><div class="kv-label">MAU</div><div class="kv-val">4,2M</div><div class="kv-note">Annual report 2023 · Alta confianza</div></div>
+      <div class="kv-item"><div class="kv-label">Funding</div><div class="kv-val">~52,5M$</div><div class="kv-note">+ PE buyout Waud Capital (importe N/D)</div></div>
+      <div class="kv-item"><div class="kv-label">Revenue est.</div><div class="kv-val">~44M$</div><div class="kv-note">Zippia/Growjo 2024 · Media confianza</div></div>
+      <div class="kv-item"><div class="kv-label">Precio equipo</div><div class="kv-val">$10–18/mes</div><div class="kv-note">Plan personal. Club desde $599/año</div></div>
+      <div class="kv-item"><div class="kv-label">Empleados</div><div class="kv-val">188</div><div class="kv-note">Marzo 2026</div></div>
+    </div>
+    <div class="verdict-mini bad-left">🔑 <strong>Hito crítico abr. 2026:</strong> Partnership con XbotGo — cámara robótica IA que graba partidos y se integra nativamente en TeamSnap ONE (plataforma unificada lanzada nov. 2025). Primera integración nativa streaming + gestión en el mercado. GRADA debe vigilar si expanden a Europa.</div>
+    <div class="verdict-mini" style="margin-top:8px;border-left-color:var(--cyan)">⚡ <strong>Relevancia para GRADA:</strong> Bajo en competencia directa (USA-centric, precio 10× mayor). Alto como referente del playbook de consolidación (comunicación → pagos → streaming → IA). Estudiar, no combatir.</div>
+  </div>
+
+  <!-- SPOND -->
+  <div class="comp-card">
+    <div class="comp-card-head">
+      <div>
+        <div class="comp-card-name">Spond</div>
+        <div class="comp-card-meta">Oslo, Noruega · Fundada 2014 · Series B (Verdane, 2021)</div>
+      </div>
+      <div class="pill-row">
+        <span class="tag-pill tp-amber">Amenaza real EU</span>
+        <span class="tag-pill tp-lime">100% Gratis</span>
+        <span class="tag-pill tp-dim">Transaction fees</span>
+      </div>
+    </div>
+    <div class="kv-grid">
+      <div class="kv-item"><div class="kv-label">MAU</div><div class="kv-val">3–4M</div><div class="kv-note">3M confirmado may 2024; 4M probable 2025 (Stripe case study)</div></div>
+      <div class="kv-item"><div class="kv-label">Clubs / equipos</div><div class="kv-val">50k+</div><div class="kv-note">Stripe case study · Alta confianza</div></div>
+      <div class="kv-item"><div class="kv-label">Funding</div><div class="kv-val">17M$</div><div class="kv-note">Seed 2018 + Series B £8M sept 2021 (Verdane)</div></div>
+      <div class="kv-item"><div class="kv-label">Volumen pagos</div><div class="kv-val">€160M/año</div><div class="kv-note">Proyectado €200M 2025 · Stripe case study · Alta</div></div>
+      <div class="kv-item"><div class="kv-label">Precio usuario</div><div class="kv-val">GRATIS</div><div class="kv-note">100% gratuito. Revenue por transaction fees</div></div>
+      <div class="kv-item"><div class="kv-label">Países activos</div><div class="kv-val">19</div><div class="kv-note">UK 1,5M MAU · Alemania 500k · Noruega ~1M</div></div>
+    </div>
+    <div class="verdict-mini" style="border-left-color:var(--coral)">🔑 <strong>Adquisición Spoortz (ene 2024):</strong> Sistema noruego de gestión de socios y cuotas de clubs. Con esto Spond cubre ahora toda la cadena: comunicación (grupo) → gestión de club → cobro de cuotas. El modelo freemium con transaction fees genera €160M de volumen con solo $17M raised. Es el benchmark de eficiencia de capital del sector.</div>
+    <div class="verdict-mini" style="margin-top:8px;border-left-color:var(--amber)">⚡ <strong>Relevancia para GRADA:</strong> Alta — competidor más peligroso en expansión EU. No tiene IA ni gamificación. Su entrada en España es cuestión de tiempo. Defensa: acuerdo FFCV + capa social + Coach IA antes de que Spond llegue a masa crítica en CV.</div>
+  </div>
+
+  <!-- HEJA -->
+  <div class="comp-card">
+    <div class="comp-card-head">
+      <div>
+        <div class="comp-card-name">Heja</div>
+        <div class="comp-card-meta">Estocolmo, Suecia · Fundada 2016 · Seed (Peak Capital, 2021)</div>
+      </div>
+      <div class="pill-row">
+        <span class="tag-pill tp-dim">Referencia tamaño</span>
+        <span class="tag-pill tp-lime">Freemium</span>
+      </div>
+    </div>
+    <div class="kv-grid">
+      <div class="kv-item"><div class="kv-label">Usuarios</div><div class="kv-val">2M</div><div class="kv-note">Coaches, jugadores, padres · Company claim 2024</div></div>
+      <div class="kv-item"><div class="kv-label">Equipos</div><div class="kv-val">235k+</div><div class="kv-note">50+ países</div></div>
+      <div class="kv-item"><div class="kv-label">Funding</div><div class="kv-val">7M$</div><div class="kv-note">Seed 2018 + Seed2 4,2M$ (Peak Capital jun 2021)</div></div>
+      <div class="kv-item"><div class="kv-label">ARR</div><div class="kv-val">~1,2M$</div><div class="kv-note">GetLatka 2023 · Media confianza</div></div>
+      <div class="kv-item"><div class="kv-label">Crecimiento ARR</div><div class="kv-val">+71% YoY</div><div class="kv-note">$700k (2022) → $1,2M (2023)</div></div>
+      <div class="kv-item"><div class="kv-label">iOS rating</div><div class="kv-val">4,84/5</div><div class="kv-note">~20k ratings · Alta confianza</div></div>
+    </div>
+    <div class="verdict-mini ok-left">⚡ <strong>Relevancia para GRADA:</strong> Heja demuestra que el segmento puede generar ~$1M ARR con $7M raised — es un benchmark de eficiencia realista para GRADA Y2-Y3. Su foco en padres/coaches vs. jugador es una distinción importante: GRADA apunta al jugador, Heja al entorno. Poca superposición directa.</div>
+  </div>
+
+  <!-- TONSSER -->
+  <div class="comp-card">
+    <div class="comp-card-head">
+      <div>
+        <div class="comp-card-name">Tonsser</div>
+        <div class="comp-card-meta">Copenhague, Dinamarca · Fundada 2014 · Series A (Alven, 2018) — sin funding desde entonces</div>
+      </div>
+      <div class="pill-row">
+        <span class="tag-pill tp-coral">Cautionary tale</span>
+        <span class="tag-pill tp-dim">Posicionamiento similar</span>
+        <span class="tag-pill tp-purple">NBA pivot 2024</span>
+      </div>
+    </div>
+    <div class="kv-grid">
+      <div class="kv-item"><div class="kv-label">Usuarios</div><div class="kv-val">1,7M</div><div class="kv-note">10 países · Company claim (sin fecha)</div></div>
+      <div class="kv-item"><div class="kv-label">Francia</div><div class="kv-val">500k</div><div class="kv-note">85% equipos juveniles franceses · Mayor mercado</div></div>
+      <div class="kv-item"><div class="kv-label">Funding total</div><div class="kv-val">17–24M$</div><div class="kv-note">Fuentes divergen. Última ronda: dic 2018</div></div>
+      <div class="kv-item"><div class="kv-label">Años sin funding</div><div class="kv-val">7+</div><div class="kv-note">Series A dic 2018 → mayo 2026: sin nueva ronda</div></div>
+      <div class="kv-item"><div class="kv-label">iOS rating</div><div class="kv-val">4,5/5</div><div class="kv-note">App Store UK · Alta confianza</div></div>
+      <div class="kv-item"><div class="kv-label">Android rating</div><div class="kv-val">4,6/5</div><div class="kv-note">~13k reviews Google Play</div></div>
+    </div>
+    <div class="verdict-mini bad-left">🚨 <strong>La pregunta que todo VC hará:</strong> "Tonsser lleva 10 años en el mismo posicionamiento con más dinero y no escaló. ¿Qué hace GRADA diferente?" La respuesta debe ser concreta: (1) modelo de monetización vía club, no scout; (2) integración federativa; (3) mercado hispanohablante sin competencia local. Las buenas ratings de app (4,5–4,6) demuestran que el producto es bueno — el problema de Tonsser fue el modelo, no la ejecución.</div>
+    <div class="verdict-mini" style="margin-top:8px;border-left-color:var(--purple)">📌 <strong>Señal de 2024:</strong> Seleccionado para NBA Launchpad — exploración del modelo de identidad de jugador aplicado a baloncesto. Indica reconocimiento de que el fútbol europeo solo no es suficiente para escalar.</div>
+  </div>
+
+  <!-- BESOCCER -->
+  <div class="comp-card">
+    <div class="comp-card-head">
+      <div>
+        <div class="comp-card-name">BeSoccer</div>
+        <div class="comp-card-meta">Málaga, España · Fundada 2010 · Adquirida por Livesport nov 2024</div>
+      </div>
+      <div class="pill-row">
+        <span class="tag-pill tp-es">España</span>
+        <span class="tag-pill tp-dim">Live scores</span>
+        <span class="tag-pill tp-amber">No competidor directo</span>
+      </div>
+    </div>
+    <div class="kv-grid">
+      <div class="kv-item"><div class="kv-label">MAU</div><div class="kv-val">25M</div><div class="kv-note">Anuncio adquisición Livesport nov 2024 · Alta confianza</div></div>
+      <div class="kv-item"><div class="kv-label">Downloads</div><div class="kv-val">100M+</div><div class="kv-note">Total histórico</div></div>
+      <div class="kv-item"><div class="kv-label">Adquirida por</div><div class="kv-val">Livesport</div><div class="kv-note">Nov 2024 · Dueño de Flashscore (100M MAU)</div></div>
+      <div class="kv-item"><div class="kv-label">Revenue est.</div><div class="kv-val">~15M$</div><div class="kv-note">Craft.co jun 2025 · Baja confianza</div></div>
+      <div class="kv-item"><div class="kv-label">iOS rating</div><div class="kv-val">4,7/5</div><div class="kv-note">~17k ratings</div></div>
+      <div class="kv-item"><div class="kv-label">Android rating</div><div class="kv-val">4,08/5</div><div class="kv-note">~580k reviews (más críticas recientes)</div></div>
+    </div>
+    <div class="verdict-mini ok-left">⚡ <strong>Relevancia para GRADA:</strong> BeSoccer es un competidor de atención (el usuario puede consultar resultados allí en vez de en GRADA) pero no de uso case. No tiene perfil de jugador, no tiene comunidad, no tiene gestión de equipos. La adquisición por Livesport lo aleja aún más del mercado de GRADA — el nuevo propietario prioriza escala global de live scores, no fútbol amateur local. <strong>La brecha de GRADA queda más clara después de esta adquisición.</strong></div>
+  </div>
+
+  <!-- LATAM -->
+  <div class="comp-card" style="border-color:rgba(0,230,118,.25)">
+    <div class="comp-card-head">
+      <div>
+        <div class="comp-card-name">Mercado LATAM</div>
+        <div class="comp-card-meta">Brasil · Argentina · Colombia · México · Chile</div>
+      </div>
+      <div class="pill-row">
+        <span class="tag-pill" style="background:rgba(0,230,118,.1);border-color:rgba(0,230,118,.3);color:var(--green)">Upside sin capturar</span>
+        <span class="tag-pill tp-dim">Sin competidor local dominante</span>
+      </div>
+    </div>
+    <div class="kv-grid">
+      <div class="kv-item"><div class="kv-label">Mercado apps deportivas LATAM</div><div class="kv-val">~481M$</div><div class="kv-note">10% del global $4,81B (2024) · Precedence Research</div></div>
+      <div class="kv-item"><div class="kv-label">Brasil — usuarios móviles</div><div class="kv-val">154M</div><div class="kv-note">Internet móvil 2023</div></div>
+      <div class="kv-item"><div class="kv-label">Brasil — crecimiento installs</div><div class="kv-val">+26%</div><div class="kv-note">H1 2023 → H1 2024 · Adjust</div></div>
+      <div class="kv-item"><div class="kv-label">Competidor local dominante</div><div class="kv-val">Ninguno</div><div class="kv-note">No hay equivalente de Spond/Heja en LATAM con escala</div></div>
+      <div class="kv-item"><div class="kv-label">FIFA registros España</div><div class="kv-val">1,25M</div><div class="kv-note">30.188 clubs · FIFA/RFEF 2023 · Alta confianza</div></div>
+      <div class="kv-item"><div class="kv-label">LATAM federados est.</div><div class="kv-val">N/D</div><div class="kv-note">CBF/AFA no publican datos consolidados en fuentes accesibles</div></div>
+    </div>
+    <div class="verdict-mini ok-left">🌎 <strong>Conclusión LATAM:</strong> La oportunidad es real y sin competencia directa con escala. Brasil en particular es el mercado más atractivo (base móvil, crecimiento, cultura futbolística dominante). Sin embargo, <strong>los 250k€ seed no cubren expansión internacional</strong>. La narrativa LATAM debe aparecer en el pitch como upside Y4-Y5, no como compromiso operativo. Cuando GRADA alcance 5-8k usuarios en CV con retención demostrada, la expansión LATAM es el argumento de la ronda Series A.</div>
+  </div>
+</section>
+
+<!-- ============ ANEXO B ============ -->
+<section class="section" id="anexo-b">
+  <h2 class="section-title"><span class="num">B</span> Fuentes</h2>
+  <div class="footnotes">
+    <p>[1] TeamSnap & XbotGo partnership — <a href="https://www.prnewswire.com/news-releases/teamsnap-and-xbotgo-partner-to-redefine-youth-sports-streaming-with-industry-first-fully-integrated-ai-powered-experience-302749882.html" target="_blank">PRNewswire, abril 2026</a></p>
+    <p>[2] TeamSnap ONE launch — <a href="https://www.prnewswire.com/news-releases/teamsnap-unveils-teamsnap-one-a-next-generation-platform-poised-to-redefine-the-future-of-youth-sports-technology-302617954.html" target="_blank">PRNewswire, nov 2025</a></p>
+    <p>[3] TeamSnap 2023 Growth — <a href="https://www.prnewswire.com/news-releases/teamsnap-experiences-another-year-of-unprecedented-growth-in-2023-302062777.html" target="_blank">PRNewswire, ene 2024</a></p>
+    <p>[4] Waud Capital adquiere TeamSnap — <a href="https://www.prnewswire.com/news-releases/teamsnap-partners-with-waud-capital-to-accelerate-expansion-301268688.html" target="_blank">PRNewswire, abr 2021</a></p>
+    <p>[5] Spond 3M MAU — <a href="https://www.spond.com/en-us/news-and-blog/spond-3-million-monthly-active-users/" target="_blank">Spond blog, may 2024</a></p>
+    <p>[6] Spond × Stripe case study — <a href="https://stripe.com/ae/customers/spond" target="_blank">Stripe.com</a></p>
+    <p>[7] Spond Series B — <a href="https://www.uktech.news/news/spond-oslo-based-sports-tech-platform-secures-8m-funding-to-help-grassroots-sports-bounce-back-20210928" target="_blank">UK Tech News, sep 2021</a></p>
+    <p>[8] Heja Peak Capital — <a href="https://peak.capital/heja-raises-investment-peak-capital/" target="_blank">Peak Capital, jun 2021</a></p>
+    <p>[9] Heja revenue — <a href="https://getlatka.com/companies/heja" target="_blank">GetLatka 2023</a></p>
+    <p>[10] Tonsser Series A — <a href="https://techcrunch.com/2018/12/18/tonsser-scores-series-a/" target="_blank">TechCrunch, dic 2018</a></p>
+    <p>[11] Tonsser NBA Launchpad — <a href="https://www.sportsvideo.org/2024/01/26/nba-launchpad-selects-5-companies-focused-on-emerging-technologies/" target="_blank">SportsVideo.org, ene 2024</a></p>
+    <p>[12] BeSoccer adquirida por Livesport — <a href="https://igamingfuture.com/livesport-expands-reach-with-acquisition-of-besoccer-adding-25m-users/" target="_blank">iGaming Future, nov 2024</a></p>
+    <p>[13] Veo Camera Series C $80M — <a href="https://www.thesaasnews.com/news/veo-raises-80-million-in-series-c" target="_blank">The SaaS News, jun 2022</a></p>
+    <p>[14] Strava IPO filing — <a href="https://fortune.com/2026/01/13/how-strava-ran-toward-a-comeback-ipo/" target="_blank">Fortune, ene 2026</a></p>
+    <p>[15] Whoop $575M @ $10,1B — <a href="https://finance.yahoo.com/sectors/healthcare/articles/whoop-raises-575-million-10-204207038.html" target="_blank">Yahoo Finance, 2025</a></p>
+    <p>[16] Consumer sports VC contraction — <a href="https://tracxn.com/d/trending-business-models/startups-in-sports-analytics-platforms/" target="_blank">Tracxn 2025</a></p>
+    <p>[17] Seed → Series A graduation rate — <a href="https://www.scaleup.finance/article/the-series-a-crunch-is-back-why-85-of-seed-stage-startups-now-fail-to-raise-series-a-and-how-to-beat-the-odds" target="_blank">ScaleUp Finance</a></p>
+    <p>[18] a16z consumer social benchmarks — <a href="https://a16z.com/do-you-have-lightning-in-a-bottle-how-to-benchmark-your-social-app/" target="_blank">a16z</a></p>
+    <p>[19] Sport app market global — <a href="https://www.precedenceresearch.com/sport-app-market" target="_blank">Precedence Research 2024</a></p>
+    <p>[20] España RFEF licencias — <a href="https://inside.fifa.com/associations/ESP" target="_blank">FIFA/RFEF 2023</a></p>
+    <p>[21] Brasil app install growth — <a href="https://www.adjust.com/blog/sports-betting-brazil/" target="_blank">Adjust 2024</a></p>
+    <p>[22] PlayerData Series A — <a href="https://www.scottishfinancialnews.com/articles/playerdata-raises-2-3m-in-series-a-investment-round-led-by-hiro-capital" target="_blank">Scottish Financial News, abr 2021</a></p>
+    <p>[23] FFCV licencias 2024/25 — <a href="https://ffcv.es/wp/numero-de-licencias-de-la-ffcv/" target="_blank">FFCV oficial</a></p>
+    <p>[24] Market study interno — docs/market-study.md · Krujens brand context — docs/krujens-brand-context.md</p>
+  </div>
+</section>
+
+<div style="padding-top:40px;border-top:1px solid var(--border);font-size:11px;color:var(--wd);line-height:1.8">
+  <strong style="color:var(--wm)">GRADA es una solución de Krujens</strong> · Documento confidencial · Actualizado mayo 2026 · pedro.paredes@kenmei.ai<br>
+  Los datos de terceros son estimaciones de fuentes públicas con nivel de confianza explicitado. No constituyen garantía de exactitud.
+</div>
+
+</main>
+</div>
+
+<script>
+// Scroll spy
+const sections = document.querySelectorAll('.section[id]');
+const navItems = document.querySelectorAll('.nav-item[href^="#"]');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navItems.forEach(n => n.classList.remove('active'));
+      const active = document.querySelector(`.nav-item[href="#${e.target.id}"]`);
+      if (active) active.classList.add('active');
+    }
+  });
+}, { threshold: 0.25, rootMargin: '-60px 0px -60% 0px' });
+sections.forEach(s => observer.observe(s));
+
+// Funding chart
+const data = [
+  { name:'GRADA', val:0.25, color:'#CCFF00' },
+  { name:'TeamSnap', val:52.5, color:'#00D4FF' },
+  { name:'Spond', val:17, color:'#FFB800' },
+  { name:'Heja', val:7, color:'#B347FF' },
+  { name:'Tonsser', val:23.8, color:'#FF5B3A' },
+  { name:'Veo', val:115, color:'#00E676' },
+  { name:'Strava', val:130, color:'#FAF5EB' },
+];
+const chart = document.getElementById('fundingChart');
+const max = Math.max(...data.map(d => d.val));
+data.forEach(d => {
+  const pct = Math.max((d.val / max) * 100, 2);
+  const wrap = document.createElement('div');
+  wrap.className = 'funding-bar-wrap';
+  wrap.innerHTML = `
+    <div class="funding-bar" style="height:${pct}%;background:${d.color};opacity:0.85" title="${d.name}: $${d.val}M">
+      <div class="funding-bar-val">$${d.val}M</div>
+    </div>
+    <div class="funding-bar-label" style="color:${d.color}">${d.name}</div>
+  `;
+  chart.appendChild(wrap);
+});
+
+// Moat bars animate on scroll
+const moatObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('.moat-bar').forEach(b => {
+        const w = b.style.width;
+        b.style.width = '0';
+        requestAnimationFrame(() => { b.style.width = w; });
+      });
+      moatObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.3 });
+document.querySelectorAll('#diferenciadores').forEach(s => moatObs.observe(s));
+</script>
+</body>
+</html>
