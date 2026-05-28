@@ -36,9 +36,7 @@ dist-ssr
 /playwright/.cache/
 
 # Cowork / Claude Code (worktrees, settings locales)
-.claude/
-.claire/
-
-# Cowork / Claude Code (worktrees, settings locales)
-.claude/
+.claude/*
+!.claude/hooks/
+!.claude/settings.json
 .claire/
